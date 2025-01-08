@@ -3,7 +3,7 @@ sidebar_position: 2
 slug: /python_api_reference
 ---
 
-# Python API Reference
+# Python API
 
 A complete reference for RAGFlow's Python APIs. Before proceeding, please ensure you [have your RAGFlow API key ready for authentication](https://ragflow.io/docs/dev/acquire_ragflow_api_key).
 
@@ -894,7 +894,7 @@ dataset = rag_object.list_datasets(name="ragflow")
 dataset = dataset[0]
 name = 'ragflow_test.txt'
 path = './test_data/ragflow_test.txt'
-documents =[{"displayed_name":"test_retrieve_chunks.txt","blob":open(path, "rb").read()}]
+documents =[{"display_name":"test_retrieve_chunks.txt","blob":open(path, "rb").read()}]
 docs = dataset.upload_documents(documents)
 doc = docs[0]
 doc.add_chunk(content="This is a chunk addition test")
