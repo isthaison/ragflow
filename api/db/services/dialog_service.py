@@ -26,6 +26,7 @@ from datetime import timedelta
 from api.db import LLMType, ParserType, StatusEnum
 from api.db.db_models import Dialog, DB
 from api.db.services.common_service import CommonService
+from api.db.services.document_service import DocumentService
 from api.db.services.knowledgebase_service import KnowledgebaseService
 from api.db.services.llm_service import LLMService, TenantLLMService, LLMBundle
 from api import settings
@@ -122,16 +123,21 @@ def kb_prompt(kbinfos, max_tokens):
             knowledges = knowledges[:i]
             break
 
-    doc2chunks = defaultdict(list)
-    for i, ck in enumerate(kbinfos["chunks"]):
-        if i >= chunks_num:
-            break
-        doc2chunks[ck["docnm_kwd"]].append(ck["content_with_weight"])
+    docs = DocumentService.get_by_ids([ck["doc_id"] for ck in kbinfos["chunks"][:chunks_num]])
+    docs = {d.id: d.meta_fields for d in docs}
+
+    doc2chunks = defaultdict(lambda: {"chunks": [], "meta": []})
+    for ck in kbinfos["chunks"][:chunks_num]:
+        doc2chunks[ck["docnm_kwd"]]["chunks"].append(ck["content_with_weight"])
+        doc2chunks[ck["docnm_kwd"]]["meta"] = docs.get(ck["doc_id"], {})
 
     knowledges = []
-    for nm, chunks in doc2chunks.items():
-        txt = f"Document: {nm} \nContains the following relevant fragments:\n"
-        for i, chunk in enumerate(chunks, 1):
+    for nm, cks_meta in doc2chunks.items():
+        txt = f"Document: {nm} \n"
+        for k,v in cks_meta["meta"].items():
+            txt += f"{k}: {v}\n"
+        txt += "Relevant fragments as following:\n"
+        for i, chunk in enumerate(cks_meta["chunks"], 1):
             txt += f"{i}. {chunk}\n"
         knowledges.append(txt)
     return knowledges
@@ -281,7 +287,7 @@ def chat(dialog, messages, stream=True, **kwargs):
         yield {"answer": empty_res, "reference": kbinfos, "audio_binary": tts(tts_mdl, empty_res)}
         return {"answer": prompt_config["empty_response"], "reference": kbinfos}
 
-    kwargs["knowledge"] = "\n\n------\n\n".join(knowledges)
+    kwargs["knowledge"] = "\n------\n" + "\n\n------\n\n".join(knowledges)
     gen_conf = dialog.llm_setting
 
     msg = [{"role": "system", "content": prompt_config["system"].format(**kwargs)}]
