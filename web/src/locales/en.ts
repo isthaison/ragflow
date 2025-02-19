@@ -1190,6 +1190,7 @@ This delimiter is used to split the input text into several text pieces echo of 
         "NumberPhone":""
       }`,
       datatype: 'MINE type',
+      insertVariableTip: `Enter / Insert variables`,
     },
     footer: {
       profile: 'All rights reserved @ React',
