@@ -210,10 +210,10 @@ class Canvas:
                 if cpn.component_name == "Answer":
                     self.answer.append(c)
                 else:
-                    logging.debug(f"Canvas.prepare2run: {c}")
+                    logging.info(f"Canvas.prepare2run: {c}")
                     if c not in without_dependent_checking:
                         cpids = cpn.get_dependent_components()
-                        if any([cc not in self.path[-1] for cc in cpids]):
+                        if any([cc not in self.path[-1] for cc in cpids]) and any([cc not in self.variables for cc in cpids]):
                             if c not in waiting:
                                 waiting.append(c)
                             continue

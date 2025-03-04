@@ -39,6 +39,7 @@ class InvokeParam(ComponentParamBase):
     def check(self):
         self.check_valid_value(self.method.lower(), "Type of content from the invoke", ['get', 'post', 'put'])
         self.check_empty(self.url, "End point URL")
+        self.check_json(self.headers, "Header is JSON")
         self.check_positive_integer(self.timeout, "Timeout time in second")
         self.check_boolean(self.clean_html, "Clean HTML")
         self.check_valid_value(self.datatype.lower(), "Data post type", ['json', 'formdata'])  # Check for valid datapost value
