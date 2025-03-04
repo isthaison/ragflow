@@ -277,7 +277,7 @@ def chat_completion_openai_compatibility (tenant_id, chat_id, share):
                         )
                     yield f"data: {json.dumps(response, ensure_ascii=False)}\n\n"
             except Exception as e:
-                response = get_data_openai(id= chat_id,messages="**ERROR**: " + str(e), finish_reason="stop" , model=req.get("model", "")) 
+                response = get_data_openai(id= chat_id,content="**ERROR**: " + str(e), finish_reason="stop" , model=req.get("model", "")) 
             
                 yield f"data: {json.dumps(response, ensure_ascii=False)}\n\n"
             yield "data: [DONE]\n\n"
@@ -299,7 +299,7 @@ def chat_completion_openai_compatibility (tenant_id, chat_id, share):
                 break
             response = get_data_openai( 
                 id= chat_id,
-                messages=answer, 
+                content=answer, 
                 model=req.get("model", ""), 
                 prompt_tokens= sum(len(tiktokenenc.encode(m["content"])) for m in filtered_messages),
                 completion_tokens=len(tiktokenenc.encode(answer)),
