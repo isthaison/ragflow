@@ -57,21 +57,25 @@ class Invoke(ComponentBase, ABC):
                 if '@' in para["component_id"]:
                     component = para["component_id"].split('@')[0]
                     field = para["component_id"].split('@')[1]
-                    cpn = self._canvas.get_component(component)["obj"]
-                    for param in cpn._param.query:
-                        if param["key"] == field:
-                            if "value" in param:
-                                args[para["key"]] = param["value"]
+                    component_obj = self._canvas.get_component(component)
+                    if component_obj is not None:
+                        cpn = component_obj["obj"]
+                        for param in cpn._param.query:
+                            if param["key"] == field:
+                                if "value" in param:
+                                    args[para["key"]] = param["value"]
                 elif para.get("component_id") in vars.keys():
                     args[para["key"]] = vars[para.get("component_id")]
                 else:
-                    cpn = self._canvas.get_component(para["component_id"])["obj"]
-                    if cpn.component_name.lower() == "answer":
-                        args[para["key"]] = self._canvas.get_history(1)[0]["content"]
-                        continue
-                    _, out = cpn.output(allow_partial=False)
-                    if not out.empty:
-                        args[para["key"]] = "\n".join(out["content"])
+                    component = self._canvas.get_component(para["component_id"])
+                    if component is not None:
+                        cpn = component["obj"]
+                        if cpn.component_name.lower() == "answer":
+                            args[para["key"]] = self._canvas.get_history(1)[0]["content"]
+                            continue
+                        _, out = cpn.output(allow_partial=False)
+                        if not out.empty:
+                            args[para["key"]] = "\n".join(out["content"])
            
             else:
                 args[para["key"]] = para["value"]
