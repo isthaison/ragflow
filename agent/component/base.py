@@ -500,7 +500,7 @@ class ComponentBase(ABC):
                         self._param.inputs.append({"content": txt, "component_id": q["component_id"]})
                         outs.append(pd.DataFrame([{"content": txt}]))
                         continue
-                    if q["component_id"] in vars.keys():
+                    elif q["component_id"] in vars.keys():
                         outs.append(pd.DataFrame([{"content": vars[q["component_id"]]}]))
                     else:
                         outs.append(self._canvas.get_component(q["component_id"])["obj"].output(allow_partial=False)[1])
