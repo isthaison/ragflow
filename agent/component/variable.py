@@ -134,6 +134,7 @@ class VariableExtract(Generate, ABC):
         match = re.search(r"```json\s*(.*?)\s*```", ans, re.DOTALL)
         if match:
             ans = match.group(1)
+            ans = ans.replace("\n", " ")
             logging.debug(ans)
         if not ans:
             logging.debug(ans)
