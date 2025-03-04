@@ -362,3 +362,13 @@ See the [RAGFlow Roadmap 2025](https://github.com/infiniflow/ragflow/issues/4214
 
 RAGFlow flourishes via open-source collaboration. In this spirit, we embrace diverse contributions from the community.
 If you would like to be a part, review our [Contribution Guidelines](./CONTRIBUTING.md) first.
+
+
+## run with windows
+
+- install env
+```python -m venv .venv```
+```.venv\Scripts\activate```
+
+- Run server
+```python -m  api.ragflow_server```
