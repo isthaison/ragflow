@@ -12,10 +12,11 @@ done < /ragflow/conf/service_conf.yaml.template
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 PY=python3
+pip install googlesearch-python
+playwright install chromium
 if [[ -z "$WS" || $WS -lt 1 ]]; then
   WS=1
 fi
-
 function task_exe(){
     JEMALLOC_PATH=$(pkg-config --variable=libdir jemalloc)/libjemalloc.so
     while [ 1 -eq 1 ];do
@@ -31,5 +32,4 @@ done
 while [ 1 -eq 1 ];do
     $PY api/ragflow_server.py
 done
-
 wait;
