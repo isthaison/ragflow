@@ -87,7 +87,7 @@ class Categorize(Generate, ABC):
         logging.info(f"input: {input}, answer: {str(ans)}")
         for c in self._param.category_description.keys():
             logging.info(f"category_description: {c}")
-            if ans.lower().trim().find(c.lower().trim()) >= 0:
+            if ans.lower().find(c.lower()) >= 0:
                 return Categorize.be_output(self._param.category_description[c]["to"])
                 
         return Categorize.be_output(list(self._param.category_description.items())[-1][1]["to"])
