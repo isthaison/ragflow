@@ -115,7 +115,8 @@ class VariableExtract(Generate, ABC):
     component_name = "VariableExtract"
 
     def _run(self, history, **kwargs):
-       
+        query = self.get_input()
+        query = str(query["content"][0]) if "content" in query else ""
         variables = {}
         if self._param.variables:
             variables = json.loads(self._param.variables)
@@ -135,20 +136,20 @@ class VariableExtract(Generate, ABC):
         if match:
             ans = match.group(1)
             ans = ans.replace("\n", " ")
-            logging.debug(ans)
+            logging.info(ans)
         if not ans:
-            logging.debug(ans)
-            return VariableExtract.be_output("")
+            logging.info(ans)
+            return VariableExtract.be_output(query)
 
         
         logging.info(f"ans: {ans}")
         try:
             ans_json = json.loads(ans)
             self._canvas.update_variables(ans_json)
-            return VariableExtract.be_output("")
+            return VariableExtract.be_output(query)
         except json.JSONDecodeError:
             logging.warning(f"VariableExtract: LLM returned non-JSON output: {ans}")
-            return VariableExtract.be_output("")
+            return VariableExtract.be_output(query)
 
     def debug(self, **kwargs):
         return self._run([], **kwargs)
