@@ -503,6 +503,7 @@ export const initialArXivValues = {
 
 export const initialGoogleValues = {
   top_n: 10,
+  provider: 'OpenSearch',
   api_key: 'YOUR_API_KEY (obtained from https://serpapi.com/manage-api-key)',
   country: 'cn',
   language: 'en',

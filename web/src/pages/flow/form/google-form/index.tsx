@@ -18,6 +18,16 @@ const GoogleForm = ({ onValuesChange, form, node }: IOperatorForm) => {
     >
       <DynamicInputVariable node={node}></DynamicInputVariable>
       <TopNItem initialValue={10}></TopNItem>
+      <Form.Item name={'provider'} label={t('flow.googleprovider')}>
+        <Select
+          options={[
+            { value: 'SerpApi', label: 'SerpApi' },
+            { value: 'GoogleCustomSearch', label: 'GoogleCustomSearch' },
+            { value: 'OpenSearch', label: 'OpenSearch' },
+          ]}
+          allowClear={true}
+        ></Select>
+      </Form.Item>
       <Form.Item label={t('apiKey')} name={'api_key'}>
         <Input></Input>
       </Form.Item>
