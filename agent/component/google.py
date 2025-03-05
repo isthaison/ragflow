@@ -4,7 +4,7 @@ from serpapi import GoogleSearch as SerpApiSearch
 import pandas as pd
 from agent.component.base import ComponentBase, ComponentParamBase
 import requests
-from bs4 import BeautifulSoup
+from googlesearch import search
 
 
 class GoogleParam(ComponentParamBase):
@@ -56,7 +56,7 @@ class GoogleParam(ComponentParamBase):
                                 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th', 'ti', 'to', 'lua', 'tum', 'tr', 'tk', 'tw',
                                 'ug', 'uk', 'ur', 'uz', 'vu', 'vi', 'cy', 'wo', 'xh', 'yi', 'yo', 'zu']
                                )
-
+        self.check_valid_value(self.provider, "Provider type", ['OpenSearch', 'GoogleCustomSearch','OpenSearch'])  
 
 class Google(ComponentBase, ABC):
     component_name = "Google"
@@ -66,7 +66,7 @@ class Google(ComponentBase, ABC):
         ans = " - ".join(ans["content"]) if "content" in ans else ""
         if not ans:
             return Google.be_output("")
-
+        logging.info(f"self._param: {self._param}")
         try:
             if self._param.provider == "SerpApi":
                 google_res = self.search_serpapi(ans)
@@ -77,8 +77,8 @@ class Google(ComponentBase, ABC):
             else:
                 return Google.be_output("**ERROR**: Unsupported provider!")
         except Exception as e:
-            logging.error(f"Search error: {e}")
-            return Google.be_output("**ERROR**: Existing Unavailable Parameters!")
+            logging.info(f"Search error: {e}")
+            return Google.be_output(f"**ERROR**: {e}!")
 
         if not google_res:
             return Google.be_output("")
@@ -96,6 +96,8 @@ class Google(ComponentBase, ABC):
              "hl": self._param.language, "num": self._param.top_n})
         results = [{"content": '<a href="' + i["link"] + '">' + i["title"] + '</a>    ' + i["snippet"]} for i in
                    client.get_dict()["organic_results"]]
+        logging.info(f"{results}")
+
         return results
 
     def search_google_custom(self, query):
@@ -107,26 +109,23 @@ class Google(ComponentBase, ABC):
         response.raise_for_status()
         data = response.json()
         results = [{"content": '<a href="' + item["link"] + '">' + item["title"] + '</a>    ' + item["snippet"]} for item in data.get("items", [])]
+        logging.info(f"{results}")
+
         return results
 
-def search_opensearch(self, query):
-    """
-    Perform a search using the OpenSearch and return the results.
-    """
-    from googlesearch import search
+    def search_opensearch(self, query):
+        """
+        Perform a search using the OpenSearch and return the results.
+        """
 
-    results = []
-    for url in search(query, num_results=self._param.top_n, lang=self._param.language):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'html.parser')
-            title = soup.title.string if soup.title else url
-            snippet = soup.find('meta', attrs={'name': 'description'})
-            snippet = snippet['content'] if snippet else 'No description available'
-            results.append({"content": f'<a href="{url}">{title}</a>    {snippet}'})
-        except Exception as e:
-            logging.error(f"Error fetching details for URL {url}: {e}")
-            results.append({"content": f'<a href="{url}">{url}</a>    Error fetching details'})
-
-    return results
+        results = []
+        for url in search(query, num_results=self._param.top_n, lang=self._param.language, advanced=True ):
+            try:
+                title = url.title
+                snippet = url.description if url.description else 'No description available'
+                results.append({"content": f'<a href="{url.url}">{title}</a>    {snippet}'})
+            except Exception as e:
+                logging.error(f"Error processing search result {url}: {e}")
+                results.append({"content": f'<a href="{url.url}">{url.url}</a>    Error processing details'})
+        logging.info(f"{results}")
+        return results

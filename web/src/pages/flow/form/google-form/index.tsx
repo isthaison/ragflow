@@ -18,7 +18,7 @@ const GoogleForm = ({ onValuesChange, form, node }: IOperatorForm) => {
     >
       <DynamicInputVariable node={node}></DynamicInputVariable>
       <TopNItem initialValue={10}></TopNItem>
-      <Form.Item name={'provider'} label={t('flow.googleprovider')}>
+      <Form.Item name={'provider'} label={t('googleprovider')}>
         <Select
           options={[
             { value: 'SerpApi', label: 'SerpApi' },
@@ -29,7 +29,7 @@ const GoogleForm = ({ onValuesChange, form, node }: IOperatorForm) => {
         ></Select>
       </Form.Item>
       <Form.Item label={t('apiKey')} name={'api_key'}>
-        <Input></Input>
+        <Input placeholder="YOUR_API_KEY (obtained from https://serpapi.com/manage-api-key)"></Input>
       </Form.Item>
       <Form.Item label={t('country')} name={'country'}>
         <Select

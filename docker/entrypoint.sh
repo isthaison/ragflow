@@ -12,7 +12,7 @@ done < /ragflow/conf/service_conf.yaml.template
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 PY=python3
-pip install googlesearch-python
+uv sync --python 3.10 --all-extras
 playwright install chromium
 if [[ -z "$WS" || $WS -lt 1 ]]; then
   WS=1
