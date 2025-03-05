@@ -1,3 +1,18 @@
+# Changes Compared to the Original
+
+- Install
+   + Installing ```playwright install chromium ``` now starts the server.
+   + Custom Docker runs directly on source code: ```docker-compose-dev.yml```
+- Agent
+   + Modifications
+      Added Google Search Provider.
+   + New Additions
+      Added Variables: Extracts information, used throughout the conversation process, or combined with Invoke to link to external services.
+- Api
+   + OpenAI compatibility with Agent
+
+
+
 <div align="center">
 <a href="https://demo.ragflow.io/">
 <img src="web/src/assets/logo-with-text.png" width="520" alt="ragflow logo">
@@ -362,13 +377,3 @@ See the [RAGFlow Roadmap 2025](https://github.com/infiniflow/ragflow/issues/4214
 
 RAGFlow flourishes via open-source collaboration. In this spirit, we embrace diverse contributions from the community.
 If you would like to be a part, review our [Contribution Guidelines](./CONTRIBUTING.md) first.
-
-
-## run with windows
-
-- install env
-```python -m venv .venv```
-```.venv\Scripts\activate```
-
-- Run server
-```python -m  api.ragflow_server```
