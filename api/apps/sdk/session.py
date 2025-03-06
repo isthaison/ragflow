@@ -249,7 +249,7 @@ def chat_completion_openai_compatibility (tenant_id, chat_id, share):
     if share == "agent":
         if not UserCanvasService.query(user_id=tenant_id, id=chat_id):
             return get_error_data_result(f"You don't own the agent {chat_id}")
-    else:
+    else: # chat
         dia = DialogService.query(tenant_id=tenant_id, id=chat_id, status=StatusEnum.VALID.value)
         if not dia:
             return get_error_data_result(f"You don't own the chat {chat_id}")
