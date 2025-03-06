@@ -56,7 +56,7 @@ class GoogleParam(ComponentParamBase):
                                 'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th', 'ti', 'to', 'lua', 'tum', 'tr', 'tk', 'tw',
                                 'ug', 'uk', 'ur', 'uz', 'vu', 'vi', 'cy', 'wo', 'xh', 'yi', 'yo', 'zu']
                                )
-        self.check_valid_value(self.provider, "Provider type", ['OpenSearch', 'GoogleCustomSearch','OpenSearch'])  
+        self.check_valid_value(self.provider, "Provider type", ['SerpApi', 'GoogleCustomSearch','OpenSearch'])  
 
 class Google(ComponentBase, ABC):
     component_name = "Google"
