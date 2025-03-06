@@ -259,7 +259,7 @@ def chat_completion_openai_compatibility (tenant_id, chat_id, share):
     if not filtered_messages:
         return get_data_openai( 
             id= chat_id,
-            messages="No valid messages found (user or assistant).",
+            content="No valid messages found (user or assistant).",
             finish_reason="stop",
             model=req.get("model", ""), 
             completion_tokens= len(tiktokenenc.encode("No valid messages found (user or assistant).")),
@@ -269,17 +269,24 @@ def chat_completion_openai_compatibility (tenant_id, chat_id, share):
     if req.get("stream", True):
         def streamed_response_generator():
             try:
+                completion_tokens = 0
+                prompt_tokens = sum(len(tiktokenenc.encode(m["content"])) for m in filtered_messages)
                 for ans in chat(dia, filtered_messages, True):
+                    completion_tokens += len(tiktokenenc.encode(ans["answer"]))
                     response =  get_data_openai(
                         id= chat_id,
                         content= ans["answer"], 
                         model=req.get("model", ""),
-                        completion_tokens=len(tiktokenenc.encode(ans["answer"])),
-                        prompt_tokens= sum(len(tiktokenenc.encode(m["content"])) for m in filtered_messages),
+                        completion_tokens=completion_tokens,
+                        prompt_tokens= prompt_tokens,
                         )
                     yield f"data: {json.dumps(response, ensure_ascii=False)}\n\n"
             except Exception as e:
-                response = get_data_openai(id= chat_id,content="**ERROR**: " + str(e), finish_reason="stop" , model=req.get("model", "")) 
+                response = get_data_openai( id= chat_id,
+                                            content="**ERROR**: " + str(e),
+                                            finish_reason="stop" ,
+                                            model=req.get("model", "")
+                                        ) 
             
                 yield f"data: {json.dumps(response, ensure_ascii=False)}\n\n"
             yield "data: [DONE]\n\n"

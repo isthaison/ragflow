@@ -1,18 +1,3 @@
-# Changes Compared to the Original
-
-- Install
-   + Installing ```playwright install chromium ``` now starts the server.
-   + Custom Docker runs directly on source code: ```docker-compose-dev.yml```
-- Agent
-   + Modifications
-      - Added Google Search **Provider**.
-   + New Additions
-      - Added Variables: Extracts information, used throughout the conversation process, or combined with Invoke to link to external services.
-- Api
-   + OpenAI compatibility with Agent
-
-
-
 <div align="center">
 <a href="https://demo.ragflow.io/">
 <img src="web/src/assets/logo-with-text.png" width="520" alt="ragflow logo">

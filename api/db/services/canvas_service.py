@@ -262,23 +262,25 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
     final_ans = {"reference": [], "content": ""}
     if stream:
         try:
+            prompt_tokens = len(tiktokenenc.encode(str(question)))
+            completion_tokens = 0
             for ans in canvas.run(stream=stream):
                 if ans.get("running_status"):
-                   
+                    completion_tokens += len(tiktokenenc.encode(str(ans["content"])))
                     yield "data: " + json.dumps(
                                             get_data_openai(
                                                 id= session_id,
                                                 model= agent_id,
                                                 content= ans["content"],
                                                 object= "chat.completion.chunk",
-                                                completion_tokens= len(tiktokenenc.encode(str(ans["content"]))),
-                                                prompt_tokens= len(tiktokenenc.encode(str(question)))
+                                                completion_tokens= completion_tokens,
+                                                prompt_tokens= prompt_tokens
                                              ),
                                                 ensure_ascii=False) + "\n\n"
                     continue
                 for k in ans.keys():
                     final_ans[k] = ans[k]
-
+                completion_tokens += ans["content"]
                 yield "data: " + json.dumps(
                                         get_data_openai(
                                             id= session_id,
@@ -286,8 +288,8 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
                                             content= ans["content"],
                                             object= "chat.completion.chunk",
                                             finish_reason= "stop" if not stream else None,
-                                            completion_tokens= len(tiktokenenc.encode(str(ans["content"]))),
-                                            prompt_tokens= len(tiktokenenc.encode(str(question)))
+                                            completion_tokens = completion_tokens,
+                                            prompt_tokens= prompt_tokens
                                         ),                                       
                                         ensure_ascii=False) + "\n\n"
 
