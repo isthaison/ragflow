@@ -45,7 +45,7 @@ class KeywordExtractParam(GenerateParam):
 # Example 1:
  - User: What is the best way to lose weight?
  - keywords: best way, lose weight
-
+# Example 2:
  - User: How do I improve my coding skills?
  - keywords: improve, coding skills
 """ % self.top_n
