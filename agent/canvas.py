@@ -318,9 +318,10 @@ class Canvas:
         return convs
     def update_variables(self, variables):
         for key, value in variables.items():
+        
             if not self.variables.get(key):
                 self.variables[key] = ""
-            if value:
+            if value and value != "Unknown" and value != "" and value != "None":
                 self.variables[key] = value
 
     def add_user_input(self, question):
