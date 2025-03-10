@@ -40,8 +40,16 @@ class KeywordExtractParam(GenerateParam):
 - Requirements: 
   - Summarize user's question, and give top %s important keyword/phrase.
   - Use comma as a delimiter to separate keywords/phrases.
-- Answer format: (in language of user's question)
-  - keyword: 
+  - Answer format: (in language of user's question)
+    - keywords: keyword1, keyword2, keyword3
+# Example 1:
+ - User: What is the best way to lose weight?
+ - keywords: best way, lose weight
+# Example 2:
+ - User: How do I improve my coding skills?
+ - keywords: improve, coding skills
+
+
 """ % self.top_n
         return self.prompt
 
@@ -57,7 +65,7 @@ class KeywordExtract(Generate, ABC):
         ans = chat_mdl.chat(self._param.get_prompt(), [{"role": "user", "content": query}],
                             self._param.gen_conf())
 
-        ans = re.sub(r".*keyword:", "", ans).strip()
+        ans = re.sub(r".*keywords:", "", ans).strip()
         logging.info(f"KeywordExtract query: {query}")
         logging.info(f"KeywordExtract ans: {ans}")
         
