@@ -41,13 +41,7 @@ class KeywordExtractParam(GenerateParam):
   - Summarize user's question, and give top %s important keyword/phrase.
   - Use comma as a delimiter to separate keywords/phrases.
 - Answer format: (in language of user's question)
-  - keywords: 
-# Example 1:
- - User: What is the best way to lose weight?
- - keywords: best way, lose weight
-# Example 2:
- - User: How do I improve my coding skills?
- - keywords: improve, coding skills
+  - keyword: 
 """ % self.top_n
         return self.prompt
 
@@ -62,10 +56,20 @@ class KeywordExtract(Generate, ABC):
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         ans = chat_mdl.chat(self._param.get_prompt(), [{"role": "user", "content": query}],
                             self._param.gen_conf())
-   
-        ans = re.sub(r".*keywords:", "", ans).strip()
-        logging.debug(f"ans: {ans}")
-        return KeywordExtract.be_output(ans)
+
+        ans = re.sub(r".*keyword:", "", ans).strip()
+        logging.info(f"KeywordExtract query: {query}")
+        logging.info(f"KeywordExtract ans: {ans}")
+        
+
+        if not ans:
+            logging.info("No keywords extracted; response was empty or malformed.")
+            return self.be_output([])
+        
+        unique_ans = list(set(ans.split(",")))
+        unique_ans = [keyword.strip() for keyword in unique_ans if keyword.strip()]
+        unique_ans.sort()
+        return self.be_output(unique_ans)
 
     def debug(self, **kwargs):
         return self._run([], **kwargs)
