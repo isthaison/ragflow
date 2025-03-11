@@ -107,7 +107,6 @@ REQUEST: Get '{", ".join(variables.keys())}' from the conversation.
     {conv}
 ######################################
 """
-        logging.info(prompt)
         return prompt
 
 
@@ -116,6 +115,7 @@ class VariableExtract(Generate, ABC):
 
     def _run(self, history, **kwargs):
         query = self.get_input()
+        
         query = str(query["content"][0]) if "content" in query else ""
         variables = {}
         if self._param.variables:
@@ -123,6 +123,8 @@ class VariableExtract(Generate, ABC):
         self._canvas.update_variables(variables)
     
         hist = self._canvas.get_history(self._param.message_history_window_size)
+        last = hist[-1] if hist else {}
+
         conv = []
         for m in hist:
             if m["role"] not in ["user"]:
@@ -136,20 +138,17 @@ class VariableExtract(Generate, ABC):
         if match:
             ans = match.group(1)
             ans = ans.replace("\n", " ")
-            logging.info(ans)
         if not ans:
-            logging.info(ans)
-            return VariableExtract.be_output(query)
+            return VariableExtract.be_output(last.get("content", ""))
 
         
-        logging.info(f"ans: {ans}")
         try:
             ans_json = json.loads(ans)
             self._canvas.update_variables(ans_json)
-            return VariableExtract.be_output(query)
+            return VariableExtract.be_output(last.get("content", ""))
         except json.JSONDecodeError:
             logging.warning(f"VariableExtract: LLM returned non-JSON output: {ans}")
-            return VariableExtract.be_output(query)
+            return VariableExtract.be_output(last.get("content", ""))
 
     def debug(self, **kwargs):
         return self._run([], **kwargs)
