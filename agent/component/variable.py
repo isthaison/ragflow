@@ -40,7 +40,9 @@ class VariableExtractParam(GenerateParam):
 
     def get_prompt(self, conv, variables):
         prompt = f"""
-You are a data expert extracting information. DON'T generate anything except the information extracted by the template. 
+- You are a data expert extracting information. 
+- DON'T generate anything except the information extracted by the template. 
+- If real data is JSON return it as it.
 ######################################
 Example
 ######################################
@@ -107,6 +109,7 @@ REQUEST: Get '{", ".join(variables.keys())}' from the conversation.
     {conv}
 ######################################
 """
+        logging.info(f"Prompt: {prompt}")
         return prompt
 
 
@@ -130,6 +133,8 @@ class VariableExtract(Generate, ABC):
             if m["role"] not in ["user"]:
                 continue
             conv.append("{}: {}".format(m["role"].upper(), m["content"]))
+     
+        conv.append("{}: {}".format("USER", query))
         conv = "\n".join(conv)
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         ans = chat_mdl.chat(self._param.get_prompt(conv, variables),

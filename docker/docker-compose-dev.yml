@@ -62,12 +62,18 @@ services:
     image: gemini-openai-compatibility-nodejs
     ports:
       - "8080:8080"
+      # - "8090:8080"
     volumes:
       - ../../../gemini-proxy/gemini-OpenAI-compatibility-nodejs:/app  # Mount toàn bộ thư mục code vào container
     environment:
       - NODE_ENV=development
     command: yarn dev  # Chạy chế độ phát triển với auto-reload
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8080/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
 
 
   executor:
@@ -103,7 +109,7 @@ services:
       nofile:
         soft: 500000
         hard: 500000
-    entrypoint: "/ragflow/entrypoint-parser.sh 1 3"
+    entrypoint: "/ragflow/entrypoint-parser.sh 0 3"
     networks:
       - ragflow
     restart: on-failure
