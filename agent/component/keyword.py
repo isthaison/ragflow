@@ -38,17 +38,9 @@ class KeywordExtractParam(GenerateParam):
         self.prompt = """
 - Role: You're a question analyzer. 
 - Requirements: 
-  - Summarize user's question, and give top %s important keyword/phrase.
-  - Use comma as a delimiter to separate keywords/phrases.
-  - Answer format: (in language of user's question)
-    - keywords: keyword1, keyword2, keyword3
-# Example 1:
- - User: What is the best way to lose weight?
- - keywords: best way, lose weight
-# Example 2:
- - User: How do I improve my coding skills?
- - keywords: improve, coding skills
-
+    - Summarize user's question, and give top %s important keyword/phrase (in language of user's question).
+    - Use comma as a delimiter to separate keywords/phrases.
+    - Answer format: keywords: keyword1, keyword2, keyword3, ...
 
 """ % self.top_n
         return self.prompt
@@ -77,7 +69,7 @@ class KeywordExtract(Generate, ABC):
         unique_ans = list(set(ans.split(",")))
         unique_ans = [keyword.strip() for keyword in unique_ans if keyword.strip()]
         unique_ans.sort()
-        return self.be_output(unique_ans)
+        return self.be_output(", ".join(unique_ans))
 
     def debug(self, **kwargs):
         return self._run([], **kwargs)
