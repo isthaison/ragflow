@@ -680,7 +680,7 @@ export const RestrictedUpstreamMap = {
     Operator.Message,
     Operator.Relevant,
   ],
-  [Operator.Retrieval]: [Operator.Begin, Operator.Retrieval],
+  [Operator.Retrieval]: [Operator.Begin],
   [Operator.Generate]: [Operator.Begin, Operator.Relevant],
   [Operator.Message]: [
     Operator.Begin,
