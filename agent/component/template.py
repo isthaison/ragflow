@@ -20,7 +20,7 @@ from jinja2 import Template as Jinja2Template
 
 class TemplateParam(ComponentParamBase):
     """
-    Define the Generate component parameters.
+    Define the Template component parameters.
     """
 
     def __init__(self):
