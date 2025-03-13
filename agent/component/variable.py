@@ -109,7 +109,6 @@ REQUEST: Get '{", ".join(variables.keys())}' from the conversation.
     {conv}
 ######################################
 """
-        logging.info(f"Prompt: {prompt}")
         return prompt
 
 

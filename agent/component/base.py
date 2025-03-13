@@ -502,6 +502,7 @@ class ComponentBase(ABC):
                         outs.append(pd.DataFrame([{"content": txt}]))
                         continue
                     if q["component_id"] in vars.keys():
+                        self._param.inputs.append({"component_id": q["component_id"], "content": vars[q["component_id"]]})
                         outs.append(pd.DataFrame([{"content": vars[q["component_id"]]}]))
                         continue
                     else:
