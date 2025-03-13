@@ -23,7 +23,6 @@ from api import settings
 from agent.component.base import ComponentBase, ComponentParamBase
 from rag.prompts import message_fit_in
 
-
 class GenerateParam(ComponentParamBase):
     """
     Define the Generate component parameters.
@@ -110,8 +109,10 @@ class Generate(ComponentBase):
     def get_input_elements(self):
         key_set = set([])
         res = [{"key": "user", "name": "Input your question here:"}]
+        vars = self._canvas.get_variables()
         for r in re.finditer(r"\{([a-z]+[:@][a-z0-9_-]+)\}", self._param.prompt, flags=re.IGNORECASE):
             cpn_id = r.group(1)
+         
             if cpn_id in key_set:
                 continue
             if cpn_id.lower().find("begin@") == 0:
@@ -126,7 +127,13 @@ class Generate(ComponentBase):
             if not cpn_nm:
                 continue
             res.append({"key": cpn_id, "name": cpn_nm})
-            key_set.add(cpn_id)
+        for r in re.finditer(r"\{([a-z0-9_-]+)\}", self._param.prompt, flags=re.IGNORECASE):
+            cpn_id = r.group(1)
+            if cpn_id in key_set:
+                continue
+            if cpn_id in vars.keys():
+                res.append({"key": cpn_id, "name": cpn_id})
+                continue
         return res
 
     def _run(self, history, **kwargs):
@@ -135,19 +142,23 @@ class Generate(ComponentBase):
 
         retrieval_res = []
         self._param.inputs = []
+        vars = self._canvas.get_variables()
+
         for para in self.get_input_elements()[1:]:
             if para["key"].lower().find("begin@") == 0:
                 cpn_id, key = para["key"].split("@")
                 for p in self._canvas.get_component(cpn_id)["obj"]._param.query:
                     if p["key"] == key:
                         kwargs[para["key"]] = p.get("value", "")
-                        self._param.inputs.append(
-                            {"component_id": para["key"], "content": kwargs[para["key"]]})
+                        self._param.inputs.append({"component_id": para["key"], "content": kwargs[para["key"]]})
                         break
                 else:
                     assert False, f"Can't find parameter '{key}' for {cpn_id}"
                 continue
-
+            if para["key"] in vars.keys():
+                kwargs[para["key"]] = vars[para["key"]]
+                self._param.inputs.append({"component_id": para["key"], "content": vars[para["key"]]})
+                continue
             component_id = para["key"]
             cpn = self._canvas.get_component(component_id)["obj"]
             if cpn.component_name.lower() == "answer":
@@ -179,23 +190,19 @@ class Generate(ComponentBase):
 
         for n, v in kwargs.items():
             prompt = re.sub(r"\{%s\}" % re.escape(n), str(v).replace("\\", " "), prompt)
-
         if not self._param.inputs and prompt.find("{input}") >= 0:
             retrieval_res = self.get_input()
             input = ("  - " + "\n  - ".join(
                 [c for c in retrieval_res["content"] if isinstance(c, str)])) if "content" in retrieval_res else ""
             prompt = re.sub(r"\{input\}", re.escape(input), prompt)
-
         downstreams = self._canvas.get_component(self._id)["downstream"]
         if kwargs.get("stream") and len(downstreams) == 1 and self._canvas.get_component(downstreams[0])[
             "obj"].component_name.lower() == "answer":
             return partial(self.stream_output, chat_mdl, prompt, retrieval_res)
-
         if "empty_response" in retrieval_res.columns and not "".join(retrieval_res["content"]):
             empty_res = "\n- ".join([str(t) for t in retrieval_res["empty_response"] if str(t)])
             res = {"content": empty_res if empty_res else "Nothing found in knowledgebase!", "reference": []}
             return pd.DataFrame([res])
-
         msg = self._canvas.get_history(self._param.message_history_window_size)
         if len(msg) < 1:
             msg.append({"role": "user", "content": "Output: "})
@@ -208,7 +215,6 @@ class Generate(ComponentBase):
         if self._param.cite and "content_ltks" in retrieval_res.columns and "vector" in retrieval_res.columns:
             res = self.set_cite(retrieval_res, ans)
             return pd.DataFrame([res])
-
         return Generate.be_output(ans)
 
     def stream_output(self, chat_mdl, prompt, retrieval_res):
