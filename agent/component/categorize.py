@@ -84,9 +84,7 @@ class Categorize(Generate, ABC):
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         ans = chat_mdl.chat(self._param.get_prompt(input), [{"role": "user", "content": "\nCategory: "}],
                             self._param.gen_conf())
-        logging.info(f"input: {input}, answer: {str(ans)}")
         for c in self._param.category_description.keys():
-            logging.info(f"category_description: {c}")
             if ans.lower().find(c.lower()) >= 0:
                 return Categorize.be_output(self._param.category_description[c]["to"])
                 

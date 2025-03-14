@@ -58,18 +58,7 @@ class KeywordExtract(Generate, ABC):
                             self._param.gen_conf())
 
         ans = re.sub(r".*keywords:", "", ans).strip()
-        logging.info(f"KeywordExtract query: {query}")
-        logging.info(f"KeywordExtract ans: {ans}")
-        
-
-        if not ans:
-            logging.info("No keywords extracted; response was empty or malformed.")
-            return self.be_output([])
-        
-        unique_ans = list(set(ans.split(",")))
-        unique_ans = [keyword.strip() for keyword in unique_ans if keyword.strip()]
-        unique_ans.sort()
-        return self.be_output(", ".join(unique_ans))
+        return KeywordExtract.be_output(ans)
 
     def debug(self, **kwargs):
         return self._run([], **kwargs)
