@@ -37,9 +37,12 @@ from rag.nlp import rag_tokenizer
 from copy import deepcopy
 from huggingface_hub import snapshot_download
 
+from rag.settings import PARALLEL_DEVICES
+
 LOCK_KEY_pdfplumber = "global_shared_lock_pdfplumber"
 if LOCK_KEY_pdfplumber not in sys.modules:
     sys.modules[LOCK_KEY_pdfplumber] = threading.Lock()
+
 
 class RAGFlowPdfParser:
     def __init__(self, parallel_devices: int | None = None):
@@ -55,11 +58,10 @@ class RAGFlowPdfParser:
 
         """
         
-        self.ocr = OCR(parallel_devices = parallel_devices)
-        self.parallel_devices = parallel_devices
+        self.ocr = OCR()
         self.parallel_limiter = None
-        if parallel_devices is not None and parallel_devices > 1:
-            self.parallel_limiter = [trio.CapacityLimiter(1) for _ in range(parallel_devices)]
+        if PARALLEL_DEVICES is not None and PARALLEL_DEVICES > 1:
+            self.parallel_limiter = [trio.CapacityLimiter(1) for _ in range(PARALLEL_DEVICES)]
         
         if hasattr(self, "model_speciess"):
             self.layouter = LayoutRecognizer("layout." + self.model_speciess)
@@ -1017,7 +1019,6 @@ class RAGFlowPdfParser:
             self.pdf.close()
         if not self.outlines:
             logging.warning("Miss outlines")
-        
 
         logging.debug("Images converted.")
         self.is_english = [re.search(r"[a-zA-Z0-9,/¸;:'\[\]\(\)!@#$%^&*\"?<>._-]{30,}", "".join(
@@ -1029,8 +1030,27 @@ class RAGFlowPdfParser:
         else:
             self.is_english = False
 
-        async def __img_ocr(id, img, limiter):
-            async with limiter:
+        async def __img_ocr(i, id, img, chars, limiter):
+            j = 0
+            while j + 1 < len(chars):
+                if chars[j]["text"] and chars[j + 1]["text"] \
+                        and re.match(r"[0-9a-zA-Z,.:;!%]+", chars[j]["text"] + chars[j + 1]["text"]) \
+                        and chars[j + 1]["x0"] - chars[j]["x1"] >= min(chars[j + 1]["width"],
+                                                                    chars[j]["width"]) / 2:
+                    chars[j]["text"] += " "
+                j += 1
+
+            if limiter:
+                async with limiter:
+                    await trio.to_thread.run_sync(lambda: self.__ocr(i + 1, img, chars, zoomin, id))
+            else:
+                self.__ocr(i + 1, img, chars, zoomin, id)
+                
+            if callback and i % 6 == 5:
+                callback(prog=(i + 1) * 0.6 / len(self.page_images), msg="")
+
+        async def __img_ocr_launcher():
+            def __ocr_preprocess():
                 chars = self.page_chars[i] if not self.is_english else []
                 self.mean_height.append(
                     np.median(sorted([c["height"] for c in chars])) if chars else 0
@@ -1039,28 +1059,24 @@ class RAGFlowPdfParser:
                     np.median(sorted([c["width"] for c in chars])) if chars else 8
                 )
                 self.page_cum_height.append(img.size[1] / zoomin)
-                j = 0
-                while j + 1 < len(chars):
-                    if chars[j]["text"] and chars[j + 1]["text"] \
-                            and re.match(r"[0-9a-zA-Z,.:;!%]+", chars[j]["text"] + chars[j + 1]["text"]) \
-                            and chars[j + 1]["x0"] - chars[j]["x1"] >= min(chars[j + 1]["width"],
-                                                                        chars[j]["width"]) / 2:
-                        chars[j]["text"] += " "
-                    j += 1
+                return chars
+            
+            if self.parallel_limiter:
+                async with trio.open_nursery() as nursery:
+                    for i, img in enumerate(self.page_images):
+                        chars = __ocr_preprocess()
 
-                await trio.to_thread.run_sync(lambda: self.__ocr(i + 1, img, chars, zoomin, id))
-                if callback and i % 6 == 5:
-                    callback(prog=(i + 1) * 0.6 / len(self.page_images), msg="")
+                        nursery.start_soon(__img_ocr, i, i % PARALLEL_DEVICES, img, chars,
+                                        self.parallel_limiter[i % PARALLEL_DEVICES])
+                        await trio.sleep(0.1)
+            else:
+                for i, img in enumerate(self.page_images):
+                    chars = __ocr_preprocess()
+                    await __img_ocr(i, 0, img, chars, None)
 
         start = timer()
-        if self.parallel_limiter:
-            async with trio.open_nursery() as nursery:
-                for i, img in enumerate(self.page_images):
-                    nursery.start_soon(__img_ocr, i % self.parallel_devices, img,
-                                       self.parallel_limiter[i % self.parallel_devices])
-        else:
-            for i, img in enumerate(self.page_images):
-                await __img_ocr(0, img)
+        
+        trio.run(__img_ocr_launcher)
             
         logging.info(f"__images__ {len(self.page_images)} pages cost {timer() - start}s")
 

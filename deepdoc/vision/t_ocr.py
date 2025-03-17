@@ -34,14 +34,17 @@ import trio
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' #1 gpu
 # os.environ['CUDA_VISIBLE_DEVICES'] = '' #cpu
 
-async def main(args):
+# os.environ['CUDA_VISIBLE_DEVICES'] = '0,2' #2 gpus, uncontinuous
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' #1 gpu
+# os.environ['CUDA_VISIBLE_DEVICES'] = '' #cpu
+
+def main(args):
     import torch.cuda
 
     cuda_devices = torch.cuda.device_count()
     limiter = [trio.CapacityLimiter(1) for _ in range(cuda_devices)] if cuda_devices > 1 else None
-    ocr = OCR(parallel_devices = cuda_devices)
+    ocr = OCR()
     images, outputs = init_in_out(args)
-
 
     def __ocr(i, id, img):
         print("Task {} start".format(i))
@@ -59,7 +62,7 @@ async def main(args):
 
         print("Task {} done".format(i))
 
-    async def _ocr_thread(i, id, img, limiter = None):
+    async def __ocr_thread(i, id, img, limiter = None):
         if limiter:
             async with limiter:
                 print("Task {} use device {}".format(i, id))
@@ -67,14 +70,17 @@ async def main(args):
         else:
             __ocr(i, id, img)
 
-    if cuda_devices > 1:
-        async with trio.open_nursery() as nursery:
+    async def __ocr_launcher():
+        if cuda_devices > 1:
+            async with trio.open_nursery() as nursery:
+                for i, img in enumerate(images):
+                    nursery.start_soon(__ocr_thread, i, i % cuda_devices, img, limiter[i % cuda_devices])
+                    await trio.sleep(0.1)
+        else:
             for i, img in enumerate(images):
-                nursery.start_soon(_ocr_thread, i, i % cuda_devices, img, limiter[i % cuda_devices])
-                await trio.sleep(0.1)
-    else:
-        for i, img in enumerate(images):
-            await _ocr_thread(i, 0, img)
+                await __ocr_thread(i, 0, img)
+
+    trio.run(__ocr_launcher)
 
     print("OCR tasks are all done")
 

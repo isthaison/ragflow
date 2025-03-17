@@ -541,7 +541,7 @@ class ComponentBase(ABC):
             if u.lower().find("answer") >= 0:
                 for r, c in self._canvas.history[::-1]:
                     if r == "user":
-                        upstream_outs.append(pd.DataFrame([{"content": f"USER:{c}", "component_id": u}]))
+                        upstream_outs.append(pd.DataFrame([{"content": c, "component_id": u}]))
                         break
                 break
             if self.component_name.lower().find("answer") >= 0 and self.get_component_name(u) in ["relevant"]:
@@ -565,7 +565,7 @@ class ComponentBase(ABC):
         return df
 
     def get_input_elements(self):
-        assert self._param.query, "Please identify input parameters firstly."
+        assert self._param.query, "Please verify the input parameters first."
         eles = []
         vars =self._canvas.get_variables()
         for q in self._param.query:
