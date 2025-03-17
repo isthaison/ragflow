@@ -210,6 +210,7 @@ class Canvas:
                 if cpn.component_name == "Answer":
                     self.answer.append(c)
                 else:
+                    logging.debug(f"Canvas.prepare2run: {c}")
                     if c not in without_dependent_checking:
                         cpids = cpn.get_dependent_components()
                         if any([cc not in self.path[-1] for cc in cpids]):
@@ -217,6 +218,7 @@ class Canvas:
                                 waiting.append(c)
                             continue
                     yield "*'{}'* is running...🕞".format(self.get_component_name(c))
+                    
                     if cpn.component_name.lower() == "iteration":
                         st_cpn = cpn.get_start()
                         assert st_cpn, "Start component not found for Iteration."
@@ -320,7 +322,7 @@ class Canvas:
             if not self.variables.get(key):
                 self.variables[key] = ""
             if value and value != "Unknown" and value != "" and value != "None":
-                self.variables[key] = value
+                self.variables[key] = f"{value}"
 
     def add_user_input(self, question):
         self.history.append(("user", question))
