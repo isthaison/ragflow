@@ -1222,14 +1222,16 @@ This delimiter is used to split the input text into several text pieces echo of 
         me: 'me',
         team: 'Team',
       },
-      footer: {
-        profile: 'All rights reserved @ React',
-      },
-      layout: {
-        file: 'file',
-        knowledge: 'knowledge',
-        chat: 'chat',
-      },
+      noMoreData: 'No more data',
+      searchAgentPlaceholder: 'Search agent',
+    },
+    footer: {
+      profile: 'All rights reserved @ React',
+    },
+    layout: {
+      file: 'file',
+      knowledge: 'knowledge',
+      chat: 'chat',
     },
   },
 };
