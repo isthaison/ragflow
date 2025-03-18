@@ -1212,16 +1212,15 @@ This delimiter is used to split the input text into several text pieces echo of 
         download: 'Download',
         version: 'Version',
         select: 'No version selected',
-        setting: 'Setting',
-        settings: {
-          upload: 'Upload',
-          photo: 'Photo',
-          permissions: 'Permission',
-          permissionsTip:
-            'You can set the permissions of the team members here.',
-          me: 'me',
-          team: 'Team',
-        },
+      },
+      setting: 'Setting',
+      settings: {
+        upload: 'Upload',
+        photo: 'Photo',
+        permissions: 'Permission',
+        permissionsTip: 'You can set the permissions of the team members here.',
+        me: 'me',
+        team: 'Team',
       },
       footer: {
         profile: 'All rights reserved @ React',
