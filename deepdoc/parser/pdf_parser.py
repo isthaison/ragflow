@@ -973,7 +973,7 @@ class RAGFlowPdfParser:
         except Exception:
             logging.exception("total_page_number")
 
-    async def __images__(self, fnm, zoomin=3, page_from=0,
+    def __images__(self, fnm, zoomin=3, page_from=0,
                    page_to=299, callback=None):
         self.lefted_chars = []
         self.mean_height = []

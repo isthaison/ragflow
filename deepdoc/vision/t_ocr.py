@@ -34,9 +34,6 @@ import trio
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' #1 gpu
 # os.environ['CUDA_VISIBLE_DEVICES'] = '' #cpu
 
-# os.environ['CUDA_VISIBLE_DEVICES'] = '0,2' #2 gpus, uncontinuous
-os.environ['CUDA_VISIBLE_DEVICES'] = '0' #1 gpu
-# os.environ['CUDA_VISIBLE_DEVICES'] = '' #cpu
 
 def main(args):
     import torch.cuda
@@ -93,4 +90,4 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', help="Directory where to store the output images. Default: './ocr_outputs'",
                         default="./ocr_outputs")
     args = parser.parse_args()
-    trio.run(main, args)
+    main(args)

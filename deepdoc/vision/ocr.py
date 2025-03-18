@@ -510,7 +510,7 @@ class TextDetector:
 
 
 class OCR:
-    def __init__(self, model_dir=None, parallel_devices: int | None = None):
+    def __init__(self, model_dir=None):
         """
         If you have trouble downloading HuggingFace models, -_^ this might help!!
 
