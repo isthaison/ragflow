@@ -49,7 +49,7 @@ export function HistoryVersionModal({
       e.stopPropagation();
       console.log('Restore version:', selectedVersion);
       // Create a JSON blob and trigger download
-      const jsonContent = JSON.stringify(flow?.dsl, null, 2);
+      const jsonContent = JSON.stringify(flow?.dsl.graph, null, 2);
       const blob = new Blob([jsonContent], {
         type: 'application/json',
       });
@@ -135,7 +135,7 @@ export function HistoryVersionModal({
                   type="secondary"
                   style={{ display: 'block', marginBottom: 16 }}
                 >
-                  {t('version.created')}: {selectedVersion.created_at}
+                  {t('version.created')}: {selectedVersion.create_date}
                 </Typography.Text>
 
                 {/*render dsl  form api*/}
