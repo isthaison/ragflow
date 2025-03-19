@@ -68,6 +68,7 @@ const FlowHeader = ({ showChatDrawer, chatDrawerVisible }: IProps) => {
   const showSetting = useCallback(() => {
     setVisibleSettingMModal(true);
   }, [setVisibleSettingMModal]);
+
   return (
     <>
       <Flex
@@ -130,9 +131,11 @@ const FlowHeader = ({ showChatDrawer, chatDrawerVisible }: IProps) => {
           >
             <b>{t('setting')}</b>
           </Button>
+          <Button type="primary" onClick={showListVersion}>
+            <b>{t('historyversion')}</b>
+          </Button>
         </Space>
       </Flex>
-
       {embedVisible && (
         <EmbedModal
           visible={embedVisible}
@@ -143,19 +146,19 @@ const FlowHeader = ({ showChatDrawer, chatDrawerVisible }: IProps) => {
           isAgent
         ></EmbedModal>
       )}
-      {visibleHistoryVersionModal && (
-        <HistoryVersionModal
-          id={id || ''}
-          visible={visibleHistoryVersionModal}
-          hideModal={() => setVisibleHistoryVersionModal(false)}
-        ></HistoryVersionModal>
-      )}
       {visibleSettingModal && (
         <FlowSettingModal
           id={id || ''}
           visible={visibleSettingModal}
           hideModal={() => setVisibleSettingMModal(false)}
         ></FlowSettingModal>
+      )}
+      {visibleHistoryVersionModal && (
+        <HistoryVersionModal
+          id={id || ''}
+          visible={visibleHistoryVersionModal}
+          hideModal={() => setVisibleHistoryVersionModal(false)}
+        ></HistoryVersionModal>
       )}
     </>
   );

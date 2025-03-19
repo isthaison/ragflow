@@ -18,8 +18,8 @@ import time
 import traceback
 from uuid import uuid4
 from agent.canvas import Canvas
-from api.db import StatusEnum, TenantPermission
-from api.db.db_models import DB, CanvasTemplate, User, UserCanvas, API4Conversation, UserTenant
+from api.db import TenantPermission
+from api.db.db_models import DB, CanvasTemplate, User, UserCanvas, API4Conversation
 from api.db.services.api_service import API4ConversationService
 from api.db.services.common_service import CommonService
 from api.db.services.conversation_service import structure_answer
@@ -27,7 +27,6 @@ from api.utils import get_uuid
 from api.utils.api_utils import get_data_openai
 import tiktoken
 from peewee import fn
-import logging
 
 class CanvasTemplateService(CommonService):
     model = CanvasTemplate
@@ -69,7 +68,6 @@ class UserCanvasService(CommonService):
                 cls.model.permission,
                 cls.model.update_time,
                 cls.model.user_id,
-                cls.model.status,
                 cls.model.create_time,
                 cls.model.create_date,
                 cls.model.update_date,
@@ -106,8 +104,7 @@ class UserCanvasService(CommonService):
             angents = cls.model.select(*fields).join(User, on=(cls.model.user_id == User.id)).where(
                 ((cls.model.user_id.in_(joined_tenant_ids) & (cls.model.permission ==
                                                                 TenantPermission.TEAM.value)) | (
-                    cls.model.user_id == user_id))
-                & (cls.model.status == StatusEnum.VALID.value),
+                    cls.model.user_id == user_id)),
                 (fn.LOWER(cls.model.title).contains(keywords.lower()))
             )
         else:
@@ -115,7 +112,6 @@ class UserCanvasService(CommonService):
                 ((cls.model.user_id.in_(joined_tenant_ids) & (cls.model.permission ==
                                                                 TenantPermission.TEAM.value)) | (
                     cls.model.user_id == user_id))
-                & (cls.model.status == StatusEnum.VALID.value)
             )
         if desc:
             angents = angents.order_by(cls.model.getter_by(orderby).desc())
