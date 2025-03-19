@@ -110,6 +110,6 @@ class Retrieval(ComponentBase, ABC):
         df["content"] = df["content_with_weight"]
         del df["content_with_weight"]
         logging.debug("{} {}".format(query, df))
-        return df
+        return df.dropna()
 
 
