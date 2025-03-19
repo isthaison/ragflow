@@ -128,8 +128,6 @@ export default {
   getCanvasSSE: `${api_host}/canvas/getsse`,
   removeCanvas: `${api_host}/canvas/rm`,
   setCanvas: `${api_host}/canvas/set`,
-  getListVersion: `${api_host}/canvas/getlistversion`,
-  getVersion: `${api_host}/canvas/getversion`,
   settingCanvas: `${api_host}/canvas/setting`,
   getListVersion: `${api_host}/canvas/getlistversion`,
   getVersion: `${api_host}/canvas/getversion`,

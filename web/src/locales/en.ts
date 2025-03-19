@@ -1227,7 +1227,6 @@ This delimiter is used to split the input text into several text pieces echo of 
       footer: {
         profile: 'All rights reserved @ React',
       },
-
       layout: {
         file: 'file',
         knowledge: 'knowledge',

@@ -120,6 +120,13 @@ const FlowHeader = ({ showChatDrawer, chatDrawerVisible }: IProps) => {
           >
             <b>{t('embedIntoSite', { keyPrefix: 'common' })}</b>
           </Button>
+          <Button
+            disabled={userInfo.nickname !== data.nickname}
+            type="primary"
+            onClick={showSetting}
+          >
+            <b>{t('setting')}</b>
+          </Button>
           <Button type="primary" onClick={showListVersion}>
             <b>{t('historyversion')}</b>
           </Button>
