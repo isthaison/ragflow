@@ -56,8 +56,11 @@ class Retrieval(ComponentBase, ABC):
     def _run(self, history, **kwargs):
         query = self.get_input()
         query = str(query["content"][0]) if "content" in query else ""
+        logging.info("Retrieval: {}".format(query))
         lines = query.split('\n')
+        logging.info("lines: {}".format(lines))
         query = lines[-1] if lines else ""
+        logging.info("query: {}".format(query))
         kbs = KnowledgebaseService.get_by_ids(self._param.kb_ids)
         logging.info("Retrieval: {}".format(query))
         logging.info("kbs: {}".format(kbs))
