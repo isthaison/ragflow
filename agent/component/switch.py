@@ -91,7 +91,6 @@ class Switch(ComponentBase, ABC):
         return Switch.be_output(self._param.end_cpn_id)
 
     def process_operator(self, input: str, operator: str, value: str) -> bool:
-        logging.info(f"input: {input} operator: {operator} value: {value}")
         if not isinstance(input, str) or not isinstance(value, str):
             raise ValueError('Invalid input or value type: string')
 

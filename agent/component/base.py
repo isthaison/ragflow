@@ -481,7 +481,6 @@ class ComponentBase(ABC):
             outs = []
             vars =self._canvas.get_variables()
             for q in self._param.query:
-                logging.info(f"q: {q}")
                 if q.get("component_id"):
                     if q["component_id"].split("@")[0].lower().find("begin") >= 0:
                         cpn_id, key = q["component_id"].split("@")
@@ -516,7 +515,6 @@ class ComponentBase(ABC):
                 elif q.get("value"):
                     self._param.inputs.append({"component_id": None, "content": q["value"]})
                     outs.append(pd.DataFrame([{"content": q["value"]}]))
-            logging.info(f"outs: {outs}")
             if outs:
                 df = pd.concat(outs, ignore_index=True)
                 if "content" in df:

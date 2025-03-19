@@ -26,8 +26,6 @@ from api.utils.api_utils import get_json_result, server_error_response, validate
 from agent.canvas import Canvas
 from peewee import MySQLDatabase, PostgresqlDatabase
 from api.db.db_models import APIToken
-import logging
-import os
 import time
 
 @manager.route('/templates', methods=['GET'])  # noqa: F821
@@ -301,7 +299,7 @@ def test_db_connect():
 @login_required
 def getlistversion(canvas_id):
     try:
-        list =sorted([c.to_dict() for c in UserCanvasVersionService.getlist_by_canvas_id(canvas_id)], key=lambda x: x["update_time"]*-1)
+        list =sorted([c.to_dict() for c in UserCanvasVersionService.list_by_canvas_id(canvas_id)], key=lambda x: x["update_time"]*-1)
         return get_json_result(data=list)
     except Exception as e:
         return get_data_error_result(message=f"Error getting history files: {e}")
@@ -333,8 +331,6 @@ def list_kbs():
         return get_json_result(data={"kbs": kbs, "total": total})
     except Exception as e:
         return server_error_response(e)
-
-
 @manager.route('/setting', methods=['POST'])  # noqa: F821
 @validate_request("id", "title", "permission")
 @login_required
