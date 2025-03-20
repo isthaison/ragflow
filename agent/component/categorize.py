@@ -43,7 +43,7 @@ class CategorizeParam(GenerateParam):
         cate_lines = []
         for c, desc in self.category_description.items():
             for line in desc.get("examples", "").split("\n"):
-                if not line:
+                if not line and not c:
                     continue
                 cate_lines.append("USER: {}\nCategory: {}".format(line, c))
         descriptions = []
