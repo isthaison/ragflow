@@ -15,7 +15,6 @@
 #
 from abc import ABC
 from agent.component.base import ComponentBase, ComponentParamBase
-import logging
 
 class SwitchParam(ComponentParamBase):
     """

@@ -24,7 +24,6 @@ from .switch import Switch, SwitchParam
 from .relevant import Relevant, RelevantParam
 from .message import Message, MessageParam
 from .rewrite import RewriteQuestion, RewriteQuestionParam
-from .variable import VariableExtract, VariableExtractParam
 from .keyword import KeywordExtract, KeywordExtractParam
 from .concentrator import Concentrator, ConcentratorParam
 from .baidu import Baidu, BaiduParam
@@ -77,9 +76,7 @@ __all__ = [
     "Message",
     "MessageParam",
     "RewriteQuestion",
-    "RewriteQuestionParam",    
-    "VariableExtract",
-    "VariableExtractParam",
+    "RewriteQuestionParam",
     "KeywordExtract",
     "KeywordExtractParam",
     "Concentrator",

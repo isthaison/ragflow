@@ -149,3 +149,4 @@ class Template(ComponentBase):
         except Exception:
             pass
         kwargs[para["key"]] = value
+        
