@@ -46,7 +46,6 @@ const Login = () => {
         const code = await login({
           email: `${params.email}`.trim(),
           password: rsaPassWord,
-          remember: params.remember,
         });
         if (code === 0) {
           navigate('/knowledge');
