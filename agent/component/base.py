@@ -503,13 +503,6 @@ class ComponentBase(ABC):
                         self._param.inputs.append({"content": txt, "component_id": q["component_id"]})
                         outs.append(pd.DataFrame([{"content": txt}]))
                         continue
-                    if q["component_id"].split("@")[0].lower().find("variables") >= 0:
-                        key = q["component_id"].split("@")[1]
-                        if key in vars.keys():
-                            self._param.inputs.append({"component_id": q["component_id"], "content": vars[key]})
-                            outs.append(pd.DataFrame([{"content": vars[key]}]))
-                            continue
-                
                     outs.append(self._canvas.get_component(q["component_id"])["obj"].output(allow_partial=False)[1])
                     self._param.inputs.append({"component_id": q["component_id"],
                                                "content": "\n".join(
