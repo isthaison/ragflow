@@ -97,10 +97,6 @@ class Template(ComponentBase):
                 )
 
             self.make_kwargs(para, kwargs, result)
-        # Replace variables in the content
-        for var_key, var_value in self._canvas.get_variables().items():
-            if var_value:
-                content = content.replace(f"{{{var_key}}}", str(var_value))
         template = Jinja2Template(content)
 
         try:
