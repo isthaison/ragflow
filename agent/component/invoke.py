@@ -50,7 +50,6 @@ class Invoke(ComponentBase, ABC):
 
     def _run(self, history, **kwargs):
         args = {}
-        vars =self._canvas.get_variables()
 
         for para in self._param.variables:
             if para.get("component_id"):

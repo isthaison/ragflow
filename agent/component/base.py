@@ -417,7 +417,7 @@ class ComponentBase(ABC):
                      if para.get("component_id") \
                      and para["component_id"].lower().find("answer") < 0 \
                      and para["component_id"].lower().find("begin") < 0 \
-                     and para["component_id"].lower().find("variables@") < 0])
+                    ])
         return list(cpnts)
 
     def run(self, history, **kwargs):
@@ -481,7 +481,6 @@ class ComponentBase(ABC):
         if self._param.query:
             self._param.inputs = []
             outs = []
-            vars =self._canvas.get_variables()
             for q in self._param.query:
                 if q.get("component_id"):
                     if q["component_id"].split("@")[0].lower().find("begin") >= 0:
@@ -560,7 +559,6 @@ class ComponentBase(ABC):
     def get_input_elements(self):
         assert self._param.query, "Please verify the input parameters first."
         eles = []
-        vars =self._canvas.get_variables()
         for q in self._param.query:
             if q.get("component_id"):
                 cpn_id = q["component_id"]
