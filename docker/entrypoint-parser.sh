@@ -10,6 +10,7 @@ done < /ragflow/conf/service_conf.yaml.template
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 PY=python3
+uv sync --python 3.10 --all-extras
 
 CONSUMER_NO_BEG=$1
 CONSUMER_NO_END=$2

@@ -335,7 +335,7 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
                     continue
                 for k in ans.keys():
                     final_ans[k] = ans[k]
-                completion_tokens += ans["content"]
+                completion_tokens += len(tiktokenenc.encode(str(ans["content"])))
                 yield "data: " + json.dumps(
                                         get_data_openai(
                                             id= session_id,
