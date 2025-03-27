@@ -158,8 +158,9 @@ class VariablesExtract(Generate, ABC):
             kwargs ={}
             ans_json = json.loads(ans)
             for v in ans_json:
-                if  ans_json[v] != "Unknown" and  ans_json[v] != "" and ans_json[v] != "None":
-                    kwargs[v] = "{}".format(ans_json[v]) 
+                invalid_values = {"unknown", "none", "invalid", "not found", "not available", "not applicable", "", "null"}
+                if ans_json[v].lower() not in invalid_values:
+                    kwargs[v] = ans_json[v]
 
             self._canvas.set_global_param(**kwargs)
             logging.info("Begin: query: {}".format( self._canvas.components["begin"]["obj"]._param.query)) 
