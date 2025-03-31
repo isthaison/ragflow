@@ -4,7 +4,9 @@ import { loader } from '@monaco-editor/react';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IOperatorForm } from '../../interface';
+import DynamicInputVariable from '../components/dynamic-input-variable';
 import DynamicVariablesForm from './dynamic-variables';
+
 loader.config({ paths: { vs: '/vs' } });
 
 const VariablesForm = ({ onValuesChange, form, node }: IOperatorForm) => {
@@ -19,6 +21,8 @@ const VariablesForm = ({ onValuesChange, form, node }: IOperatorForm) => {
         onValuesChange={onValuesChange}
         layout={'vertical'}
       >
+        <DynamicInputVariable node={node}></DynamicInputVariable>
+
         <Form.Item
           name={'llm_id'}
           label={t('model', { keyPrefix: 'chat' })}
