@@ -76,3 +76,12 @@ services:
       retries: 5
       start_period: 30s
 
+  huggingface:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.6
+    ports:
+      - "3124:80"
+    volumes:
+      - ./data:/data
+    environment:
+      - MODEL_ID=sentence-transformers/all-MiniLM-L6-v2
+      - HF_TOKEN=${HF_TOKEN}  
