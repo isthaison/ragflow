@@ -62,7 +62,7 @@ Here's description of each category:
 {}
 
 You could learn from the following examples:
-{}
+- {}
 You could learn from the above examples.
 
 Requirements:
@@ -74,7 +74,7 @@ USER: {}\n
             len(self.category_description.keys()),
             "/".join(list(self.category_description.keys())),
             "\n".join(descriptions),
-            "\n\n- ".join(cate_lines),
+            "\n- ".join(cate_lines),
             chat_hist
         )
         logging.info(f"Prompt: {self.prompt}")
