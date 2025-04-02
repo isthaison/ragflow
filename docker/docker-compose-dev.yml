@@ -79,9 +79,17 @@ services:
   huggingface:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.6
     ports:
-      - "3124:80"
+      - "3124:3124"
     volumes:
       - ./data:/data
+    env_file: .env
     environment:
       - MODEL_ID=sentence-transformers/all-MiniLM-L6-v2
       - HF_TOKEN=${HF_TOKEN}  
+      - PORT=3124
+      - TZ=${TIMEZONE}
+    networks:
+      - ragflow
+    restart: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

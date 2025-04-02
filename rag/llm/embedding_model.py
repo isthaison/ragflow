@@ -797,7 +797,10 @@ class HuggingFaceEmbed(Base):
         for text in texts:
             response = requests.post(
                 f"{self.base_url}/embed",
-                json={"inputs": text},
+                json={
+                    "inputs": text, 
+                    "truncate": True
+                },
                 headers={'Content-Type': 'application/json'}
             )
             if response.status_code == 200:
@@ -810,7 +813,10 @@ class HuggingFaceEmbed(Base):
     def encode_queries(self, text):
         response = requests.post(
             f"{self.base_url}/embed",
-            json={"inputs": text},
+            json={
+                    "inputs": text, 
+                    "truncate": True
+                },
             headers={'Content-Type': 'application/json'}
         )
         if response.status_code == 200:
