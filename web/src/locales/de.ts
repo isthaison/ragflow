@@ -727,6 +727,8 @@ export default {
       quit: 'Verlassen',
       sureQuit:
         'Sind Sie sicher, dass Sie das Team, dem Sie beigetreten sind, verlassen möchten?',
+      modelsToBeAddedTooltip:
+        'Wenn Ihr Modellanbieter nicht aufgeführt ist, aber behauptet, „OpenAI-kompatibel“ zu sein, wählen Sie die Karte OpenAI-API-compatible, um das/die entsprechende(n) Modell(e) hinzuzufügen.',
     },
     message: {
       registered: 'Registriert!',

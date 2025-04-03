@@ -37,6 +37,7 @@ export default {
       embedIntoSite: '嵌入網站',
       previousPage: '上一頁',
       nextPage: '下一頁',
+      add: '添加',
     },
     login: {
       login: '登入',
@@ -682,6 +683,8 @@ export default {
         '追蹤、評估、提示管理和指標以調試和改進您的 LLM 應用程式。',
       viewLangfuseSDocumentation: '查看 Langfuse 的文檔',
       view: '查看',
+      modelsToBeAddedTooltip:
+        '若您的模型供應商未列於此處，但宣稱與 OpenAI 相容，可透過選擇「OpenAI-API-compatible」卡片來設定相關模型。',
     },
     message: {
       registered: '註冊成功',

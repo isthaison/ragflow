@@ -37,6 +37,7 @@ export default {
       embedIntoSite: '嵌入网站',
       previousPage: '上一页',
       nextPage: '下一页',
+      add: '添加',
     },
     login: {
       login: '登录',
@@ -701,6 +702,8 @@ General：实体和关系提取提示来自 GitHub - microsoft/graphrag：基于
         '跟踪、评估、提示管理和指标，以调试和改进您的 LLM 应用程序。',
       viewLangfuseSDocumentation: '查看 Langfuse 的文档',
       view: '查看',
+      modelsToBeAddedTooltip:
+        '如果你的模型供应商在这里没有列出，但是宣称 OpenAI-compatible，可以通过选择卡片 OpenAI-API-compatible 设置相关模型。',
     },
     message: {
       registered: '注册成功',

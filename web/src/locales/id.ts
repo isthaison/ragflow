@@ -603,6 +603,8 @@ export default {
         'Silakan tambahkan model embedding dan LLM di <b>Pengaturan > Penyedia Model</b> terlebih dahulu.',
       apiVersion: 'Versi API',
       apiVersionMessage: 'Silakan masukkan versi API',
+      modelsToBeAddedTooltip:
+        'Jika penyedia model Anda tidak tercantum tetapi mengklaim kompatibel dengan OpenAI, pilih kartu OpenAI-API-compatible untuk menambahkan model yang relevan.',
     },
     message: {
       registered: 'Terdaftar!',

@@ -608,6 +608,8 @@ export default {
       sureDelete: 'このメンバーを削除してもよろしいですか？',
       quit: '退出',
       sureQuit: '参加したチームから退出してもよろしいですか？',
+      modelsToBeAddedTooltip:
+        'モデルプロバイダーがリストにないが「OpenAI互換」を謳っている場合は、OpenAI-API-compatible カードを選択して関連モデルを追加してください。',
     },
     message: {
       registered: '登録完了！',
