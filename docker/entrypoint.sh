@@ -25,7 +25,7 @@ function usage() {
 ENABLE_WEBSERVER=1 # Default to enable web server
 ENABLE_TASKEXECUTOR=1  # Default to enable task executor
 CONSUMER_NO_BEG=0
-CONSUMER_NO_END=0
+CONSUMER_NO_END=4
 WORKERS=1
 
 # -----------------------------------------------------------------------------
@@ -135,5 +135,4 @@ if [[ "${ENABLE_TASKEXECUTOR}" -eq 1 ]]; then
         done
     fi
 fi
-
 wait
