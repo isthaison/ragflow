@@ -81,7 +81,7 @@ services:
     ports:
       - "3124:3124"
     volumes:
-      - ./data:/data
+      - ../huggingface:/data
     env_file: .env
     environment:
       - MODEL_ID=sentence-transformers/all-MiniLM-L6-v2
