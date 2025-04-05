@@ -94,7 +94,7 @@ class VariablesExtract(Generate, ABC):
     
             for v in ans_json:
                 invalid_values = {"unknown", "none", "invalid", "not found", "not available", "not applicable", "", "null"}
-                data = "{}".format(ans_json[v]).strip()
+                data = f"{ans_json[v]}"
                 if data.lower() in invalid_values:
                     continue
                 if data:
