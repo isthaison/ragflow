@@ -159,7 +159,7 @@ export default {
       rerankPlaceholder: '請選擇',
       rerankTip: `如果是空的。它使用查詢和塊的嵌入來構成矢量餘弦相似性。否則，它使用rerank評分代替矢量餘弦相似性。`,
       topK: 'Top-K',
-      topKTip: `K塊將被送入Rerank型號。`,
+      topKTip: `與 Rerank 模型配合使用，用於設定傳給 Rerank 模型的文本塊數量。`,
       delimiter: `文字分段標識符`,
       delimiterTip:
         '支持多字符作為分隔符，多字符用 `` 分隔符包裹。若配置成：\\n`##`; 系統將首先使用換行符、兩個#號以及分號先對文本進行分割，隨後再對分得的小文本塊按照「建议文本块大小」設定的大小進行拼裝。在设置文本分段標識符之前，請確保您已理解上述文本分段切片機制。',
@@ -401,7 +401,7 @@ export default {
       send: '發送',
       sendPlaceholder: '消息概要助手...',
       chatConfiguration: '聊天配置',
-      chatConfigurationDescription: '在這裡，為你的專業知識庫裝扮專屬助手！💕',
+      chatConfigurationDescription: '為你的知識庫配置專屬聊天助手！💕',
       assistantName: '助理姓名',
       assistantNameMessage: '助理姓名是必填項',
       namePlaceholder: '例如 賈維斯簡歷',
@@ -427,10 +427,9 @@ export default {
       topN: 'Top N',
       topNTip: `並非所有相似度得分高於“相似度閾值”的塊都會被提供給法學碩士。LLM 只能看到這些“Top N”塊。`,
       variable: '變量',
-      variableTip: `如果您使用对话 API，变量可能会帮助您使用不同的策略与客户聊天。
-        这些变量用于填写提示中的“系统提示词”部分，以便给LLM一个提示。
-        “知识”是一个非常特殊的变量，它将用检索到的块填充。
-        “系统提示词”中的所有变量都应该用大括号括起来。`,
+      variableTip: `你可以透過對話 API，並配合變數設定來動態調整大模型的系統提示詞。
+      {knowledge}為系統預留變數，代表從指定知識庫召回的文本塊。
+     「系統提示詞」中的所有變數都必須用大括號{}括起來。詳見 https://ragflow.io/docs/dev/set_chat_variables。`,
       add: '新增',
       key: '關鍵字',
       optional: '可選的',
@@ -518,7 +517,7 @@ export default {
       keywordTip: `應用LLM分析使用者的問題，提取在相關性計算中需要強調的關鍵字。`,
       reasoning: '推理',
       reasoningTip:
-        '是否像 DeepSeek-R1 / OpenAI o1 一樣通過推理產生答案。啟用後，允許模型在遇到未知情況時將代理搜索過程整合到推理工作流中，自行動態檢索外部知識，並通過推理生成最終答案。',
+        '在問答過程中是否啟用推理工作流程，例如Deepseek-R1或OpenAI o1等模型所採用的方式。啟用後，該功能允許模型存取外部知識，並借助思維鏈推理等技術逐步解決複雜問題。通過將問題分解為可處理的步驟，這種方法增強了模型提供準確回答的能力，從而在需要邏輯推理和多步思考的任務上表現更優。',
       tavilyApiKeyTip:
         '如果 API 金鑰設定正確，它將利用 Tavily 進行網路搜尋作為知識庫的補充。',
       tavilyApiKeyMessage: '請輸入你的 Tavily API Key',
@@ -1146,6 +1145,9 @@ export default {
       categoryName: '分類名稱',
       nextStep: '下一步',
       insertVariableTip: `輸入 / 插入變數`,
+      promptMessage: '提示詞是必填項',
+      promptTip:
+        '系統提示為大型模型提供任務描述、規定回覆方式，以及設定其他各種要求。系統提示通常與 key（變數）合用，透過變數設定大型模型的輸入資料。你可以透過斜線或 (x) 按鈕顯示可用的 key。',
     },
     footer: {
       profile: '“保留所有權利 @ react”',

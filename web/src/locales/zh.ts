@@ -159,7 +159,7 @@ export default {
       rerankPlaceholder: '请选择',
       rerankTip: `非必选项：若不选择 rerank 模型，系统将默认采用关键词相似度与向量余弦相似度相结合的混合查询方式；如果设置了 rerank 模型，则混合查询中的向量相似度部分将被 rerank 打分替代。请注意：采用 rerank 模型会非常耗时。`,
       topK: 'Top-K',
-      topKTip: `K块将被送入Rerank型号。`,
+      topKTip: `与 Rerank 模型配合使用，用于设置传给 Rerank 模型的文本块数量。`,
       delimiter: `文本分段标识符`,
       delimiterTip:
         '支持多字符作为分隔符，多字符用 `` 分隔符包裹。若配置成：\\n`##`; 系统将首先使用换行符、两个#号以及分号先对文本进行分割，随后再对分得的小文本块按照「建议文本块大小」设定的大小进行拼装。在设置文本分段标识符前请确保理解上述文本分段切片机制。',
@@ -418,7 +418,7 @@ General：实体和关系提取提示来自 GitHub - microsoft/graphrag：基于
       send: '发送',
       sendPlaceholder: '消息概要助手...',
       chatConfiguration: '聊天配置',
-      chatConfigurationDescription: '在这里，为你的专业知识库装扮专属助手！ 💕',
+      chatConfigurationDescription: '为你的知识库配置专属聊天助手！ 💕',
       assistantName: '助理姓名',
       assistantNameMessage: '助理姓名是必填项',
       namePlaceholder: '例如 贾维斯简历',
@@ -444,10 +444,9 @@ General：实体和关系提取提示来自 GitHub - microsoft/graphrag：基于
       topN: 'Top N',
       topNTip: `并非所有相似度得分高于“相似度阈值”的块都会被提供给大语言模型。 LLM 只能看到这些“Top N”块。`,
       variable: '变量',
-      variableTip: `如果您使用对话 API，变量可能会帮助您使用不同的策略与客户聊天。
-      这些变量用于填写提示中的“系统提示词”部分，以便给LLM一个提示。
-      “知识”是一个非常特殊的变量，它将用检索到的块填充。
-      “系统提示词”中的所有变量都应该用大括号括起来。`,
+      variableTip: `你可以通过对话 API，并配合变量设置来动态调整大模型的系统提示词。
+      {knowledge}为系统预留变量，代表从指定知识库召回的文本块。
+      “系统提示词”中的所有变量都必须用大括号{}括起来。详见 https://ragflow.io/docs/dev/set_chat_variables。`,
       add: '新增',
       key: '关键字',
       optional: '可选的',
@@ -535,7 +534,7 @@ General：实体和关系提取提示来自 GitHub - microsoft/graphrag：基于
       keywordTip: `应用 LLM 分析用户的问题，提取在相关性计算中要强调的关键词。`,
       reasoning: '推理',
       reasoningTip:
-        '是否像 Deepseek-R1 / OpenAI o1一样通过推理产生答案。启用后，允许模型在遇到未知情况时将代理搜索过程集成到推理工作流中，自行动态检索外部知识，并通过推理生成最终答案。',
+        '在问答过程中是否启用推理工作流，例如Deepseek-R1或OpenAI o1等模型所采用的方式。启用后，该功能允许模型访问外部知识，并借助思维链推理等技术逐步解决复杂问题。通过将问题分解为可处理的步骤，这种方法增强了模型提供准确回答的能力，从而在需要逻辑推理和多步思考的任务上表现更优。',
       tavilyApiKeyTip:
         '如果 API 密钥设置正确，它将利用 Tavily 进行网络搜索作为知识库的补充。',
       tavilyApiKeyMessage: '请输入你的 Tavily API Key',
@@ -1201,6 +1200,11 @@ General：实体和关系提取提示来自 GitHub - microsoft/graphrag：基于
         me: '仅限自己',
         team: '团队',
       },
+      systemPrompt: '系统提示词',
+      prompt: '提示词',
+      promptMessage: '提示词是必填项',
+      promptTip:
+        '系统提示为大模型提供任务描述、规定回复方式，以及设置其他各种要求。系统提示通常与 key （变量）合用，通过变量设置大模型的输入数据。你可以通过斜杠或者 (x) 按钮显示可用的 key。',
     },
     footer: {
       profile: 'All rights reserved @ React',
