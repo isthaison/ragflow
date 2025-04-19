@@ -123,7 +123,7 @@ class CommunityReportsExtractor(Extractor):
         async with trio.open_nursery() as nursery:
             for level, comm in communities.items():
                 for community in comm.items():
-                    nursery.start_soon(lambda: extract_community_report(community))
+                    nursery.start_soon(extract_community_report, community)
         if callback:
             callback(msg=f"Community reports done in {trio.current_time() - st:.2f}s, used tokens: {token_count}")
 

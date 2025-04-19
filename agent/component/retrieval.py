@@ -13,6 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+import logging
 from abc import ABC
 
 import pandas as pd
@@ -103,6 +104,7 @@ class Retrieval(ComponentBase, ABC):
             return df
 
         df = pd.DataFrame({"content": kb_prompt(kbinfos, 200000)})
+        logging.debug("{} {}".format(query, df))
         return df.dropna()
 
 
