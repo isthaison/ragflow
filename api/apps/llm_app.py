@@ -93,7 +93,6 @@ def set_api_key():
                 if len(arr) == 0 or tc == 0:
                     raise Exception("Fail")
                 rerank_passed = True
-                logging.debug(f'passed model rerank {llm.llm_name}')
             except Exception as e:
                 msg += f"\nFail to access model({llm.llm_name}) using this api key." + str(
                     e)
