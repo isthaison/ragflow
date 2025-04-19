@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 import pandas as pd
 from agent.component.base import ComponentBase, ComponentParamBase
@@ -59,12 +58,10 @@ class GoogleScholar(ComponentBase, ABC):
                                                    'bib'].get('abstract', 'no abstract')})
 
             except StopIteration or Exception:
-                logging.exception("GoogleScholar")
                 break
 
         if not scholar_res:
             return GoogleScholar.be_output("")
 
         df = pd.DataFrame(scholar_res)
-        logging.debug(f"df: {df}")
         return df

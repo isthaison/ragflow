@@ -19,7 +19,6 @@ from abc import ABC
 import requests
 from deepdoc.parser import HtmlParser
 from agent.component.base import ComponentBase, ComponentParamBase
-import logging
 class InvokeParam(ComponentParamBase):
     """
     Define the Invoke component parameters.
@@ -85,10 +84,7 @@ class Invoke(ComponentBase, ABC):
                     component_obj = self._canvas.get_component("begin")
                     if component_obj is not None:
                         cpn = component_obj["obj"]
-                        logging.info(f"Invoke: _run: {cpn._param.query}")
                         for param in cpn._param.query:
-                            logging.info(f"Invoke: _run: {param}")
-                            logging.info(f"Invoke: _run: {param['key']}")
                             if "value" in param:
                                 args[param["key"]] = param["value"]
             elif para.get("key"):

@@ -34,7 +34,6 @@ class RAGFlowExcelParser:
         file_like_object.seek(0)
 
         if not (file_head.startswith(b'PK\x03\x04') or file_head.startswith(b'\xD0\xCF\x11\xE0')):
-            logging.info("****wxy: Not an Excel file, converting CSV to Excel Workbook")
 
             try:
                 file_like_object.seek(0)
@@ -47,7 +46,6 @@ class RAGFlowExcelParser:
         try:
             return load_workbook(file_like_object,data_only= True)
         except Exception as e:
-            logging.info(f"****wxy: openpyxl load error: {e}, try pandas instead")
             try:
                 file_like_object.seek(0)
                 df = pd.read_excel(file_like_object)

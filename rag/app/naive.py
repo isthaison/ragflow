@@ -52,13 +52,10 @@ class Docx(DocxParser):
         try:
             image_blob = related_part.image.blob
         except UnrecognizedImageError:
-            logging.info("Unrecognized image format. Skipping image.")
             return None
         except UnexpectedEndOfFileError:
-            logging.info("EOF was unexpectedly encountered while reading an image stream. Skipping image.")
             return None
         except InvalidImageStreamError:
-            logging.info("The recognized image stream appears to be corrupted. Skipping image.")
             return None
         try:
             image = Image.open(BytesIO(image_blob)).convert('RGB')
@@ -92,8 +89,7 @@ class Docx(DocxParser):
                     blocks.append(('p', i, p))
                 elif block.tag.endswith('tbl'):  # Table
                     blocks.append(('t', i, None))  # Table object will be retrieved later
-        except Exception as e:
-            logging.error(f"Error collecting blocks: {e}")
+        except Exception:
             return ""
             
         # Find the target table position
@@ -258,7 +254,6 @@ class Pdf(PdfParser):
             callback
         )
         callback(msg="OCR finished ({:.2f}s)".format(timer() - start))
-        logging.info("OCR({}~{}): {:.2f}s".format(from_page, to_page, timer() - start))
 
         start = timer()
         self._layouts_rec(zoomin)
@@ -275,14 +270,12 @@ class Pdf(PdfParser):
         if separate_tables_figures:
             tbls, figures = self._extract_table_figure(True, zoomin, True, True, True)
             self._concat_downward()
-            logging.info("layouts cost: {}s".format(timer() - first_start))
             return [(b["text"], self._line_tag(b, zoomin)) for b in self.boxes], tbls, figures
         else:
             tbls = self._extract_table_figure(True, zoomin, True, True)
             # self._naive_vertical_merge()
             self._concat_downward()
             # self._filter_forpages()
-            logging.info("layouts cost: {}s".format(timer() - first_start))
             return [(b["text"], self._line_tag(b, zoomin)) for b in self.boxes], tbls
 
 
@@ -369,7 +362,6 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
             return chunks
 
         res.extend(tokenize_chunks_docx(chunks, doc, is_english, images))
-        logging.info("naive_merge({}): {}".format(filename, timer() - st))
         return res
 
     elif re.search(r"\.pdf$", filename, re.IGNORECASE):
@@ -475,7 +467,6 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
         return chunks
 
     res.extend(tokenize_chunks(chunks, doc, is_english, pdf_parser))
-    logging.info("naive_merge({}): {}".format(filename, timer() - st))
     return res
 
 

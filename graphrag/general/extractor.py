@@ -112,7 +112,6 @@ class Extractor:
         if callback:
             callback(msg = f"Entities and relationships extraction done, {len(maybe_nodes)} nodes, {len(maybe_edges)} edges, {sum_token_count} tokens, {now-start_ts:.2f}s.")
         start_ts = now
-        logging.info("Entities merging...")
         all_entities_data = []
         async with trio.open_nursery() as nursery:
             for en_nm, ents in maybe_nodes.items():
@@ -122,7 +121,6 @@ class Extractor:
             callback(msg = f"Entities merging done, {now-start_ts:.2f}s.")
 
         start_ts = now
-        logging.info("Relationships merging...")
         all_relationships_data = []
         async with trio.open_nursery() as nursery:
             for (src, tgt), rels in maybe_edges.items():

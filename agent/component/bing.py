@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 import requests
 import pandas as pd
@@ -80,5 +79,4 @@ class Bing(ComponentBase, ABC):
             return Bing.be_output("")
 
         df = pd.DataFrame(bing_res)
-        logging.debug(f"df: {str(df)}")
         return df

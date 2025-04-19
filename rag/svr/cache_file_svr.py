@@ -36,7 +36,6 @@ def main():
     locations = collect()
     if not locations:
         return
-    logging.info(f"TASKS: {len(locations)}")
     for kb_id, loc in locations:
         try:
             if REDIS_CONN.is_alive():
@@ -46,7 +45,6 @@ def main():
                         continue
                     file_bin = STORAGE_IMPL.get(kb_id, loc)
                     REDIS_CONN.transaction(key, file_bin, 12 * 60)
-                    logging.info("CACHE: {}".format(loc))
                 except Exception as e:
                     traceback.print_stack(e)
         except Exception as e:

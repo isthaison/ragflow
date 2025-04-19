@@ -74,7 +74,6 @@ def load_model(model_dir, nm, device_id: int | None = None):
     global loaded_models
     loaded_model = loaded_models.get(model_cached_tag)
     if loaded_model:
-        logging.info(f"load_model {model_file_path} reuses cached model")
         return loaded_model
 
     if not os.path.exists(model_file_path):

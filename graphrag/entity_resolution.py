@@ -140,7 +140,6 @@ class EntityResolution(Extractor):
             self._input_text_key: pair_prompt
         }
         text = perform_variable_replacements(self._resolution_prompt, variables=variables)
-        logging.info(f"Created resolution prompt {len(text)} bytes for {len(candidate_resolution_i[1])} entity pairs of type {candidate_resolution_i[0]}")
         async with chat_limiter:
             response = await trio.to_thread.run_sync(lambda: self._chat(text, [{"role": "user", "content": "Output:"}], gen_conf))
         logging.debug(f"_resolve_candidate chat prompt: {text}\nchat response: {response}")

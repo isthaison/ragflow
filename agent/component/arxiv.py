@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 import arxiv
 import pandas as pd
@@ -64,5 +63,4 @@ class ArXiv(ComponentBase, ABC):
             return ArXiv.be_output("")
 
         df = pd.DataFrame(arxiv_res)
-        logging.debug(f"df: {str(df)}")
         return df

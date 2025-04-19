@@ -123,7 +123,6 @@ def start_tracemalloc_and_snapshot(signum, frame):
     else:
         import resource
         max_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    logging.info(f"taken snapshot {snapshot_file}. max RSS={max_rss / 1000:.2f} MB, current memory usage: {current / 10**6:.2f} MB, Peak memory usage: {peak / 10**6:.2f} MB")
 
 # SIGUSR2 handler: stop tracemalloc
 def stop_tracemalloc(signum, frame):
@@ -163,7 +162,6 @@ def set_progress(task_id, from_page=0, to_page=-1, prog=None, msg="Processing...
         close_connection()
         if cancel:
             raise TaskCanceledException(msg)
-        logging.info(f"set_progress({task_id}), progress: {prog}, progress_msg: {msg}")
     except DoesNotExist:
         logging.warning(f"set_progress({task_id}) got exception DoesNotExist")
     except Exception:
@@ -225,7 +223,6 @@ async def build_chunks(task, progress_callback):
         st = timer()
         bucket, name = File2DocumentService.get_storage_address(doc_id=task["doc_id"])
         binary = await get_storage_binary(bucket, name)
-        logging.info("From minio({}) {}/{}".format(timer() - st, task["location"], task["name"]))
     except TimeoutError:
         progress_callback(-1, "Internal server error: Fetch file from minio timeout. Could you try it again.")
         logging.exception(
@@ -244,7 +241,6 @@ async def build_chunks(task, progress_callback):
             cks = await trio.to_thread.run_sync(lambda: chunker.chunk(task["name"], binary=binary, from_page=task["from_page"],
                                 to_page=task["to_page"], lang=task["language"], callback=progress_callback,
                                 kb_id=task["kb_id"], parser_config=task["parser_config"], tenant_id=task["tenant_id"]))
-        logging.info("Chunking({}) {}/{} done".format(timer() - st, task["location"], task["name"]))
     except TaskCanceledException:
         raise
     except Exception as e:
@@ -290,7 +286,6 @@ async def build_chunks(task, progress_callback):
         d["img_id"] = "{}-{}".format(task["kb_id"], d["id"])
         del d["image"]
         docs.append(d)
-    logging.info("MINIO PUT({}):{}".format(task["name"], el))
 
     if task["parser_config"].get("auto_keywords", 0):
         st = timer()
@@ -533,7 +528,6 @@ async def do_handle_task(task):
         # Standard chunking methods
         start_ts = timer()
         chunks = await build_chunks(task, progress_callback)
-        logging.info("Build document {}: {:.2f}s".format(task_document_name, timer() - start_ts))
         if chunks is None:
             return
         if not chunks:
@@ -575,19 +569,13 @@ async def do_handle_task(task):
             logging.warning(f"do_handle_task update_chunk_ids failed since task {task['id']} is unknown.")
             doc_store_result = await trio.to_thread.run_sync(lambda: settings.docStoreConn.delete({"id": chunk_ids}, search.index_name(task_tenant_id), task_dataset_id))
             return
-    logging.info("Indexing doc({}), page({}-{}), chunks({}), elapsed: {:.2f}".format(task_document_name, task_from_page,
-                                                                                     task_to_page, len(chunks),
-                                                                                     timer() - start_ts))
+
 
     DocumentService.increment_chunk_num(task_doc_id, task_dataset_id, token_count, chunk_count, 0)
 
     time_cost = timer() - start_ts
     task_time_cost = timer() - task_start_ts
     progress_callback(prog=1.0, msg="Indexing done ({:.2f}s). Task done ({:.2f}s)".format(time_cost, task_time_cost))
-    logging.info(
-        "Chunk doc({}), page({}-{}), chunks({}), token({}), elapsed:{:.2f}".format(task_document_name, task_from_page,
-                                                                                   task_to_page, len(chunks),
-                                                                                   token_count, task_time_cost))
 
 
 async def handle_task():
@@ -597,12 +585,10 @@ async def handle_task():
         await trio.sleep(5)
         return
     try:
-        logging.info(f"handle_task begin for task {json.dumps(task)}")
         CURRENT_TASKS[task["id"]] = copy.deepcopy(task)
         await do_handle_task(task)
         DONE_TASKS += 1
         CURRENT_TASKS.pop(task["id"], None)
-        logging.info(f"handle_task done for task {json.dumps(task)}")
     except Exception as e:
         FAILED_TASKS += 1
         CURRENT_TASKS.pop(task["id"], None)
@@ -641,7 +627,6 @@ async def report_status():
                 "current": current,
             })
             REDIS_CONN.zadd(CONSUMER_NAME, heartbeat, now.timestamp())
-            logging.info(f"{CONSUMER_NAME} reported heartbeat: {heartbeat}")
 
             expired = REDIS_CONN.zcount(CONSUMER_NAME, 0, now.timestamp() - 60 * 30)
             if expired > 0:

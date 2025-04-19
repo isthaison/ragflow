@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 import pandas as pd
 from agent.component.base import ComponentBase, ComponentParamBase
@@ -76,7 +75,7 @@ class YahooFinance(ComponentBase, ABC):
             if self._param.news:
                 yohoo_res.append({"content": "news:\n" + pd.DataFrame(msft.news).to_markdown() + "\n"})
         except Exception:
-            logging.exception("YahooFinance got exception")
+            return YahooFinance.be_output("**ERROR**: " + str(Exception))
 
         if not yohoo_res:
             return YahooFinance.be_output("")

@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 import json
 from copy import deepcopy
 from functools import partial
@@ -205,7 +204,6 @@ class Canvas:
                 if cpn.component_name == "Answer":
                     self.answer.append(c)
                 else:
-                    logging.debug(f"Canvas.prepare2run: {c}")
                     if c not in without_dependent_checking:
                         cpids = cpn.get_dependent_components()
                         if any([cc not in self.path[-1] for cc in cpids]):
@@ -224,7 +222,6 @@ class Canvas:
                     try:
                         ans = cpn.run(self.history, **kwargs)
                     except Exception as e:
-                        logging.exception(f"Canvas.run got exception: {e}")
                         self.path[-1].append(c)
                         ran += 1
                         raise e
@@ -245,7 +242,6 @@ class Canvas:
             yield {"content": m, "running_status": True}
 
         while 0 <= ran < len(self.path[-1]):
-            logging.debug(f"Canvas.run: {ran} {self.path}")
             cpn_id = self.path[-1][ran]
             cpn = self.get_component(cpn_id)
             if not any([cpn["downstream"], cpn.get("parent_id"), waiting]):
@@ -378,7 +374,6 @@ class Canvas:
             # Check if the parameter already exists
             for param in self.components["begin"]["obj"]._param.query:
                 if param["key"] == key:
-                    logging.info(f"Parameter '{key}' already exists. Skipping addition.")
                     return False
 
             # Add the parameter if it does not exist
@@ -395,7 +390,6 @@ class Canvas:
             self.components["begin"]["obj"]._param.query.append(param_item)
             return True
         except Exception as e:
-            logging.error(f"Failed to add parameter: {str(e)}")
             return False
 
     def get_preset_param(self):

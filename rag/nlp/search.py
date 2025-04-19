@@ -348,19 +348,6 @@ class Dealer:
                   vector_similarity_weight=0.3, top=1024, doc_ids=None, aggs=True,
                   rerank_mdl=None, highlight=False,
                   rank_feature: dict | None = {PAGERANK_FLD: 10}):
-        logging.info(f"===============")
-        logging.info(f"Retrieval: {question}")
-        logging.info(f"KBs: {kb_ids}")
-        logging.info(f"Page: {page}")
-        logging.info(f"Page size: {page_size}")
-        logging.info(f"Similarity threshold: {similarity_threshold}")
-        logging.info(f"Vector similarity weight: {vector_similarity_weight}")
-        logging.info(f"Top: {top}")
-        logging.info(f"Doc IDs: {doc_ids}")
-        logging.info(f"Aggs: {aggs}")
-        logging.info(f"Rerank model: {rerank_mdl}")
-        logging.info(f"Highlight: {highlight}")
-        logging.info(f"===============")
         ranks = {"total": 0, "chunks": [], "doc_aggs": {}}
         if not question:
             return ranks

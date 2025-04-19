@@ -274,7 +274,6 @@ class RedisDB:
                     if not payload:
                         break
                     current_min = payload.get_msg_id()
-                    logging.info(f"RedisDB.get_unacked_iterator {queue_name} {consumer_name} {current_min}")
                     yield payload
         except Exception:
             logging.exception(

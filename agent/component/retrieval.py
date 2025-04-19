@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 
 import pandas as pd
@@ -58,8 +57,6 @@ class Retrieval(ComponentBase, ABC):
         query = self.get_input()
         query = str(query["content"][0]) if "content" in query else ""
         kbs = KnowledgebaseService.get_by_ids(self._param.kb_ids)
-        logging.info("Retrieval: {}".format(query))
-        logging.info("kbs: {}".format(kbs))
         if not kbs:
             return Retrieval.be_output("")
 
@@ -106,7 +103,6 @@ class Retrieval(ComponentBase, ABC):
             return df
 
         df = pd.DataFrame({"content": kb_prompt(kbinfos, 200000)})
-        logging.debug("{} {}".format(query, df))
         return df.dropna()
 
 

@@ -183,11 +183,6 @@ class KGSearch(Dealer):
                         nhop_pathes[(f, t)]["sim"] = ent["sim"] / (2 + i)
                     nhop_pathes[(f, t)]["pagerank"] = wts[i]
 
-        logging.info("Retrieved entities: {}".format(list(ents_from_query.keys())))
-        logging.info("Retrieved relations: {}".format(list(rels_from_txt.keys())))
-        logging.info("Retrieved entities from types({}): {}".format(ty_kwds, list(ents_from_types.keys())))
-        logging.info("Retrieved N-hops: {}".format(list(nhop_pathes.keys())))
-
         # P(E|Q) => P(E) * P(Q|E) => pagerank * sim
         for ent in ents_from_types.keys():
             if ent not in ents_from_query:

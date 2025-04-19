@@ -112,7 +112,6 @@ class RAGFlowOSS:
             try:
                 if not self.bucket_exists(bucket):
                     self.conn.create_bucket(Bucket=bucket)
-                    logging.info(f"create bucket {bucket} ********")
                 r = self.conn.upload_fileobj(BytesIO(binary), bucket, fnm)
 
                 return r

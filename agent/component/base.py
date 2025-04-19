@@ -17,7 +17,6 @@ from abc import ABC
 import builtins
 import json
 import os
-import logging
 from functools import partial
 from typing import Tuple, Union
 
@@ -370,17 +369,11 @@ class ComponentParamBase(ABC):
         return value not in wrong_value_list
 
     def _warn_deprecated_param(self, param_name, descr):
-        if self._deprecated_params_set.get(param_name):
-            logging.warning(
-                f"{descr} {param_name} is deprecated and ignored in this version."
-            )
+        self._deprecated_params_set.get(param_name)
+          
 
     def _warn_to_deprecate_param(self, param_name, descr, new_param):
         if self._deprecated_params_set.get(param_name):
-            logging.warning(
-                f"{descr} {param_name} will be deprecated in future release; "
-                f"please use {new_param} instead."
-            )
             return True
         return False
 
@@ -423,8 +416,6 @@ class ComponentBase(ABC):
         return list(cpnts)
 
     def run(self, history, **kwargs):
-        logging.debug("{}, history: {}, kwargs: {}".format(self, json.dumps(history, ensure_ascii=False),
-                                                              json.dumps(kwargs, ensure_ascii=False)))
         self._param.debug_inputs = []
         try:
             res = self._run(history, **kwargs)

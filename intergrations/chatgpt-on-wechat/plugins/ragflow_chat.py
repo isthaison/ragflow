@@ -31,7 +31,6 @@ class RAGFlowChat(Plugin):
         self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
         # Store conversation_id for each user
         self.conversations = {}
-        logging.info("[RAGFlowChat] Plugin initialized")
 
     def on_handle_context(self, e_context: EventContext):
         context = e_context['context']

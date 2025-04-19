@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 import re
 from abc import ABC
 from api.db import LLMType
@@ -59,7 +58,6 @@ class KeywordExtract(Generate, ABC):
 
         ans = re.sub(r"<think>.*</think>", "", ans, flags=re.DOTALL)
         ans = re.sub(r".*keyword:", "", ans).strip()
-        logging.debug(f"ans: {ans}")
         return KeywordExtract.be_output(ans)
 
     def debug(self, **kwargs):

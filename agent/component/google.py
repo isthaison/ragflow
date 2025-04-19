@@ -1,4 +1,3 @@
-import logging
 from abc import ABC
 from serpapi import GoogleSearch as SerpApiSearch
 import pandas as pd
@@ -404,7 +403,6 @@ class Google(ComponentBase, ABC):
             return Google.be_output("")
 
         df = pd.DataFrame(google_res)
-        logging.debug(f"df: {df}")
         return df
 
     def search_serpapi(self, query):
@@ -444,6 +442,5 @@ class Google(ComponentBase, ABC):
                 snippet += f'{url.page_content}' if url.page_content else ''
                 results.append({"content": f'<a href="{url.url}">{title}</a>{snippet}'})
             except Exception as e:
-                logging.error(f"Error processing search result {url}: {e}")
                 results.append({"content": f'<a href="{url.url}">{url.url}</a>    Error processing details'})
         return results

@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 import re
 from functools import partial
 from agentic_reasoning.prompts import BEGIN_SEARCH_QUERY, BEGIN_SEARCH_RESULT, END_SEARCH_RESULT, MAX_SEARCH_LIMIT, \
@@ -182,7 +181,6 @@ class DeepResearcher:
 
             # Process each search query
             for search_query in queries:
-                logging.info(f"[THINK]Query: {step_index}. {search_query}")
                 msg_history.append({"role": "assistant", "content": search_query})
                 think += f"\n\n> {step_index + 1}. {search_query}\n\n"
                 yield {"answer": think + "</think>", "reference": {}, "audio_binary": None}
@@ -218,6 +216,5 @@ class DeepResearcher:
                 msg_history.append(
                     {"role": "user", "content": f"\n\n{BEGIN_SEARCH_RESULT}{summary_think}{END_SEARCH_RESULT}\n\n"})
                 think += self._remove_result_tags(summary_think)
-                logging.info(f"[THINK]Summary: {step_index}. {summary_think}")
 
         yield think + "</think>"

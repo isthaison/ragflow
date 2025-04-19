@@ -22,7 +22,6 @@ import pymysql
 import psycopg2
 from agent.component import GenerateParam, Generate
 import pyodbc
-import logging
 
 
 class ExeSQLParam(GenerateParam):
@@ -147,7 +146,6 @@ class ExeSQL(Generate, ABC):
             regenerated_sql = response.loc[0, "content"]
             return regenerated_sql
         except Exception as e:
-            logging.error(f"Failed to regenerate SQL: {e}")
             return None
 
     def debug(self, **kwargs):

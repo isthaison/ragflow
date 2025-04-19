@@ -55,7 +55,6 @@ def main(args):
             } for t in lyt]
         img = draw_box(images[i], lyt, detr.labels, float(args.threshold))
         img.save(outputs[i], quality=95)
-        logging.info("save result to: " + outputs[i])
 
 
 def get_table_html(img, tb_cpns, ocr):

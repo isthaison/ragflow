@@ -52,7 +52,6 @@ RAGFLOW_DEBUGPY_LISTEN = int(os.environ.get('RAGFLOW_DEBUGPY_LISTEN', "0"))
 def update_progress():
     lock_value = str(uuid.uuid4())
     redis_lock = RedisDistributedLock("update_progress", lock_value=lock_value, timeout=60)
-    logging.info(f"update_progress lock_value: {lock_value}")
     while not stop_event.is_set():
         try:
             if redis_lock.acquire():
@@ -65,7 +64,6 @@ def update_progress():
             redis_lock.release()
 
 def signal_handler(sig, frame):
-    logging.info("Received interrupt signal, shutting down...")
     stop_event.set()
     time.sleep(1)
     sys.exit(0)

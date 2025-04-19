@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 from Bio import Entrez
 import re
@@ -65,5 +64,4 @@ class PubMed(ComponentBase, ABC):
             return PubMed.be_output("")
 
         df = pd.DataFrame(pubmed_res)
-        logging.debug(f"df: {df}")
         return df

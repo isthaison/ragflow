@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 import re
 from abc import ABC
 from api.db import LLMType
@@ -45,7 +44,6 @@ You are a data expert extracting information. DON'T generate anything except the
 Get {", ".join([f"'{key}'" for key in params.keys()])} and any field from the conversation below.
 {conv}
 """
-        logging.info(f"VariablesExtract: get_prompt: {prompt}")
         return prompt
 
 
@@ -54,7 +52,6 @@ class VariablesExtract(Generate, ABC):
 
     def _run(self, history, **kwargs):
         args = {}
-        logging.info(f"VariablesExtract: _run: {self._param.variables}")
         for para in self._param.variables:
             if para.get("key"):
                 if 'begin@' in para["key"]:
@@ -81,12 +78,9 @@ class VariablesExtract(Generate, ABC):
         match = re.search(r"```json\s*(.*?)\s*```", ans, re.DOTALL)
         if match:
             ans = match.group(1)
-            logging.info(ans)
         if not ans:
-            logging.info(ans)
             return VariablesExtract.be_output(initquestion)
 
-        logging.info(f"ans: {ans}")
 
         try:
             kwargs = {}
@@ -105,13 +99,10 @@ class VariablesExtract(Generate, ABC):
                     # Add missing keys to global parameters
                     self._canvas.add_item_global_param(key=v, value=data.strip(), description=f"Extracted variable: {v}")
 
-                    logging.info(f"Extracted variable: {v} = {kwargs[v]}")
             self._canvas.set_global_param(**kwargs)
-            logging.info("Begin: query: {}".format(self._canvas.components["begin"]["obj"]._param.query))
 
             return VariablesExtract.be_output(query)
         except json.JSONDecodeError:
-            logging.warning(f"VariablesExtract: LLM returned non-JSON output: {ans}")
             return VariablesExtract.be_output(query)
 
     def debug(self, **kwargs):

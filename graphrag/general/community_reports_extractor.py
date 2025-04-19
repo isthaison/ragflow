@@ -122,7 +122,6 @@ class CommunityReportsExtractor(Extractor):
         st = trio.current_time()
         async with trio.open_nursery() as nursery:
             for level, comm in communities.items():
-                logging.info(f"Level {level}: Community: {len(comm.keys())}")
                 for community in comm.items():
                     nursery.start_soon(lambda: extract_community_report(community))
         if callback:

@@ -77,7 +77,6 @@ def show_configs():
                 v = copy.deepcopy(v)
                 v["secret_key"] = "*" * 8
         msg += f"\n\t{k}: {v}"
-    logging.info(msg)
 
 
 def get_base_config(key, default=None):

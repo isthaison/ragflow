@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 import wikipedia
 import pandas as pd
@@ -63,5 +62,4 @@ class Wikipedia(ComponentBase, ABC):
             return Wikipedia.be_output("")
 
         df = pd.DataFrame(wiki_res)
-        logging.debug(f"df: {df}")
         return df

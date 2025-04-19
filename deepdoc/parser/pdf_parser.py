@@ -296,8 +296,6 @@ class RAGFlowPdfParser:
     def __ocr(self, pagenum, img, chars, ZM=3, device_id: int | None = None):
         start = timer()
         bxs = self.ocr.detect(np.array(img), device_id)
-        logging.info(f"__ocr detecting boxes of a image cost ({timer() - start}s)")
-
         start = timer()
         if not bxs:
             self.boxes.append([])
@@ -329,7 +327,6 @@ class RAGFlowPdfParser:
             else:
                 bxs[ii]["text"] += c["text"]
 
-        logging.info(f"__ocr sorting {len(chars)} chars cost {timer() - start}s")
         start = timer()
         boxes_to_reg = []
         img_np = np.array(img)
@@ -344,7 +341,6 @@ class RAGFlowPdfParser:
         for i in range(len(boxes_to_reg)):
             boxes_to_reg[i]["text"] = texts[i]
             del boxes_to_reg[i]["box_image"]
-        logging.info(f"__ocr recognize {len(bxs)} boxes cost {timer() - start}s")
         bxs = [b for b in bxs if b["text"]]
         if self.mean_height[-1] == 0:
             self.mean_height[-1] = np.median([b["bottom"] - b["top"]
@@ -1019,7 +1015,6 @@ class RAGFlowPdfParser:
 
         except Exception:
             logging.exception("RAGFlowPdfParser __images__")
-        logging.info(f"__images__ dedupe_chars cost {timer() - start}s")
 
         self.outlines = []
         try:
@@ -1101,7 +1096,6 @@ class RAGFlowPdfParser:
 
         trio.run(__img_ocr_launcher)
 
-        logging.info(f"__images__ {len(self.page_images)} pages cost {timer() - start}s")
 
         if not self.is_english and not any(
                 [c for c in self.page_chars]) and self.boxes:

@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 from duckduckgo_search import DDGS
 import pandas as pd
@@ -62,5 +61,4 @@ class DuckDuckGo(ComponentBase, ABC):
             return DuckDuckGo.be_output("")
 
         df = pd.DataFrame(duck_res)
-        logging.debug("df: {df}")
         return df

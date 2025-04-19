@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-import logging
 from abc import ABC
 from api.db import LLMType
 from api.db.services.llm_service import LLMBundle
@@ -77,7 +76,6 @@ USER: {}\n
             "\n- ".join(cate_lines),
             chat_hist
         )
-        logging.info(f"Prompt: {self.prompt}")
         return self.prompt
 
 
@@ -90,7 +88,6 @@ class Categorize(Generate, ABC):
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         ans = chat_mdl.chat(self._param.get_prompt(input), [{"role": "user", "content": "\nCategory: "}],
                             self._param.gen_conf())
-        logging.debug(f"input: {input}, answer: {str(ans)}")    
         # Count the number of times each category appears in the answer.
         category_counts = {}
         for c in self._param.category_description.keys():

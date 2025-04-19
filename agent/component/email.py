@@ -17,7 +17,6 @@
 from abc import ABC
 import json
 import smtplib
-import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
@@ -79,7 +78,6 @@ class Email(ComponentBase, ABC):
             msg.attach(MIMEText(email_content, 'html', 'utf-8'))
 
             # Connect to SMTP server and send
-            logging.info(f"Connecting to SMTP server {self._param.smtp_server}:{self._param.smtp_port}")
             
             context = smtplib.ssl.create_default_context()
             with smtplib.SMTP(self._param.smtp_server, self._param.smtp_port) as server:
@@ -87,7 +85,6 @@ class Email(ComponentBase, ABC):
                 server.starttls(context=context)
                 server.ehlo()
                 # Login
-                logging.info(f"Attempting to login with email: {self._param.email}")
                 server.login(self._param.email, self._param.password)
                 
                 # Get all recipient list
@@ -96,46 +93,38 @@ class Email(ComponentBase, ABC):
                     recipients.extend(email_data["cc_email"].split(','))
                 
                 # Send email
-                logging.info(f"Sending email to recipients: {recipients}")
                 try:
                     server.send_message(msg, self._param.email, recipients)
                     success = True
                 except Exception as e:
-                    logging.error(f"Error during send_message: {str(e)}")
                     # Try alternative method
                     server.sendmail(self._param.email, recipients, msg.as_string())
                     success = True
                 
                 try:
                     server.quit()
-                except Exception as e:
-                    # Ignore errors when closing connection
-                    logging.warning(f"Non-fatal error during connection close: {str(e)}")
-
+                except Exception:
+                    pass
+                    
             if success:
                 return Email.be_output("Email sent successfully")
 
         except json.JSONDecodeError:
             error_msg = "Invalid JSON format in input"
-            logging.error(error_msg)
             return Email.be_output(error_msg)
             
         except smtplib.SMTPAuthenticationError:
             error_msg = "SMTP Authentication failed. Please check your email and authorization code."
-            logging.error(error_msg)
             return Email.be_output(f"Failed to send email: {error_msg}")
             
         except smtplib.SMTPConnectError:
             error_msg = f"Failed to connect to SMTP server {self._param.smtp_server}:{self._param.smtp_port}"
-            logging.error(error_msg)
             return Email.be_output(f"Failed to send email: {error_msg}")
             
         except smtplib.SMTPException as e:
             error_msg = f"SMTP error occurred: {str(e)}"
-            logging.error(error_msg)
             return Email.be_output(f"Failed to send email: {error_msg}")
             
         except Exception as e:
             error_msg = f"Unexpected error: {str(e)}"
-            logging.error(error_msg)
             return Email.be_output(f"Failed to send email: {error_msg}") 
