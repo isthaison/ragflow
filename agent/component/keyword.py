@@ -38,9 +38,9 @@ class KeywordExtractParam(GenerateParam):
         self.prompt = """
 - Role: You're a question analyzer. 
 - Requirements: 
-  - Summarize user's question, and give top %s important keyword/phrase.
+  - Summarize user's question, and give top %s important keyword/phrase (in language of user's question).
   - Use comma as a delimiter to separate keywords/phrases.
-- Answer format: (in language of user's question)
+- Answer format: 
   - keyword: 
 """ % self.top_n
         return self.prompt
