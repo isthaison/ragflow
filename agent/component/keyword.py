@@ -13,6 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+import logging
 import re
 from abc import ABC
 from api.db import LLMType
@@ -37,10 +38,10 @@ class KeywordExtractParam(GenerateParam):
         self.prompt = """
 - Role: You're a question analyzer. 
 - Requirements: 
-    - Summarize user's question, and give top %s important keyword/phrase (in language of user's question).
-    - Use comma as a delimiter to separate keywords/phrases.
-    - Answer format: keywords: keyword1, keyword2, keyword3, ...
-
+  - Summarize user's question, and give top %s important keyword/phrase.
+  - Use comma as a delimiter to separate keywords/phrases.
+- Answer format: (in language of user's question)
+  - keyword: 
 """ % self.top_n
         return self.prompt
 
@@ -57,7 +58,8 @@ class KeywordExtract(Generate, ABC):
                             self._param.gen_conf())
 
         ans = re.sub(r"<think>.*</think>", "", ans, flags=re.DOTALL)
-        ans = re.sub(r".*keywords:", "", ans).strip()
+        ans = re.sub(r".*keyword:", "", ans).strip()
+        logging.debug(f"ans: {ans}")
         return KeywordExtract.be_output(ans)
 
     def debug(self, **kwargs):
