@@ -57,7 +57,7 @@ class KeywordExtract(Generate, ABC):
                             self._param.gen_conf())
 
         ans = re.sub(r"<think>.*</think>", "", ans, flags=re.DOTALL)
-        ans = re.sub(r".*keyword:", "", ans).strip()
+        ans = re.sub(r".*keywords:", "", ans).strip()
         return KeywordExtract.be_output(ans)
 
     def debug(self, **kwargs):
