@@ -35,14 +35,17 @@ class KeywordExtractParam(GenerateParam):
         self.check_positive_integer(self.top_n, "Top N")
 
     def get_prompt(self):
-        self.prompt = """
-- Role: You're a question analyzer. 
-- Requirements: 
-  - Summarize user's question, and give top %s important keyword/phrase (in language of user's question).
-  - Use comma as a delimiter to separate keywords/phrases.
-- Answer format: 
-  - keyword: 
-""" % self.top_n
+        # unified, language-agnostic prompt
+        self.prompt = f"""
+- Role: You're a question analyzer.
+- Requirements:
+  - Summarize the user's question and give the top {self.top_n} important keyword/phrase.
+  - Provide the keywords/phrases in the same language as the user's question.
+  - Use commas to separate the keywords/phrases.
+  - Example: keyword: keyword1, keyword2, keyword3, …, keyword{self.top_n}
+- Answer format:
+  keyword:
+"""
         return self.prompt
 
 
