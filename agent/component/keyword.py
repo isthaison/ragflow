@@ -35,7 +35,6 @@ class KeywordExtractParam(GenerateParam):
         self.check_positive_integer(self.top_n, "Top N")
 
     def get_prompt(self):
-        # unified, language-agnostic prompt
         self.prompt = f"""
 - Role: You're a question analyzer.
 - Requirements:
