@@ -56,7 +56,7 @@ class DeepResearcher:
             msg_history[-1]["content"] += "\n\nContinues reasoning with the new information.\n"
             
         for ans in self.chat_mdl.chat_streamly(REASON_PROMPT, msg_history, {"temperature": 0.7}):
-            ans = re.sub(r"<think>.*</think>", "", ans, flags=re.DOTALL)
+            ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
             if not ans:
                 continue
             query_think = ans
@@ -141,7 +141,7 @@ class DeepResearcher:
                 [{"role": "user",
                   "content": f'Now you should analyze each web page and find helpful information based on the current search query "{search_query}" and previous reasoning steps.'}],
                 {"temperature": 0.7}):
-            ans = re.sub(r"<think>.*</think>", "", ans, flags=re.DOTALL)
+            ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
             if not ans:
                 continue
             summary_think = ans
