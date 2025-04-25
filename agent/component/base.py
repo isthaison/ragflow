@@ -481,8 +481,9 @@ class ComponentBase(ABC):
             outs = []
             for q in self._param.query:
                 if q.get("component_id"):
-                    if q["component_id"].split("@")[0].lower().find("begin") >= 0:
-                        cpn_id, key = q["component_id"].split("@")
+                    component_id = q["component_id"]
+                    if "@" in component_id and component_id.split("@")[0].lower().find("begin") >= 0:
+                        cpn_id, key = component_id.split("@", 1)
                         for p in self._canvas.get_component(cpn_id)["obj"]._param.query:
                             if p["key"] == key:
                                 outs.append(pd.DataFrame([{"content": p.get("value", "")}]))
@@ -492,7 +493,7 @@ class ComponentBase(ABC):
                         else:
                             assert False, f"Can't find parameter '{key}' for {cpn_id}"
                         continue
-                    if q["component_id"].lower().find("answer") == 0:
+                    if component_id.lower().find("answer") == 0:
                         txt = []
                         for r, c in self._canvas.history[::-1][:self._param.message_history_window_size][::-1]:
                             txt.append(f"{r.upper()}:{c}")
