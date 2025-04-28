@@ -24,11 +24,12 @@ from api.db.services.user_service import TenantService
 from api.db.services.user_canvas_version import UserCanvasVersionService
 from api.settings import RetCode
 from api.utils import get_uuid
-from api.utils.api_utils import get_json_result, server_error_response, validate_request, get_data_error_result
+from api.utils.api_utils import get_json_result, replace_nan_with_none, server_error_response, validate_request, get_data_error_result
 from agent.canvas import Canvas
 from peewee import MySQLDatabase, PostgresqlDatabase
 from api.db.db_models import APIToken
 import time
+import math
 
 @manager.route('/templates', methods=['GET'])  # noqa: F821
 @login_required
@@ -311,6 +312,9 @@ def getversion( version_id):
             return get_json_result(data=version.to_dict())
     except Exception as e:
         return get_json_result(data=f"Error getting history file: {e}")
+    
+
+
 @manager.route('/listteam', methods=['GET'])  # noqa: F821
 @login_required
 def list_kbs():
@@ -324,9 +328,11 @@ def list_kbs():
         kbs, total = UserCanvasService.get_by_tenant_ids(
             [m["tenant_id"] for m in tenants], current_user.id, page_number,
             items_per_page, orderby, desc, keywords)
+        kbs = replace_nan_with_none(kbs)
         return get_json_result(data={"kbs": kbs, "total": total})
     except Exception as e:
         return server_error_response(e)
+
 @manager.route('/setting', methods=['POST'])  # noqa: F821
 @validate_request("id", "title", "permission")
 @login_required

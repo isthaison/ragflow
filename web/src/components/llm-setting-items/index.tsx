@@ -273,6 +273,55 @@ const LlmSettingItems = ({ prefix, formItemLayout = {} }: IProps) => {
               </Form.Item>
             </Flex>
           </Form.Item>
+          <Form.Item
+            label={t('maxTokens')}
+            tooltip={t('maxTokensTip')}
+            {...formItemLayout}
+          >
+            <Flex gap={20} align="center">
+              <Form.Item
+                name={'maxTokensEnabled'}
+                valuePropName="checked"
+                noStyle
+              >
+                <Switch size="small" />
+              </Form.Item>
+              <Form.Item noStyle dependencies={['maxTokensEnabled']}>
+                {({ getFieldValue }) => {
+                  const disabled = !getFieldValue('maxTokensEnabled');
+                  return (
+                    <>
+                      <Flex flex={1}>
+                        <Form.Item
+                          name={[...memorizedPrefix, 'max_tokens']}
+                          noStyle
+                        >
+                          <Slider
+                            className={styles.variableSlider}
+                            max={4096}
+                            step={1}
+                            disabled={disabled}
+                          />
+                        </Form.Item>
+                      </Flex>
+                      <Form.Item
+                        name={[...memorizedPrefix, 'max_tokens']}
+                        noStyle
+                      >
+                        <InputNumber
+                          className={styles.sliderInputNumber}
+                          max={1048576 * 2}
+                          min={1}
+                          step={1}
+                          disabled={disabled}
+                        />
+                      </Form.Item>
+                    </>
+                  );
+                }}
+              </Form.Item>
+            </Flex>
+          </Form.Item>
         </div>
       </div>
     </>

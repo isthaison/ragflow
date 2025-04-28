@@ -16,6 +16,7 @@
 import functools
 import json
 import logging
+import math
 import random
 import time
 from base64 import b64encode
@@ -202,6 +203,17 @@ def send_file_in_mem(data, filename):
     f.seek(0)
 
     return send_file(f, as_attachment=True, attachment_filename=filename)
+
+def replace_nan_with_none(obj):
+    """Recursively replace NaN values with None in lists and dicts."""
+    if isinstance(obj, float) and math.isnan(obj):
+        return None
+    elif isinstance(obj, dict):
+        return {k: replace_nan_with_none(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [replace_nan_with_none(v) for v in obj]
+    else:
+        return obj
 
 
 def get_json_result(code=settings.RetCode.SUCCESS, message="success", data=None):

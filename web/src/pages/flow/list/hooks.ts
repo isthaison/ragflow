@@ -28,6 +28,8 @@ export const useFetchDataOnMount = () => {
         page_size: PageSize,
         keywords: debouncedSearchString,
       });
+      console.log(222222222222222222222222, data);
+
       const list = data?.data ?? [];
       return list;
     },

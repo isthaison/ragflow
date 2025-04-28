@@ -38,8 +38,12 @@ const FlowList = () => {
   } = useFetchDataOnMount();
 
   const nextList = useMemo(() => {
+    console.log('data', data?.pages);
+
     const list =
       data?.pages?.flatMap((x) => (Array.isArray(x.kbs) ? x.kbs : [])) ?? [];
+    console.log('nextList', list);
+
     return list;
   }, [data?.pages]);
 
