@@ -1,3 +1,5 @@
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/toaster';
 import i18n from '@/locales/config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -67,6 +69,8 @@ function Root({ children }: React.PropsWithChildren) {
         locale={locale}
       >
         <App>{children}</App>
+        <Sonner position={'top-right'} expand richColors closeButton></Sonner>
+        <Toaster />
       </ConfigProvider>
       <ReactQueryDevtools buttonPosition={'top-left'} />
     </>
