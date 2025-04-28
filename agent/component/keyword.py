@@ -34,6 +34,13 @@ class KeywordExtractParam(GenerateParam):
         super().check()
         self.check_positive_integer(self.top_n, "Top N")
 
+    def resub(ans=""):
+        ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
+        if "keyword:" not in ans:
+            return ans
+        ans = re.sub(r".*keyword:\s*", "", ans, flags=re.DOTALL).strip()
+        return ans
+    
     def get_prompt(self):
         self.prompt = f"""
 - Role: You're a question analyzer.
@@ -50,6 +57,7 @@ class KeywordExtractParam(GenerateParam):
 
 class KeywordExtract(Generate, ABC):
     component_name = "KeywordExtract"
+   
 
     def _run(self, history, **kwargs):
         query = self.get_input()
@@ -67,8 +75,8 @@ class KeywordExtract(Generate, ABC):
         ans = chat_mdl.chat(self._param.get_prompt(), [{"role": "user", "content": query}],
                             self._param.gen_conf())
 
-        ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
-        ans = re.sub(r".*keyword:", "", ans).strip()
+        ans = self._param.resub(ans)
+     
         logging.debug(f"ans: {ans}")
         return KeywordExtract.be_output(ans)
 
