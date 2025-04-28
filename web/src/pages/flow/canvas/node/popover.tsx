@@ -249,7 +249,7 @@ export function NextNodePopover({ children, nodeId, name }: IProps) {
                                 size="small"
                                 onClick={() => {
                                   const inlineString = prompt
-                                    .replace(/(\n)|(\t)/g, ' ')
+                                    .replace(/\s+/g, ' ')
                                     .trim();
                                   navigator.clipboard.writeText(inlineString);
                                   message.success(
