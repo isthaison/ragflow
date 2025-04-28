@@ -72,6 +72,8 @@ class VariablesExtract(Generate, ABC):
             conv.append("{}: {}".format(m["role"].upper(), m["content"]))
         conv = "\n".join(conv)
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
+        self._canvas.set_component_infor(self._id, {"prompt":self._param.get_prompt(conv, args) ,"messages": [{"role": "user", "content": "Output:"}],"conf":  self._param.gen_conf()})
+
         ans = chat_mdl.chat(self._param.get_prompt(conv, args),
                             [{"role": "user", "content": "Output:"}], self._param.gen_conf())
         ans = re.sub(r"\s+", " ", ans)
