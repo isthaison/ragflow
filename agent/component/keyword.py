@@ -34,7 +34,7 @@ class KeywordExtractParam(GenerateParam):
         super().check()
         self.check_positive_integer(self.top_n, "Top N")
 
-    def resub(ans=""):
+    def resub(self,ans=""):
         ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
         if "keyword:" not in ans:
             return ans
@@ -75,7 +75,7 @@ class KeywordExtract(Generate, ABC):
         ans = chat_mdl.chat(self._param.get_prompt(), [{"role": "user", "content": query}],
                             self._param.gen_conf())
 
-        ans = self._param.resub(self,ans)
+        ans = self._param.resub(ans)
      
         logging.debug(f"ans: {ans}")
         return KeywordExtract.be_output(ans)
