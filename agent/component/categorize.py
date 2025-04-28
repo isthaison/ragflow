@@ -17,6 +17,7 @@ from abc import ABC
 from api.db import LLMType
 from api.db.services.llm_service import LLMBundle
 from agent.component import GenerateParam, Generate
+from rag.prompts import message_fit_in
 
 
 class CategorizeParam(GenerateParam):
@@ -86,10 +87,16 @@ class Categorize(Generate, ABC):
         input = self.get_input()
         input = " - ".join(input["content"]) if "content" in input else ""
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
-        self._canvas.set_component_infor(self._id, {"prompt":self._param.get_prompt(input),"messages":  [{"role": "user", "content": "\nCategory: "}],"conf": self._param.gen_conf()})
+        
+        msg = self._canvas.get_history(self._param.message_history_window_size)
+        if len(msg) < 1:
+            msg.append({"role": "user", "content": "\nCategory: "})
+        _, msg = message_fit_in([{"role": "system", "content": self._param.get_prompt(input)}, *msg ,{"role": "user", "content": "\nCategory: "}], int(chat_mdl.max_length * 0.97))
+        if len(msg) < 2:
+            msg.append({"role": "user", "content": "\nCategory: "})
+        self._canvas.set_component_infor(self._id, {"prompt": msg[0]["content"],"messages":  msg[1:] ,"conf": self._param.gen_conf()})
 
-        ans = chat_mdl.chat(self._param.get_prompt(input), [{"role": "user", "content": "\nCategory: "}],
-                            self._param.gen_conf())
+        ans = chat_mdl.chat(msg[0]["content"], msg[1:],self._param.gen_conf())
         # Count the number of times each category appears in the answer.
         category_counts = {}
         for c in self._param.category_description.keys():

@@ -197,9 +197,13 @@ class Generate(ComponentBase):
         _, msg = message_fit_in([{"role": "system", "content": prompt}, *msg], int(chat_mdl.max_length * 0.97))
         if len(msg) < 2:
             msg.append({"role": "user", "content": "Output: "})
-        ans = chat_mdl.chat(msg[0]["content"], msg[1:], self._param.gen_conf())
-        ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
+    
+
         self._canvas.set_component_infor(self._id, {"prompt":msg[0]["content"],"messages":  msg[1:],"conf":  self._param.gen_conf()})
+
+        ans = chat_mdl.chat(msg[0]["content"], msg[1:], self._param.gen_conf())
+
+        ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
         if self._param.cite and "chunks" in retrieval_res.columns:
             res = self.set_cite(retrieval_res, ans)
             return pd.DataFrame([res])
@@ -223,6 +227,8 @@ class Generate(ComponentBase):
         if len(msg) < 2:
             msg.append({"role": "user", "content": "Output: "})
         answer = ""
+        self._canvas.set_component_infor(self._id, {"prompt":msg[0]["content"],"messages":  msg[1:],"conf":  self._param.gen_conf()})
+
         for ans in chat_mdl.chat_streamly(msg[0]["content"], msg[1:], self._param.gen_conf()):
             res = {"content": ans, "reference": []}
             answer = ans

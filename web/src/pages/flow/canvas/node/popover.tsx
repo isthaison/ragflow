@@ -19,7 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useTranslate } from '@/hooks/common-hooks';
-import { Input } from 'antd';
+import { Button, Input, message } from 'antd';
 import { useGetComponentLabelByValue } from '../../hooks/use-get-begin-query';
 
 interface IProps extends React.PropsWithChildren {
@@ -129,8 +129,20 @@ export function NextNodePopover({ children, nodeId, name }: IProps) {
                   )}
                   {prompt && (
                     <div>
-                      <div className="font-medium mb-2 text-gray-600 dark:text-gray-400">
+                      <div className="font-medium mb-2 text-gray-600 dark:text-gray-400 flex items-center justify-between">
                         Prompt:
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            const inlineString = prompt
+                              .replace(/\n/g, '\\n')
+                              .trim();
+                            navigator.clipboard.writeText(inlineString);
+                            message.success('Prompt copied as single line!');
+                          }}
+                        >
+                          Copy as single line
+                        </Button>
                       </div>
                       <Input.TextArea
                         value={prompt}
