@@ -16,7 +16,6 @@
 import json
 from copy import deepcopy
 from functools import partial
-
 import pandas as pd
 
 from agent.component import component_class
@@ -396,3 +395,6 @@ class Canvas:
 
     def get_component_input_elements(self, cpnnm):
         return self.components[cpnnm]["obj"].get_input_elements()
+    
+    def set_component_infor(self, cpn_id, infor):
+        self.components[cpn_id]["obj"].set_infor(infor)
