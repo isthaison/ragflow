@@ -36,7 +36,7 @@ MCP_PORT=9382
 MCP_BASE_URL="http://127.0.0.1:9380"
 MCP_SCRIPT_PATH="/ragflow/mcp/server/server.py"
 MCP_MODE="self-host"
-MCP_HOST_API_KEY="ragflow-VhMTI2YTU0YzhmNzExZWY5NjBiMDI0Mm"
+MCP_HOST_API_KEY=""
 
 # -----------------------------------------------------------------------------
 # Host ID logic:
