@@ -61,12 +61,10 @@ class KeywordExtract(Generate, ABC):
 
     def _run(self, history, **kwargs):
         query = self.get_input()
-
         if hasattr(query, "to_dict") and "content" in query:
             query = ", ".join(map(str, query["content"].dropna()))
         else:
             query = str(query)
-
 
 
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
