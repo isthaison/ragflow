@@ -54,18 +54,21 @@ class CategorizeParam(GenerateParam):
                 descriptions.append(
                     "\nCategory: {}\nDescription: {}".format(c, desc["description"]))
 
-        self.prompt = """
+        examples_section = ""
+        if cate_lines:
+            examples_section = """
+You could learn from the following examples:
+- {}
+You could learn from the above examples.
+""".format("\n- ".join(cate_lines))
+
+        prompt = """
 Role: You're a text classifier. 
 Task: You need to categorize the user’s questions into {} categories, namely: {}
 
 Here's description of each category:
 {}
-
-You could learn from the following examples:
-- {}
-You could learn from the above examples.
-
-Requirements:
+{}Requirements:
 - Just mention the category names, no need for any additional words.
 
 ---- Real Data ----
@@ -74,10 +77,10 @@ USER: {}\n
             len(self.category_description.keys()),
             "/".join(list(self.category_description.keys())),
             "\n".join(descriptions),
-            "\n- ".join(cate_lines),
+            examples_section,
             chat_hist
         )
-        return self.prompt
+        return prompt
 
 
 class Categorize(Generate, ABC):

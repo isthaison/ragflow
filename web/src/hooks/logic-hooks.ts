@@ -48,7 +48,7 @@ export const useHandleSearchChange = () => {
     [],
   );
 
-  return { handleInputChange, searchString };
+  return { handleInputChange, searchString, setSearchString };
 };
 
 export const useChangeLanguage = () => {

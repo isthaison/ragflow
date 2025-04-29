@@ -17,8 +17,10 @@ import { useSaveKnowledge } from './hooks';
 import KnowledgeCard from './knowledge-card';
 import KnowledgeCreatingModal from './knowledge-creating-modal';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import styles from './index.less';
+
+const SEARCH_STRING_KEY = 'knowledge_search_string';
 
 const KnowledgeList = () => {
   const { data: userInfo } = useFetchUserInfo();
@@ -37,7 +39,23 @@ const KnowledgeList = () => {
     searchString,
     handleInputChange,
     loading,
+    setSearchString, // ensure this is exposed from your hook, or add a setter below
   } = useInfiniteFetchKnowledgeList();
+
+  // Restore searchString from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(SEARCH_STRING_KEY);
+    if (saved && saved !== searchString) {
+      // If your hook exposes setSearchString, use it. Otherwise, see note below.
+      setSearchString?.(saved);
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  // Save searchString to localStorage on change
+  useEffect(() => {
+    localStorage.setItem(SEARCH_STRING_KEY, searchString ?? '');
+  }, [searchString]);
 
   const nextList = useMemo(() => {
     const list =

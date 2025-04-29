@@ -88,7 +88,8 @@ export const useSelectKnowledgeOptions = () => {
 };
 
 export const useInfiniteFetchKnowledgeList = () => {
-  const { searchString, handleInputChange } = useHandleSearchChange();
+  const { searchString, handleInputChange, setSearchString } =
+    useHandleSearchChange();
   const debouncedSearchString = useDebounce(searchString, { wait: 500 });
 
   const PageSize = 30;
@@ -131,6 +132,7 @@ export const useInfiniteFetchKnowledgeList = () => {
     status,
     handleInputChange,
     searchString,
+    setSearchString, // expose setter
   };
 };
 

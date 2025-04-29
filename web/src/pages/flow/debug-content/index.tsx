@@ -7,10 +7,12 @@ import { getAuthorization } from '@/utils/authorization-util';
 import { UploadOutlined } from '@ant-design/icons';
 import {
   Button,
+  Col,
   Form,
   FormItemProps,
   Input,
   InputNumber,
+  Row,
   Select,
   Switch,
   Upload,
@@ -216,9 +218,13 @@ const DebugContent = ({
             layout={'vertical'}
             form={form}
           >
-            {parameters.map((x, idx) => {
-              return renderWidget(x, idx);
-            })}
+            <Row gutter={16}>
+              {parameters.map((x, idx) => (
+                <Col span={12} key={idx}>
+                  {renderWidget(x, idx)}
+                </Col>
+              ))}
+            </Row>
           </Form>
         </Form.Provider>
       </section>
