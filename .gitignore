@@ -46,3 +46,4 @@ nltk_data/
 docker/.env
 node_modules
 docker/data/
+/huggingface
