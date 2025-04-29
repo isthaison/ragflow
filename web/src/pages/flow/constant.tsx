@@ -753,7 +753,7 @@ export const NodeMap = {
   [Operator.GitHub]: 'ragNode',
   [Operator.BaiduFanyi]: 'ragNode',
   [Operator.QWeather]: 'ragNode',
-  [Operator.ExeSQL]: 'ragNode',
+  [Operator.ExeSQL]: 'exeSQLNode',
   [Operator.Switch]: 'switchNode',
   [Operator.Concentrator]: 'logicNode',
   [Operator.WenCai]: 'ragNode',

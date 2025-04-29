@@ -33,6 +33,7 @@ import { RagNode } from './node';
 import { BeginNode } from './node/begin-node';
 import { CategorizeNode } from './node/categorize-node';
 import { EmailNode } from './node/email-node';
+import { ExecSQLNode } from './node/execsql-node';
 import { GenerateNode } from './node/generate-node';
 import { InvokeNode } from './node/invoke-node';
 import { IterationNode, IterationStartNode } from './node/iteration-node';
@@ -63,6 +64,7 @@ export const nodeTypes: NodeTypes = {
   invokeNode: InvokeNode,
   templateNode: TemplateNode,
   variablesNode: VariablesNode,
+  exeSQLNode: ExecSQLNode,
   emailNode: EmailNode,
   group: IterationNode,
   iterationStartNode: IterationStartNode,
