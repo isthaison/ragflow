@@ -45,7 +45,7 @@ class CategorizeParam(GenerateParam):
             c=c.strip()
             for line in desc.get("examples", "").split("\n"):
                 line=line.strip()
-                if not line and not c:
+                if not line and not c and len(line)>0:
                     continue
                 cate_lines.append("Category: {} - USER: {}".format(c,line))
         descriptions = []
@@ -84,15 +84,21 @@ class Categorize(Generate, ABC):
     component_name = "Categorize"
 
     def _run(self, history, **kwargs):
-        input = self.get_input()
-        input = " - ".join(input["content"]) if "content" in input else ""
+        query = self.get_input()
+        if hasattr(query, "to_dict") and "content" in query:
+            query = ", ".join(map(str, query["content"].dropna()))
+        else:
+            query = str(query)
+
+
+
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         
         msg = self._canvas.get_history(self._param.message_history_window_size)
         msg = [m for m in msg if m["role"] == "user"]
         if len(msg) < 1:
             msg.append({"role": "user", "content": "\nCategory: "})
-        _, msg = message_fit_in([{"role": "system", "content": self._param.get_prompt(input)}, *msg ,{"role": "user", "content": "\nCategory: "}], int(chat_mdl.max_length * 0.97))
+        _, msg = message_fit_in([{"role": "system", "content": self._param.get_prompt(query)}, *msg ,{"role": "user", "content": "\nCategory: "}], int(chat_mdl.max_length * 0.97))
         if len(msg) < 2:
             msg.append({"role": "user", "content": "\nCategory: "})
         self._canvas.set_component_infor(self._id, {"prompt": msg[0]["content"],"messages":  msg[1:] ,"conf": self._param.gen_conf()})
