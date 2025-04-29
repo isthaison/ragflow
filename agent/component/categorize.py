@@ -89,6 +89,7 @@ class Categorize(Generate, ABC):
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         
         msg = self._canvas.get_history(self._param.message_history_window_size)
+        msg = [m for m in msg if m["role"] == "user"]
         if len(msg) < 1:
             msg.append({"role": "user", "content": "\nCategory: "})
         _, msg = message_fit_in([{"role": "system", "content": self._param.get_prompt(input)}, *msg ,{"role": "user", "content": "\nCategory: "}], int(chat_mdl.max_length * 0.97))
