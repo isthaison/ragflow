@@ -107,6 +107,16 @@ class Categorize(Generate, ABC):
         self._canvas.set_component_infor(self._id, {"prompt": msg[0]["content"],"messages":  msg[1:] ,"conf": self._param.gen_conf()})
 
         ans = chat_mdl.chat(msg[0]["content"], msg[1:],self._param.gen_conf())
+        
+        # Save last user question and ans to Category.txt
+        last_user_msg = ""
+        for m in reversed(msg):
+            if m.get("role") == "user" and m.get("content"):
+                last_user_msg = m["content"].strip()
+                break
+        with open("category.txt", "a", encoding="utf-8") as f:
+            f.write(f"# ans: {last_user_msg}\n{ans}\n\n")
+
         # Count the number of times each category appears in the answer.
         category_counts = {}
         for c in self._param.category_description.keys():
