@@ -68,11 +68,12 @@ Task: You need to categorize the user’s questions into {} categories, namely: 
 
 Here's description of each category:
 {}
-{}Requirements:
+{}
+Requirements:
 - Just mention the category names, no need for any additional words.
 
----- Real Data ----
-USER: {}\n
+Additional information for category identification:
+{}\n
         """.format(
             len(self.category_description.keys()),
             "/".join(list(self.category_description.keys())),
