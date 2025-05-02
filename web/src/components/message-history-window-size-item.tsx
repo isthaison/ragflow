@@ -1,4 +1,4 @@
-import { Form, InputNumber } from 'antd';
+import { Form, InputNumber, Select } from 'antd';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,6 +9,12 @@ import {
   FormMessage,
 } from './ui/form';
 import { Input } from './ui/input';
+
+export const MESSAGE_ROLES = [
+  { label: 'User', value: 'user' },
+  { label: 'Assistant', value: 'assistant' },
+  { label: 'System', value: 'system' },
+];
 
 const MessageHistoryWindowSizeItem = ({
   initialValue,
@@ -25,6 +31,37 @@ const MessageHistoryWindowSizeItem = ({
       tooltip={t('flow.messageHistoryWindowSizeTip')}
     >
       <InputNumber style={{ width: '100%' }} />
+    </Form.Item>
+  );
+};
+
+export const MessageHistoryRoleFilterItem = ({
+  initialValue = [],
+}: {
+  initialValue?: string[];
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Form.Item
+      name={'message_history_role_filter'}
+      label={t('flow.messageHistoryRoleFilter', 'Message Roles Filter')}
+      initialValue={initialValue}
+      tooltip={t(
+        'flow.messageHistoryRoleFilterTip',
+        'Select roles to filter messages',
+      )}
+    >
+      <Select
+        mode="multiple"
+        allowClear
+        options={MESSAGE_ROLES}
+        placeholder={t(
+          'flow.messageHistoryRoleFilterPlaceholder',
+          'Select roles',
+        )}
+        style={{ width: '100%' }}
+      />
     </Form.Item>
   );
 };

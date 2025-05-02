@@ -1,5 +1,7 @@
 import LLMSelect from '@/components/llm-select';
-import MessageHistoryWindowSizeItem from '@/components/message-history-window-size-item';
+import MessageHistoryWindowSizeItem, {
+  MessageHistoryRoleFilterItem,
+} from '@/components/message-history-window-size-item';
 import { PromptEditor } from '@/components/prompt-editor';
 import { useTranslate } from '@/hooks/common-hooks';
 import { Form, Switch } from 'antd';
@@ -50,6 +52,7 @@ const GenerateForm = ({ onValuesChange, form }: IOperatorForm) => {
       <MessageHistoryWindowSizeItem
         initialValue={12}
       ></MessageHistoryWindowSizeItem>
+      <MessageHistoryRoleFilterItem initialValue={['user', 'assistant']} />
     </Form>
   );
 };

@@ -192,6 +192,10 @@ class Generate(ComponentBase):
             res = {"content": empty_res if empty_res else "Nothing found in knowledgebase!", "reference": []}
             return pd.DataFrame([res])
         msg = self._canvas.get_history(self._param.message_history_window_size)
+        # Filter message history by role if filter is set
+        message_role_filter = getattr(self._param, "message_history_role_filter", None)
+        if message_role_filter:
+            msg = [m for m in msg if m.get("role") in message_role_filter]
         if len(msg) < 1:
             msg.append({"role": "user", "content": "Output: "})
         _, msg = message_fit_in([{"role": "system", "content": prompt}, *msg], int(chat_mdl.max_length * 0.97))
@@ -221,6 +225,10 @@ class Generate(ComponentBase):
         msg = self._canvas.get_history(self._param.message_history_window_size)
         if msg and msg[0]['role'] == 'assistant':
             msg.pop(0)
+        # Filter message history by role if filter is set
+        message_role_filter = getattr(self._param, "message_history_role_filter", None)
+        if message_role_filter:
+            msg = [m for m in msg if m.get("role") in message_role_filter]
         if len(msg) < 1:
             msg.append({"role": "user", "content": "Output: "})
         _, msg = message_fit_in([{"role": "system", "content": prompt}, *msg], int(chat_mdl.max_length * 0.97))
