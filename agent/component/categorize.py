@@ -98,6 +98,11 @@ class Categorize(Generate, ABC):
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
         
         msg = self._canvas.get_history(self._param.message_history_window_size)
+        last_user_msg = ""
+        for m in reversed(msg):
+            if m.get("role") == "user" and m.get("content"):
+                last_user_msg = m["content"].strip()
+                break
         msg = [m for m in msg if m["role"] == "user"]
         if len(msg) < 1:
             msg.append({"role": "user", "content": "\nCategory: "})
@@ -106,16 +111,17 @@ class Categorize(Generate, ABC):
             msg.append({"role": "user", "content": "\nCategory: "})
         self._canvas.set_component_infor(self._id, {"prompt": msg[0]["content"],"messages":  msg[1:] ,"conf": self._param.gen_conf()})
 
+        import os
+
         ans = chat_mdl.chat(msg[0]["content"], msg[1:],self._param.gen_conf())
         
-        # Save last user question and ans to Category.txt
-        last_user_msg = ""
-        for m in reversed(msg):
-            if m.get("role") == "user" and m.get("content"):
-                last_user_msg = m["content"].strip()
-                break
-        with open("category.txt", "a", encoding="utf-8") as f:
-            f.write(f"# ans: {last_user_msg}\n{ans}\n\n")
+
+        file_path = "/ragflow/logs/category.txt"
+        if not os.path.exists(file_path):
+            with open(file_path, "w", encoding="utf-8") as f:
+                pass  # create the file if not exists
+        with open(file_path, "a", encoding="utf-8") as f:
+            f.write(f"# {ans}: {last_user_msg}\n")
 
         # Count the number of times each category appears in the answer.
         category_counts = {}
