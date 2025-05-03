@@ -75,7 +75,7 @@ services:
       - "8080:8080"
       # - "8090:8080"
     volumes:
-      - ../../../gemini-proxy/gemini-OpenAI-compatibility-nodejs:/app  # Mount toàn bộ thư mục code vào container
+      - ../../../gemini-proxy:/app  # Mount toàn bộ thư mục code vào container
     environment:
       - NODE_ENV=development
     command: yarn dev  # Chạy chế độ phát triển với auto-reload
