@@ -56,18 +56,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  gemini-mattermost:
-    image: gemini-proxy
-    container_name: gemini-mattermost
-    ports:
-      - "8090:8080"
-    environment:
-      - TZ=${TIMEZONE}
-    networks:
-      - ragflow
-    restart: on-failure
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   gemini-openai-compatibility-nodejs:
     image: gemini-openai-compatibility-nodejs
