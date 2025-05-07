@@ -40,10 +40,11 @@ class VariablesExtractParam(GenerateParam):
     def get_prompt(self, conv:str, params:dict):
         prompt = f"""
 
-You are a data expert extracting information. DON'T generate anything except the information extracted with flat JSON (no nested JSON or Array). 
-Get {", ".join([f"'{key}'" for key in params.keys()])} and any field from the conversation below.
-{conv}
+Task: You are a data expert extracting information. DON'T generate anything except the information extracted with flat JSON (no nested JSON or Array). 
 """
+        if params:
+            prompt += f"Get {', '.join([f"'{key}'" for key in params.keys()])} and any field from the conversation below.\n"
+        prompt += f"{conv}"
         return prompt
 
 
@@ -61,10 +62,10 @@ class VariablesExtract(Generate, ABC):
                         args[field] = ""
 
         inputs = self.get_input()
-        query = "\n".join(i.strip() for i in inputs["content"] if i.strip())
+        query ="\n".join(i.strip() for i in inputs["content"] if i.strip())
         hist = self._canvas.get_history(self._param.message_history_window_size)
         initquestion = ""
-        conv = ["{}: {}".format("USER", query)]
+        conv = ["{}: {}".format("# The information need to extract below:\n", query)]
         for m in hist:
             if m["role"] not in ["user"]:
                 continue
