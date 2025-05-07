@@ -65,7 +65,7 @@ class VariablesExtract(Generate, ABC):
         query ="\n".join(i.strip() for i in inputs["content"] if i.strip())
         hist = self._canvas.get_history(self._param.message_history_window_size)
         initquestion = ""
-        conv = ["{}: {}".format("# The information need to extract below:\n", query)]
+        conv = ["{}\n: {}".format("# The information need to extract below:", query)]
         for m in hist:
             if m["role"] not in ["user"]:
                 continue
