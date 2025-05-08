@@ -45,7 +45,7 @@ Task: You are a data expert extracting information. DON'T generate anything exce
         if params:
             key_strings = [f"'{k}'" for k in params.keys()]
             joined_key_strings = ", ".join(key_strings)
-            prompt += f"Get {joined_key_strings} and any field from the conversation below.\n"
+            prompt += f"Get {joined_key_strings} and any fields\n"
         prompt += f"{conv}"
         return prompt
 
@@ -68,7 +68,7 @@ class VariablesExtract(Generate, ABC):
         hist = self._canvas.get_history(self._param.message_history_window_size)
         initquestion = ""
         if query:
-            conv = ["{}\n: {}".format("# The information need to extract below:", query)]
+            conv = ["{}\n {}".format("# The information need to extract below:", query)]
         else:
             conv = []
         for m in hist:
