@@ -19,7 +19,7 @@ from api.db import LLMType
 from api.db.services.llm_service import LLMBundle
 from agent.component import GenerateParam, Generate
 import json
-
+import logging
 
 class VariablesExtractParam(GenerateParam):
     """
@@ -78,7 +78,6 @@ class VariablesExtract(Generate, ABC):
             conv.append("{}: {}".format(m["role"].upper(), m["content"]))
         conv = "\n".join(conv)
         chat_mdl = LLMBundle(self._canvas.get_tenant_id(), LLMType.CHAT, self._param.llm_id)
-        self._canvas.set_component_infor(self._id, {"prompt":self._param.get_prompt(conv, args) ,"messages": [{"role": "user", "content": "Output:"}],"conf":  self._param.gen_conf()})
 
         ans = chat_mdl.chat(self._param.get_prompt(conv, args),
                             [{"role": "user", "content": "Output:"}], self._param.gen_conf())
@@ -87,8 +86,22 @@ class VariablesExtract(Generate, ABC):
         if match:
             ans = match.group(1)
         if not ans:
+            self._canvas.set_component_infor(self._id, {
+                "prompt":self._param.get_prompt(conv, args) ,
+                "messages":     [
+                                    {"role": "user", "content": "Output:"},
+                                    {"role": "assistant", "content": "no match JSON"},
+                                ],
+                "conf":  self._param.gen_conf()})
             return VariablesExtract.be_output(initquestion)
-
+        
+        self._canvas.set_component_infor(self._id, {
+            "prompt":self._param.get_prompt(conv, args) ,
+            "messages":         [
+                                    {"role": "user", "content": "Output:"},
+                                    {"role": "assistant", "content": ans},
+                                ],
+            "conf":  self._param.gen_conf()})
 
         try:
             kwargs = {}
@@ -104,8 +117,12 @@ class VariablesExtract(Generate, ABC):
                 if data:
                     kwargs[v] = data.strip()
                     self._canvas.add_item_global_param(key=v, value=data.strip(), description=f"Extracted variable: {v}")
-
+            logging.info(f"kwargs: {kwargs}")
+            logging.info("============")
+            logging.info("{}".format(self._canvas.components["begin"]["obj"]._param.query))
+            logging.info("============")
             self._canvas.set_global_param(**kwargs)
+
 
             return VariablesExtract.be_output(query)
         except json.JSONDecodeError:

@@ -250,6 +250,7 @@ export function NextNodePopover({ children, nodeId, name }: IProps) {
                                 onClick={() => {
                                   const inlineString = prompt
                                     .replace(/\s+/g, ' ')
+                                    .replace(/"/g, '\\"')
                                     .trim();
                                   navigator.clipboard.writeText(inlineString);
                                   message.success(
