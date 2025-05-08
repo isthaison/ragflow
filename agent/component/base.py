@@ -474,7 +474,6 @@ class ComponentBase(ABC):
         for q in sources:
             if q.get("component_id"):
                 if "@" in q["component_id"] and q["component_id"].split("@")[0].lower().find("begin") >= 0:
-
                     cpn_id, key = q["component_id"].split("@")
                     for p in self._canvas.get_component(cpn_id)["obj"]._param.query:
                         if p["key"] == key:

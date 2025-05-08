@@ -103,8 +103,6 @@ class VariablesExtract(Generate, ABC):
                     continue
                 if data:
                     kwargs[v] = data.strip()
-
-                    # Add missing keys to global parameters
                     self._canvas.add_item_global_param(key=v, value=data.strip(), description=f"Extracted variable: {v}")
 
             self._canvas.set_global_param(**kwargs)

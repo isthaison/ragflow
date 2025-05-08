@@ -57,6 +57,7 @@ import upperFirst from 'lodash/upperFirst';
 import {
   CirclePower,
   CloudUpload,
+  Database,
   IterationCcw,
   ListOrdered,
   OptionIcon,
@@ -2965,6 +2966,7 @@ export enum BeginQueryType {
   File = 'file',
   Integer = 'integer',
   Boolean = 'boolean',
+  KnowledgeBases = 'kb',
 }
 
 export const BeginQueryTypeIconMap = {
@@ -2974,6 +2976,7 @@ export const BeginQueryTypeIconMap = {
   [BeginQueryType.File]: CloudUpload,
   [BeginQueryType.Integer]: ListOrdered,
   [BeginQueryType.Boolean]: ToggleLeft,
+  [BeginQueryType.KnowledgeBases]: Database,
 };
 
 export const NoDebugOperatorsList = [
