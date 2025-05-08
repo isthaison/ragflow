@@ -43,7 +43,9 @@ class VariablesExtractParam(GenerateParam):
 Task: You are a data expert extracting information. DON'T generate anything except the information extracted with flat JSON (no nested JSON or Array). 
 """
         if params:
-            prompt += f"Get {', '.join([f"'{key}'" for key in params.keys()])} and any field from the conversation below.\n"
+            key_strings = [f"'{k}'" for k in params.keys()]
+            joined_key_strings = ", ".join(key_strings)
+            prompt += f"Get {joined_key_strings} and any field from the conversation below.\n"
         prompt += f"{conv}"
         return prompt
 

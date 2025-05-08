@@ -619,3 +619,22 @@ class ComponentBase(ABC):
     def get_upstream(self):
         cpn_nms = self._canvas.get_component(self._id)['upstream']
         return cpn_nms
+    def add_item_global_param(self, key, value=None, optional=True, type="paragraph", description=""):
+        try:
+            for param in self._canvas.components["begin"]["obj"]._param.query:
+                if param["key"] == key:
+                    return False
+            param_item = {
+                "key": key,
+                "optional": optional,
+                "type": type,
+                "description": description
+            }
+            
+            if value is not None:
+                param_item["value"] = value
+                
+            self.components["begin"]["obj"]._param.query.append(param_item)
+            return True
+        except:
+            return False
