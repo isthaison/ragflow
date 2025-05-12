@@ -358,7 +358,18 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
                 canvas.reference.append(final_ans["reference"])
             conv.dsl = json.loads(str(canvas))
             API4ConversationService.append_message(conv.id, conv.to_dict())
-            
+            yield "data: " + json.dumps(
+                    get_data_openai(
+                        id=session_id,
+                        model=agent_id,
+                        content="",
+                        object="chat.completion.chunk",
+                        finish_reason="stop",
+                        completion_tokens=completion_tokens,
+                        prompt_tokens=prompt_tokens
+                    ),
+                    ensure_ascii=False
+                ) + "\n\n"
             yield "data: [DONE]\n\n"
             
         except Exception as e:
