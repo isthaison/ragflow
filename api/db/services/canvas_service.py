@@ -344,7 +344,7 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
                         model=agent_id,
                         content=final_ans["content"],
                         object="chat.completion.chunk",
-                        finish_reason="stop",
+                        finish_reason="",
                         completion_tokens=completion_tokens,
                         prompt_tokens=prompt_tokens
                     ),
