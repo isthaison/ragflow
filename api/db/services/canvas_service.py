@@ -337,12 +337,12 @@ def completionOpenAI(tenant_id, agent_id, question, session_id=None, stream=True
                 for k in ans.keys():
                     final_ans[k] = ans[k]
                 
-                completion_tokens += len(tiktokenenc.encode(ans))
+                completion_tokens += len(tiktokenenc.encode(final_ans.get("content", "")))
                 yield "data: " + json.dumps(
                     get_data_openai(
                         id=session_id,
                         model=agent_id,
-                        content=ans,
+                        content=final_ans["content"],
                         object="chat.completion.chunk",
                         finish_reason="",
                         completion_tokens=completion_tokens,
