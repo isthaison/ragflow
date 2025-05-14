@@ -1129,6 +1129,7 @@ export default {
       promptTip:
         'Use o prompt do sistema para descrever a tarefa para o LLM, especificar como ele deve responder e esboçar outros requisitos diversos. O prompt do sistema é frequentemente usado em conjunto com chaves (variáveis), que servem como várias entradas de dados para o LLM. Use uma barra `/` ou o botão (x) para mostrar as chaves a serem usadas.',
       promptMessage: 'O prompt é obrigatório',
+      runningHintText: 'está rodando...🕞',
     },
     footer: {
       profile: 'Todos os direitos reservados @ React',

@@ -171,7 +171,10 @@ class Canvas:
                 return n["data"]["name"]
         return ""
 
-    def run(self, **kwargs):
+    def run(self, running_hint_text = "is running...🕞", **kwargs):
+        if not running_hint_text or not isinstance(running_hint_text, str):
+            running_hint_text = "is running...🕞"
+
         if self.answer:
             cpn_id = self.answer[0]
             self.answer.pop(0)
@@ -212,8 +215,8 @@ class Canvas:
                             if c not in waiting:
                                 waiting.append(c)
                             continue
-                    yield "*'{}'* is running...🕞".format(self.get_component_name(c))
-                    
+                    yield "*'{}'* {}".format(self.get_component_name(c), running_hint_text)
+
                     if cpn.component_name.lower() == "iteration":
                         st_cpn = cpn.get_start()
                         assert st_cpn, "Start component not found for Iteration."

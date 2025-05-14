@@ -57,6 +57,9 @@ class Docx(DocxParser):
             return None
         except InvalidImageStreamError:
             return None
+        except UnicodeDecodeError:
+            logging.info("The recognized image stream appears to be corrupted. Skipping image.")
+            return None
         try:
             image = Image.open(BytesIO(image_blob)).convert('RGB')
             return image

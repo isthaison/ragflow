@@ -1273,6 +1273,7 @@ This delimiter is used to split the input text into several text pieces echo of 
         k: 'Top K',
         pathzone: 'Path zone',
       },
+      runningHintText: 'is running...🕞',
     },
   },
 };
