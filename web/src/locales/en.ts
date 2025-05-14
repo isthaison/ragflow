@@ -1271,6 +1271,7 @@ This delimiter is used to split the input text into several text pieces echo of 
         similarity_threshold: 'Similarity threshold',
         deep_zone: 'Deep zone',
         k: 'Top K',
+        pathzone: 'Path zone',
       },
     },
   },

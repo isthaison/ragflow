@@ -117,6 +117,10 @@ class Canvas:
                 for _, desc in param.category_description.items():
                     if desc["to"] not in cpn["downstream"]:
                         cpn["downstream"].append(desc["to"])
+            if cpn["obj"].component_name == "ClassifyFaiss":
+                for _, desc in param.category_description.items():
+                    if desc["to"] not in cpn["downstream"]:
+                        cpn["downstream"].append(desc["to"])
 
         self.path = self.dsl["path"]
         self.history = self.dsl["history"]
@@ -250,7 +254,7 @@ class Canvas:
                 raise OverflowError(f"Too much loops: {loop}")
 
             downstream = []
-            if cpn["obj"].component_name.lower() in ["switch", "categorize", "relevant"]:
+            if cpn["obj"].component_name.lower() in ["switch", "categorize", "relevant", "classifyfaiss"]:
                 switch_out = cpn["obj"].output()[1].iloc[0, 0]
                 assert switch_out in self.components, \
                     "{}'s output: {} not valid.".format(cpn_id, switch_out)
