@@ -37,7 +37,7 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       <Form.Item name={'pathzone'} label={t('flow.classifyFaissForm.pathzone')}>
         <Input />
       </Form.Item>
-      <Form.Item label={t('flow.k')} shouldUpdate>
+      <Form.Item label={t('flow.classifyFaissForm.k')} shouldUpdate>
         {({ getFieldValue, setFieldsValue }) => (
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Slider
