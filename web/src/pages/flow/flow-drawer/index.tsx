@@ -50,6 +50,7 @@ import SingleDebugDrawer from './single-debug-drawer';
 import { RAGFlowNodeType } from '@/interfaces/database/flow';
 import { FlowFormContext } from '../context';
 import { RunTooltip } from '../flow-tooltip';
+import ClassifyFaissForm from '../form/classify-faiss-form';
 import IterationForm from '../form/iteration-from';
 import VariablesForm from '../form/variables-form';
 import styles from './index.less';
@@ -67,6 +68,7 @@ const FormMap = {
   [Operator.Generate]: GenerateForm,
   [Operator.Answer]: AnswerForm,
   [Operator.Categorize]: CategorizeForm,
+  [Operator.ClassifyFaiss]: ClassifyFaissForm,
   [Operator.Message]: MessageForm,
   [Operator.Relevant]: RelevantForm,
   [Operator.RewriteQuestion]: RewriteQuestionForm,
@@ -131,6 +133,14 @@ const FormDrawer = ({
       }
 
       if (operatorName === Operator.Categorize) {
+        const items = buildCategorizeListFromObject(
+          get(node, 'data.form.category_description', {}),
+        );
+        const formData = node?.data?.form;
+        if (isPlainObject(formData)) {
+          form.setFieldsValue({ ...formData, items });
+        }
+      } else if (operatorName === Operator.ClassifyFaiss) {
         const items = buildCategorizeListFromObject(
           get(node, 'data.form.category_description', {}),
         );

@@ -32,6 +32,7 @@ import styles from './index.less';
 import { RagNode } from './node';
 import { BeginNode } from './node/begin-node';
 import { CategorizeNode } from './node/categorize-node';
+import { ClassifyFaissNode } from './node/classify-faiss-node';
 import { EmailNode } from './node/email-node';
 import { ExecSQLNode } from './node/execsql-node';
 import { GenerateNode } from './node/generate-node';
@@ -68,6 +69,7 @@ export const nodeTypes: NodeTypes = {
   emailNode: EmailNode,
   group: IterationNode,
   iterationStartNode: IterationStartNode,
+  classifyFaissNode: ClassifyFaissNode,
 };
 
 export const edgeTypes = {

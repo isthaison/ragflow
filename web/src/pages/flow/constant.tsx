@@ -1,4 +1,5 @@
 import {
+  FaissIcon,
   GitHubIcon,
   KeywordIcon,
   QWeatherIcon,
@@ -106,6 +107,7 @@ export enum Operator {
   Iteration = 'Iteration',
   IterationStart = 'IterationItem',
   VariablesExtract = 'VariablesExtract',
+  ClassifyFaiss = 'ClassifyFaiss',
 }
 
 export const CommonOperatorList = Object.values(Operator).filter(
@@ -150,6 +152,7 @@ export const operatorIconMap = {
   [Operator.Email]: EmailIcon,
   [Operator.Iteration]: IterationCcw,
   [Operator.IterationStart]: CirclePower,
+  [Operator.ClassifyFaiss]: FaissIcon,
 };
 
 export const operatorMap: Record<
@@ -209,6 +212,7 @@ export const operatorMap: Record<
     iconFontSize: 16,
   },
   [Operator.VariablesExtract]: { backgroundColor: '#e6f7ff' },
+  [Operator.ClassifyFaiss]: { backgroundColor: '#b474ff' },
 
   [Operator.KeywordExtract]: {
     width: 70,
@@ -396,6 +400,9 @@ export const componentMenuList = [
   {
     name: Operator.Email,
   },
+  {
+    name: Operator.ClassifyFaiss,
+  },
 ];
 
 const initialQueryBaseValues = {
@@ -459,6 +466,15 @@ export const initialCategorizeValues = {
   ...initialLlmBaseValues,
   message_history_window_size: 1,
   category_description: {},
+  ...initialQueryBaseValues,
+};
+export const initialClassifyFaissValues = {
+  category_description: {},
+  keyword_weight: 0.1,
+  similarity_threshold: 0.1,
+  url: 'http://',
+  k: 5,
+  deep_zone: false,
   ...initialQueryBaseValues,
 };
 
@@ -667,6 +683,11 @@ export const CategorizeAnchorPointPositions = [
 export const RestrictedUpstreamMap = {
   [Operator.Begin]: [Operator.Relevant],
   [Operator.Categorize]: [Operator.Begin, Operator.Answer, Operator.Relevant],
+  [Operator.ClassifyFaiss]: [
+    Operator.Begin,
+    Operator.Answer,
+    Operator.Relevant,
+  ],
   [Operator.Answer]: [
     Operator.Begin,
     Operator.Answer,
@@ -769,6 +790,7 @@ export const NodeMap = {
   [Operator.Email]: 'emailNode',
   [Operator.Iteration]: 'group',
   [Operator.IterationStart]: 'iterationStartNode',
+  [Operator.ClassifyFaiss]: 'classifyFaissNode',
 };
 
 export const LanguageOptions = [

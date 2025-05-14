@@ -40,6 +40,7 @@ import {
   initialBeginValues,
   initialBingValues,
   initialCategorizeValues,
+  initialClassifyFaissValues,
   initialConcentratorValues,
   initialCrawlerValues,
   initialDeepLValues,
@@ -141,6 +142,7 @@ export const useInitializeOperatorParams = () => {
       [Operator.Email]: initialEmailValues,
       [Operator.Iteration]: initialIterationValues,
       [Operator.IterationStart]: initialIterationValues,
+      [Operator.ClassifyFaiss]: initialClassifyFaissValues,
     };
   }, [llmId]);
 

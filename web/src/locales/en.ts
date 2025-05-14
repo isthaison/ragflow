@@ -1263,6 +1263,15 @@ This delimiter is used to split the input text into several text pieces echo of 
       knowledgeBasesTip:
         'Select the knowledge bases to associate with this chat assistant, or choose variables containing knowledge base IDs below.',
       knowledgeBaseVars: 'Knowledge base variables',
+      classifyFaiss: 'Classify Faiss',
+      classifyFaissDescription:
+        'Classify Faiss is a component that uses the Faiss API to classify user inputs into predefined categories. Ensure you specify the name and description for each category, along with the corresponding next component.',
+      classifyFaissForm: {
+        keyword_weight: 'Keyword weight',
+        similarity_threshold: 'Similarity threshold',
+        deep_zone: 'Deep zone',
+        k: 'Top K',
+      },
     },
   },
 };

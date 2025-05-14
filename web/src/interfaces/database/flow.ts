@@ -81,6 +81,9 @@ export interface ICategorizeItem {
 export interface ICategorizeForm extends IGenerateForm {
   category_description: ICategorizeItemResult;
 }
+export interface IClassifyFAISSForm extends IGenerateForm {
+  category_description: ICategorizeItemResult;
+}
 
 export interface IRelevantForm extends IGenerateForm {
   yes: string;
@@ -132,6 +135,7 @@ export type IBeginNode = BaseNode<IBeginForm>;
 export type IRetrievalNode = BaseNode<IRetrievalForm>;
 export type IGenerateNode = BaseNode<IGenerateForm>;
 export type ICategorizeNode = BaseNode<ICategorizeForm>;
+export type IClassifyFAISSNode = BaseNode<IClassifyFAISSForm>;
 export type ISwitchNode = BaseNode<ISwitchForm>;
 export type IRagNode = BaseNode;
 export type IRelevantNode = BaseNode;
@@ -165,6 +169,7 @@ export type RAGFlowNodeType =
   | IIterationNode
   | IIterationStartNode
   | IKeywordNode
+  | IClassifyFAISSNode
   | IVariableNode;
 
 export interface IGraph {

@@ -1,4 +1,5 @@
 import {
+  FaissIcon,
   GitHubIcon,
   KeywordIcon,
   QWeatherIcon,
@@ -103,6 +104,7 @@ export enum Operator {
   Email = 'Email',
   Iteration = 'Iteration',
   IterationStart = 'IterationItem',
+  ClassifyFaiss = 'ClassifyFaiss',
 }
 
 export const CommonOperatorList = Object.values(Operator).filter(
@@ -161,6 +163,7 @@ export const operatorIconMap = {
   [Operator.Email]: EmailIcon,
   [Operator.Iteration]: IterationCcw,
   [Operator.IterationStart]: CirclePower,
+  [Operator.ClassifyFaiss]: FaissIcon,
 };
 
 export const operatorMap: Record<
@@ -299,6 +302,7 @@ export const operatorMap: Record<
   [Operator.Email]: { backgroundColor: '#e6f7ff' },
   [Operator.Iteration]: { backgroundColor: '#e6f7ff' },
   [Operator.IterationStart]: { backgroundColor: '#e6f7ff' },
+  [Operator.ClassifyFaiss]: { backgroundColor: '#e6f7ff' },
 };
 
 export const componentMenuList = [
@@ -402,6 +406,9 @@ export const componentMenuList = [
   {
     name: Operator.Email,
   },
+  {
+    name: Operator.ClassifyFaiss,
+  },
 ];
 
 const initialQueryBaseValues = {
@@ -459,6 +466,17 @@ export const initialCategorizeValues = {
   ...initialLlmBaseValues,
   message_history_window_size: 1,
   category_description: {},
+  ...initialQueryBaseValues,
+};
+
+export const initialClassifyFaissValues = {
+  message_history_window_size: 1,
+  category_description: {},
+  keyword_weight: 0.1,
+  similarity_threshold: 0.1,
+  url: 'http://',
+  k: 5,
+  deep_zone: false,
   ...initialQueryBaseValues,
 };
 
@@ -670,6 +688,12 @@ export const RestrictedUpstreamMap = {
     Operator.Answer,
     Operator.Relevant,
   ],
+  [Operator.ClassifyFaiss]: [
+    Operator.Begin,
+    Operator.Categorize,
+    Operator.Answer,
+    Operator.Relevant,
+  ],
   [Operator.Answer]: [
     Operator.Begin,
     Operator.Answer,
@@ -764,7 +788,7 @@ export const NodeMap = {
   [Operator.Template]: 'templateNode',
   [Operator.Email]: 'emailNode',
   [Operator.Iteration]: 'group',
-  [Operator.IterationStart]: 'iterationStartNode',
+  [Operator.ClassifyFaiss]: 'classifyFaissNode',
 };
 
 export const LanguageOptions = [

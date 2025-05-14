@@ -17,6 +17,7 @@ import { settledModelVariableMap } from '@/constants/knowledge';
 import { useFetchModelId } from '@/hooks/logic-hooks';
 import {
   ICategorizeForm,
+  IClassifyFAISSForm,
   IRelevantForm,
   ISwitchForm,
   RAGFlowNodeType,
@@ -39,6 +40,7 @@ import {
   initialBeginValues,
   initialBingValues,
   initialCategorizeValues,
+  initialClassifyFaissValues,
   initialConcentratorValues,
   initialCrawlerValues,
   initialDeepLValues,
@@ -100,6 +102,7 @@ export const useInitializeOperatorParams = () => {
     return {
       [Operator.Begin]: initialBeginValues,
       [Operator.Retrieval]: initialRetrievalValues,
+      [Operator.ClassifyFaiss]: initialClassifyFaissValues,
       [Operator.Generate]: { ...initialGenerateValues, llm_id: llmId },
       [Operator.Answer]: {},
       [Operator.Categorize]: { ...initialCategorizeValues, llm_id: llmId },
@@ -488,6 +491,9 @@ export const useWatchNodeFormDataChange = () => {
           break;
         case Operator.Categorize:
           buildCategorizeEdgesByFormData(node.id, form as ICategorizeForm);
+          break;
+        case Operator.ClassifyFaiss:
+          buildCategorizeEdgesByFormData(node.id, form as IClassifyFAISSForm);
           break;
         case Operator.Switch:
           buildSwitchEdgesByFormData(node.id, form as ISwitchForm);

@@ -51,6 +51,7 @@ from .email import Email, EmailParam
 from .iteration import Iteration, IterationParam
 from .iterationitem import IterationItem, IterationItemParam
 from .variables import VariablesExtract, VariablesExtractParam
+from .classifyfaiss import ClassifyFaiss, ClassifyFaissParam
 
 
 def component_class(class_name):
@@ -133,4 +134,6 @@ __all__ = [
     "component_class",
     "VariablesExtract",
     "VariablesExtractParam"
+    "ClassifyFaiss",
+    "ClassifyFaissParam"
 ]
