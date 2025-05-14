@@ -31,6 +31,7 @@ class ClassifyFaissParam(ComponentParamBase):
         super().__init__()
         self.category_description = {}
         self.url = ""
+        self.pathzone = ""
         self.k = 5
         self.keyword_weight = 0.1
         self.similarity_threshold = 0.1
@@ -60,6 +61,7 @@ class ClassifyFaiss(ComponentBase, ABC):
             query = str(query)
         config = {  
             "query": query,
+            "data_path": self._param.pathzone,
             "k": self._param.k,
             "keyword_weight": self._param.keyword_weight,
             "similarity_threshold": self._param.similarity_threshold,
@@ -69,13 +71,8 @@ class ClassifyFaiss(ComponentBase, ABC):
         msg = self._canvas.get_history(self._param.message_history_window_size)
         msg = [m for m in msg if m["role"] == "user"]
         query +=  ", ".join(map(str, [m["content"] for m in msg]))
-        
-        self._canvas.set_component_infor(self._id, {
-            "prompt":query,
-            "messages": [],
-            "conf": self._param.gen_conf()
-            })
 
+     
         url = self._param.url.strip()
         if url.find("http") != 0:
             url = "http://" + url
@@ -83,9 +80,17 @@ class ClassifyFaiss(ComponentBase, ABC):
                                     json=config,
                                     headers={"Content-Type": "application/json"},
                                 )
-        ans = response.text
-        
+   
+        if response.status_code != 200:
+            raise ValueError(f"[ClassifyFaiss] Error: {response.status_code}, {response.text}")
+        data = response.json()
+        ans = data.get("zone", "")
 
+        self._canvas.set_component_infor(self._id, {
+            "prompt": query,
+            "messages": data,
+            "conf": config
+        })
    
 
         # Count the number of times each category appears in the answer.

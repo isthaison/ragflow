@@ -27,10 +27,14 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
         k: 5,
         deep_zone: false,
         url: '',
+        pathzone: '',
       }}
       layout={'vertical'}
     >
       <Form.Item name={'url'} label={t('flow.url')}>
+        <Input />
+      </Form.Item>
+      <Form.Item name={'pathzone'} label={t('flow.pathzone')}>
         <Input />
       </Form.Item>
       <Form.Item label={t('flow.k')} shouldUpdate>
@@ -54,7 +58,6 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
           </div>
         )}
       </Form.Item>
-
       <Form.Item
         label={t('flow.classifyFaissForm.keyword_weight')}
         shouldUpdate
@@ -109,7 +112,6 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
           </div>
         )}
       </Form.Item>
-
       <Form.Item
         name={'deep_zone'}
         label={t('flow.classifyFaissForm.deep_zone')}
@@ -117,7 +119,6 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       >
         <Switch />
       </Form.Item>
-
       <DynamicInputVariable node={node}></DynamicInputVariable>
       <MessageHistoryWindowSizeItem initialValue={1} />
       <DynamicCategorize nodeId={node?.id}></DynamicCategorize>
