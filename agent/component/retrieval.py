@@ -13,6 +13,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+import json
+import logging
 from abc import ABC
 
 import pandas as pd
@@ -56,11 +58,7 @@ class Retrieval(ComponentBase, ABC):
 
     def _run(self, history, **kwargs):
         query = self.get_input()
-        if hasattr(query, "to_dict") and "content" in query:
-            query = ", ".join(map(str, query["content"].dropna()))
-        else:
-            query = str(query)
-        kbs = KnowledgebaseService.get_by_ids(self._param.kb_ids)
+        query = str(query["content"][0]) if "content" in query else ""
 
         kb_ids: list[str] = self._param.kb_ids or []
 
