@@ -52,7 +52,7 @@ export function ClassifyFaissNode({
                 position={Position.Right}
                 isConnectable
                 className={styles.handle}
-                style={{ ...RightHandleStyle, top: position.top }}
+                style={{ ...RightHandleStyle, top: position.top - 36 }}
               ></Handle>
             </div>
           );
