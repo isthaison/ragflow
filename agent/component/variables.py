@@ -117,10 +117,6 @@ class VariablesExtract(Generate, ABC):
                 if data:
                     kwargs[v] = data.strip()
                     self._canvas.add_item_global_param(key=v, value=data.strip(), description=f"Extracted variable: {v}")
-            logging.info(f"kwargs: {kwargs}")
-            logging.info("============")
-            logging.info("{}".format(self._canvas.components["begin"]["obj"]._param.query))
-            logging.info("============")
             self._canvas.set_global_param(**kwargs)
 
 
