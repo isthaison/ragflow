@@ -57,40 +57,6 @@ services:
       - "host.docker.internal:host-gateway"
 
 
-  # gemini-openai-compatibility-nodejs:
-  #   image: gemini-openai-compatibility-nodejs
-  #   ports:
-  #     - "8080:8080"
-  #     # - "8090:8080"
-  #   volumes:
-  #     - ../../../gemini-proxy:/app  # Mount toàn bộ thư mục code vào container
-  #   environment:
-  #     - NODE_ENV=development
-  #   command: yarn dev  # Chạy chế độ phát triển với auto-reload
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "curl http://localhost:8080/health"]
-  #     interval: 1m30s
-  #     timeout: 30s
-  #     retries: 5
-  #     start_period: 30s
-
-  huggingface:
-    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.6
-    ports:
-      - "3124:3124"
-    volumes:
-      - ../huggingface:/data
-    env_file: .env
-    environment:
-      - MODEL_ID=sentence-transformers/all-MiniLM-L6-v2
-      - HF_TOKEN=${HF_TOKEN}  
-      - PORT=3124
-      - TZ=${TIMEZONE}
-    networks:
-      - ragflow
-    restart: on-failure
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
   classifier-api:
     image: classifier-api
     container_name: classifier
