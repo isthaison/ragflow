@@ -470,6 +470,7 @@ export const initialCategorizeValues = {
 };
 export const initialClassifyFaissValues = {
   category_description: {},
+  default_category: '',
   keyword_weight: 0.1,
   similarity_threshold: 0.1,
   url: 'http://',

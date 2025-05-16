@@ -149,6 +149,43 @@ const FormSet = ({ nodeId, field }: IProps & { field: FormListFieldData }) => {
   );
 };
 
+// Add DefaultCategorySelector component
+export const DefaultCategorySelector = () => {
+  const form = Form.useFormInstance();
+  const { t } = useTranslate('flow');
+  const [categories, setCategories] = useState<string[]>([]);
+
+  // Watch for changes in the items field to update category options
+  useEffect(() => {
+    const items = form.getFieldValue('items') || [];
+    const categoryNames = items
+      .map((item: any) => item?.name)
+      .filter(Boolean)
+      .map((name: string) => name.trim())
+      .filter((name: string) => name !== '');
+
+    setCategories(categoryNames);
+  }, [form]);
+
+  return (
+    <Form.Item
+      name="default_category"
+      label={t('defaultCategory', { defaultValue: 'Default Category' })}
+    >
+      <Select
+        allowClear
+        placeholder={t('selectDefaultCategory', {
+          defaultValue: 'Select default category',
+        })}
+        options={categories.map((category) => ({
+          label: category,
+          value: category,
+        }))}
+      />
+    </Form.Item>
+  );
+};
+
 const DynamicCategorize = ({ nodeId }: IProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const form = Form.useFormInstance();

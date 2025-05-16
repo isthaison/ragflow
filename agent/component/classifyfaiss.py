@@ -31,6 +31,7 @@ class ClassifyFaissParam(ComponentParamBase):
         super().__init__()
         self.category_description = {}
         self.url = ""
+        self.default_category = ""
         self.pathzone = ""
         self.k = 5
         self.keyword_weight = 0.1
@@ -39,6 +40,8 @@ class ClassifyFaissParam(ComponentParamBase):
 
     def check(self):
         self.check_empty(self.category_description, "[ClassifyFaiss] Category examples")
+        self.check_empty(self.default_category, "[ClassifyFaiss] Default category")
+        self.check_empty(self.url, "[ClassifyFaiss] URL")
         for k, v in self.category_description.items():
             if not k:
                 raise ValueError("[ClassifyFaiss] Category name can not be empty!")
@@ -56,7 +59,7 @@ class ClassifyFaiss(ComponentBase, ABC):
     def _run(self, history, **kwargs):
         query = self.get_input()
         if hasattr(query, "to_dict") and "content" in query:
-            query = ", ".join(map(str, query["content"].dropna()))
+            query = " - ".join(map(str, query["content"].dropna()))
         else:
             query = str(query)
         config = {  
@@ -70,44 +73,60 @@ class ClassifyFaiss(ComponentBase, ABC):
 
         msg = self._canvas.get_history(self._param.message_history_window_size)
         msg = [m for m in msg if m["role"] == "user"]
-        query +=  ", ".join(map(str, [m["content"] for m in msg]))
+        query +=  " - ".join(map(str, [m["content"] for m in msg]))
 
      
         url = self._param.url.strip()
         if url.find("http") != 0:
             url = "http://" + url
-        response = requests.post(   url=url,
-                                    json=config,
-                                    headers={"Content-Type": "application/json"},
-                                )
-   
-        if response.status_code != 200:
-            raise ValueError(f"[ClassifyFaiss] Error: {response.status_code}, {response.text}")
-        data = response.json()
+        
+        try:
+            response = requests.post(
+                url=url,
+                json=config,
+                headers={"Content-Type": "application/json"},
+                timeout=30  # Add timeout to prevent hanging
+            )
+            response.raise_for_status()  # Raise exception for HTTP errors
+        except requests.exceptions.RequestException as e:
+            raise ValueError(f"[ClassifyFaiss] Request error: {str(e)}")
+            
+        try:
+            data = response.json()
+        except ValueError:
+            raise ValueError(f"[ClassifyFaiss] Invalid JSON response: {response.text}")
+            
         ans = data.get("zone", "")
-
+      
         self._canvas.set_component_infor(self._id, {
             "prompt": query,
             "messages": data,
             "conf": config
         })
    
-
-        # Count the number of times each category appears in the answer.
-        category_counts = {}
-        for c in self._param.category_description.keys():
-            count = ans.lower().count(c.lower())
-            category_counts[c] = count
+        # Optimize category matching
+        if ans:
+            # Convert to lowercase once for efficiency
+            ans_lower = ans.lower()
             
-        # If a category is found, return the category with the highest count.
-        if any(category_counts.values()):
-            max_category = max(category_counts.items(), key=lambda x: x[1])
-            return ClassifyFaiss.be_output(self._param.category_description[max_category[0]]["to"])
+            # Count the number of times each category appears in the answer
+            category_counts = {
+                c: ans_lower.count(c.lower()) for c in self._param.category_description.keys()
+            }
+            
+            # If any category is found, return the one with highest count
+            if any(category_counts.values()):
+                max_category = max(category_counts.items(), key=lambda x: x[1])
+                return ClassifyFaiss.be_output(self._param.category_description[max_category[0]]["to"])
 
-        return ClassifyFaiss.be_output(list(self._param.category_description.items())[-1][1]["to"])
+        # Default case
+        return ClassifyFaiss.be_output(self._param.category_description[self._param.default_category]["to"])
 
     def debug(self, **kwargs):
-        df = self._run([], **kwargs)
-        cpn_id = df.iloc[0, 0]
-        return ClassifyFaiss.be_output(self._canvas.get_component_name(cpn_id))
+        try:
+            df = self._run([], **kwargs)
+            cpn_id = df.iloc[0, 0]
+            return ClassifyFaiss.be_output(self._canvas.get_component_name(cpn_id))
+        except Exception as e:
+            return f"Debug error: {str(e)}"
 

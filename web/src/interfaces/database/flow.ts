@@ -81,8 +81,11 @@ export interface ICategorizeItem {
 export interface ICategorizeForm extends IGenerateForm {
   category_description: ICategorizeItemResult;
 }
-export interface IClassifyFAISSForm extends IGenerateForm {
+
+export interface IClassifyFAISSForm {
   category_description: ICategorizeItemResult;
+  default_category: string;
+  k: number;
 }
 
 export interface IRelevantForm extends IGenerateForm {

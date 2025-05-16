@@ -1,5 +1,5 @@
 import { useTheme } from '@/components/theme-provider';
-import { ICategorizeNode } from '@/interfaces/database/flow';
+import { IClassifyFAISSNode } from '@/interfaces/database/flow';
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { Flex } from 'antd';
 import classNames from 'classnames';
@@ -12,7 +12,7 @@ export function ClassifyFaissNode({
   id,
   data,
   selected,
-}: NodeProps<ICategorizeNode>) {
+}: NodeProps<IClassifyFAISSNode>) {
   const { positions } = useBuildCategorizeHandlePositions({ data, id });
   const { theme } = useTheme();
   return (
@@ -40,6 +40,13 @@ export function ClassifyFaissNode({
         className={styles.nodeHeader}
       ></NodeHeader>
 
+      {data.form?.default_category && (
+        <div className={styles.defaultCategory}>
+          <span className={styles.defaultCategoryLabel}>Default:</span>{' '}
+          {data.form?.default_category}
+        </div>
+      )}
+
       <Flex vertical gap={8}>
         {positions.map((position, idx) => {
           return (
@@ -52,7 +59,7 @@ export function ClassifyFaissNode({
                 position={Position.Right}
                 isConnectable
                 className={styles.handle}
-                style={{ ...RightHandleStyle, top: position.top - 36 }}
+                style={{ ...RightHandleStyle, top: position.top }}
               ></Handle>
             </div>
           );

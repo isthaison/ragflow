@@ -3,7 +3,9 @@ import { Form, Input, InputNumber, Slider, Switch } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IOperatorForm } from '../../interface';
 import DynamicInputVariable from '../components/dynamic-input-variable';
-import DynamicCategorize from './dynamic-categorize';
+import DynamicCategorize, {
+  DefaultCategorySelector,
+} from './dynamic-categorize';
 import { useHandleFormValuesChange } from './hooks';
 
 const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
@@ -28,6 +30,7 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
         deep_zone: false,
         url: '',
         pathzone: '',
+        default_category: '',
       }}
       layout={'vertical'}
     >
@@ -122,6 +125,7 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       <DynamicInputVariable node={node}></DynamicInputVariable>
       <MessageHistoryWindowSizeItem initialValue={1} />
       <DynamicCategorize nodeId={node?.id}></DynamicCategorize>
+      <DefaultCategorySelector />
     </Form>
   );
 };

@@ -23,6 +23,7 @@ export const useHandleFormValuesChange = ({
       onValuesChange?.(changedValues, {
         ...omit(values, 'items'),
         category_description: buildCategorizeObjectFromList(values.items),
+        default_category: values.default_category,
       });
     },
     [onValuesChange],
