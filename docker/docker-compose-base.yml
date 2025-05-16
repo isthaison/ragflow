@@ -30,8 +30,7 @@ services:
       test: ["CMD-SHELL", "curl http://localhost:9200"]
       interval: 10s
       timeout: 10s
-      retries: 120,
-      start_period: 30s
+      retries: 120
     networks:
       - ragflow
     restart: on-failure
