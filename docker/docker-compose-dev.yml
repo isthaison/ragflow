@@ -56,6 +56,23 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  gemini-openai-compatibility-nodejs:
+    image: gemini-openai-compatibility-nodejs
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../../gemini-proxy:/app  # Mount toàn bộ thư mục code vào container
+    environment:
+      - NODE_ENV=development
+    command: yarn dev  # Chạy chế độ phát triển với auto-reload
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8080/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+
 
   classifier:
     image: classifier
@@ -64,13 +81,14 @@ services:
       - "3910:3000"  # Web port
     volumes:
       # Mount code directories to avoid copying during build
-      - ../classifier/main.py:/app/main.py
-      - ../classifier/api:/app/api
-      - ../classifier/data:/app/data
-      - ../classifier/models:/app/models
-      - ../classifier/web/.next/standalone:/app/web
-      - ../classifier/requirements-cpu.txt:/app/requirements.txt
-      - ../classifier/startup.sh:/app/startup.sh
+      - ../../../classifier/main.py:/app/main.py
+      - ../../../classifier/api:/app/api
+      - ../../../classifier/data:/app/data
+      - ../../../classifier/docs:/app/docs
+      - ../../../classifier/models:/app/models
+      - ../../../classifier/web/.next/standalone:/app/web
+      - ../../../classifier/requirements-cpu.txt:/app/requirements.txt
+      - ../../../classifier/startup.sh:/app/startup.sh
 
     restart: unless-stopped
     # Add healthcheck configuration
