@@ -1274,6 +1274,8 @@ This delimiter is used to split the input text into several text pieces echo of 
         pathzone: 'Path zone',
       },
       runningHintText: 'is running...🕞',
+      parameters: 'Parameters',
+      parametersDescription: `This component is used to set the parameters. The parameters are set in the form of key-value pairs, and the key is the name of the parameter. The value is the value of the parameter. The parameters are set in JSON format.`,
     },
   },
 };

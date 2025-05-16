@@ -52,6 +52,7 @@ from .iteration import Iteration, IterationParam
 from .iterationitem import IterationItem, IterationItemParam
 from .variables import VariablesExtract, VariablesExtractParam
 from .classifyfaiss import ClassifyFaiss, ClassifyFaissParam
+from .parameters import Parameters, ParametersParam
 
 
 def component_class(class_name):
@@ -135,5 +136,7 @@ __all__ = [
     "VariablesExtract",
     "VariablesExtractParam"
     "ClassifyFaiss",
-    "ClassifyFaissParam"
+    "ClassifyFaissParam",
+    "Parameters",
+    "ParametersParam",
 ]

@@ -298,6 +298,10 @@ class Canvas:
         else:
             raise Exception("The dialog flow has no way to interact with you. Please add an 'Interact' component to the end of the flow.")
 
+    def check_is_component(self, cpn_id):
+        if cpn_id  in self.components:
+             return True
+        return False
     def get_component(self, cpn_id):
         return self.components[cpn_id]
 

@@ -2,6 +2,7 @@ import {
   FaissIcon,
   GitHubIcon,
   KeywordIcon,
+  ParametersIcon,
   QWeatherIcon,
   VarsIcon,
   WikipediaIcon,
@@ -108,6 +109,7 @@ export enum Operator {
   IterationStart = 'IterationItem',
   VariablesExtract = 'VariablesExtract',
   ClassifyFaiss = 'ClassifyFaiss',
+  Parameters = 'Parameters',
 }
 
 export const CommonOperatorList = Object.values(Operator).filter(
@@ -124,6 +126,7 @@ export const operatorIconMap = {
   [Operator.Relevant]: BranchesOutlined,
   [Operator.RewriteQuestion]: FormOutlined,
   [Operator.VariablesExtract]: VarsIcon,
+  [Operator.Parameters]: ParametersIcon,
   [Operator.KeywordExtract]: KeywordIcon,
   [Operator.DuckDuckGo]: DuckIcon,
   [Operator.Baidu]: BaiduIcon,
@@ -212,6 +215,7 @@ export const operatorMap: Record<
     iconFontSize: 16,
   },
   [Operator.VariablesExtract]: { backgroundColor: '#e6f7ff' },
+  [Operator.Parameters]: { backgroundColor: '#a2ccf0' },
   [Operator.ClassifyFaiss]: { backgroundColor: '#b474ff' },
 
   [Operator.KeywordExtract]: {
@@ -333,6 +337,9 @@ export const componentMenuList = [
   },
   {
     name: Operator.VariablesExtract,
+  },
+  {
+    name: Operator.Parameters,
   },
   {
     name: Operator.Note,
@@ -457,6 +464,8 @@ export const initialVariableValues = {
   ...initialLlmBaseValues,
   message_history_window_size: 6,
 };
+
+export const initialParametersValues = {};
 
 export const initialRelevantValues = {
   ...initialLlmBaseValues,
@@ -719,6 +728,12 @@ export const RestrictedUpstreamMap = {
     Operator.RewriteQuestion,
     Operator.Relevant,
   ],
+  [Operator.Parameters]: [
+    Operator.Begin,
+    Operator.Message,
+    Operator.RewriteQuestion,
+    Operator.Relevant,
+  ],
   [Operator.KeywordExtract]: [
     Operator.Begin,
     Operator.Message,
@@ -764,6 +779,7 @@ export const NodeMap = {
   [Operator.RewriteQuestion]: 'rewriteNode',
   [Operator.KeywordExtract]: 'keywordNode',
   [Operator.VariablesExtract]: 'variablesNode',
+  [Operator.Parameters]: 'ragNode',
   [Operator.DuckDuckGo]: 'ragNode',
   [Operator.Baidu]: 'ragNode',
   [Operator.Wikipedia]: 'ragNode',

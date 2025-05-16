@@ -57,6 +57,7 @@ import {
   initialKeywordExtractValues,
   initialMessageValues,
   initialNoteValues,
+  initialParametersValues,
   initialPubMedValues,
   initialQWeatherValues,
   initialRelevantValues,
@@ -112,6 +113,7 @@ export const useInitializeOperatorParams = () => {
         llm_id: llmId,
       },
       [Operator.VariablesExtract]: { ...initialVariableValues, llm_id: llmId },
+      [Operator.Parameters]: { ...initialParametersValues },
       [Operator.Message]: initialMessageValues,
       [Operator.KeywordExtract]: {
         ...initialKeywordExtractValues,

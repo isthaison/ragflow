@@ -52,6 +52,7 @@ import { FlowFormContext } from '../context';
 import { RunTooltip } from '../flow-tooltip';
 import ClassifyFaissForm from '../form/classify-faiss-form';
 import IterationForm from '../form/iteration-from';
+import { ParametersForm } from '../form/parameters-form';
 import VariablesForm from '../form/variables-form';
 import styles from './index.less';
 
@@ -101,6 +102,7 @@ const FormMap = {
   [Operator.Iteration]: IterationForm,
   [Operator.IterationStart]: () => <></>,
   [Operator.VariablesExtract]: VariablesForm,
+  [Operator.Parameters]: ParametersForm,
 };
 
 const EmptyContent = () => <div></div>;

@@ -42,7 +42,7 @@ const DynamicVariablesForm = ({ node }: IProps) => {
       onCell: (record: IInvokeVariable) => {
         return {
           record,
-          editable: record.component_id !== 'allparambegin',
+          editable: true,
           dataIndex: 'key',
           title: 'key',
           handleSave,

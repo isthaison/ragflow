@@ -17,10 +17,6 @@ from abc import ABC
 
 import requests
 from agent.component.base import ComponentBase, ComponentParamBase
-from api.db import LLMType
-from api.db.services.llm_service import LLMBundle
-from rag.prompts import message_fit_in
-
 
 class ClassifyFaissParam(ComponentParamBase):
 
