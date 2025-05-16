@@ -29,7 +29,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl http://localhost:9200"]
       interval: 10s
-      timeout: 10s
+      timeout: 10s     
+      start_period: 60s
       retries: 120
     networks:
       - ragflow

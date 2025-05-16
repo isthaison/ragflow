@@ -57,6 +57,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   gemini-openai-compatibility-nodejs:
+    container_name: gemini-openai-compatibility-nodejs
     image: gemini-openai-compatibility-nodejs
     ports:
       - "8080:8080"
