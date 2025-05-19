@@ -164,7 +164,7 @@ function FlowCanvas({ drawerVisible, hideDrawer }: IProps) {
         onPaneClick={onPaneClick}
         onInit={setReactFlowInstance}
         onSelectionChange={onSelectionChange}
-        nodeOrigin={[0.5, 0]}
+        // nodeOrigin={[0.5, 0]}
         isValidConnection={isValidConnection}
         defaultEdgeOptions={{
           type: 'buttonEdge',

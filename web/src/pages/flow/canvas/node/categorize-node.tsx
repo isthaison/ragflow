@@ -46,22 +46,33 @@ export function CategorizeNode({
         <div className={styles.nodeText}>
           <LLMLabel value={get(data, 'form.llm_id')}></LLMLabel>
         </div>
-        {positions.map((position, idx) => {
-          return (
-            <div key={idx}>
-              <div className={styles.nodeText}>{position.text}</div>
-              <Handle
-                key={position.text}
-                id={position.text}
-                type="source"
-                position={Position.Right}
-                isConnectable
-                className={styles.handle}
-                style={{ ...RightHandleStyle, top: position.top }}
-              ></Handle>
-            </div>
-          );
-        })}
+        <Flex vertical gap={8}>
+          {positions.map((position, idx) => {
+            return (
+              <div key={idx} style={{ position: 'relative' }}>
+                <div
+                  className={styles.nodeText}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingLeft: '4px',
+                  }}
+                >
+                  {position.text}
+                </div>
+                <Handle
+                  key={position.text}
+                  id={position.text}
+                  type="source"
+                  position={Position.Right}
+                  isConnectable
+                  className={styles.handle}
+                  style={{ ...RightHandleStyle, top: '50%', right: -10 }}
+                ></Handle>
+              </div>
+            );
+          })}
+        </Flex>
       </Flex>
     </section>
   );

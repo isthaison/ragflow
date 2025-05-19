@@ -35,7 +35,10 @@ const CategorizeForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       <MessageHistoryWindowSizeItem
         initialValue={1}
       ></MessageHistoryWindowSizeItem>
-      <DynamicCategorize nodeId={node?.id}></DynamicCategorize>
+      <DynamicCategorize
+        onValuesChange={onValuesChange}
+        nodeId={node?.id}
+      ></DynamicCategorize>
     </Form>
   );
 };

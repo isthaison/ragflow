@@ -1,5 +1,10 @@
 import { useTranslate } from '@/hooks/common-hooks';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CloseOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { useUpdateNodeInternals } from '@xyflow/react';
 import {
   Button,
@@ -22,11 +27,11 @@ import {
 } from 'react';
 import { Operator } from '../../constant';
 import { useBuildFormSelectOptions } from '../../form-hooks';
-
-import styles from './index.less';
+import { useHandleFormValuesChange } from './hooks';
 
 interface IProps {
   nodeId?: string;
+  onValuesChange?: (changedValues: any, allValues: any) => void;
 }
 
 interface INameInputProps {
@@ -136,6 +141,7 @@ const FormSet = ({ nodeId, field }: IProps & { field: FormListFieldData }) => {
 
       <Form.Item label={t('nextStep')} name={[field.name, 'to']}>
         <Select
+          showSearch
           allowClear
           options={buildCategorizeToOptions(
             getOtherFieldValues(form, 'items', field, 'to'),
@@ -173,6 +179,7 @@ export const DefaultCategorySelector = () => {
       label={t('defaultCategory', { defaultValue: 'Default Category' })}
     >
       <Select
+        showSearch
         allowClear
         placeholder={t('selectDefaultCategory', {
           defaultValue: 'Select default category',
@@ -186,11 +193,17 @@ export const DefaultCategorySelector = () => {
   );
 };
 
-const DynamicCategorize = ({ nodeId }: IProps) => {
+const DynamicCategorize = ({ nodeId, onValuesChange }: IProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const form = Form.useFormInstance();
-
   const { t } = useTranslate('flow');
+
+  // Get handleValuesChange from the hook
+  const { handleValuesChange } = useHandleFormValuesChange({
+    form,
+    nodeId,
+    onValuesChange,
+  });
 
   return (
     <>
@@ -209,26 +222,147 @@ const DynamicCategorize = ({ nodeId }: IProps) => {
             if (nodeId) updateNodeInternals(nodeId);
           };
 
+          // Sort fields by index
+          const sortedFields = [...fields].sort((a, b) => {
+            const indexA = form.getFieldValue(['items', a.name, 'index']) || 0;
+            const indexB = form.getFieldValue(['items', b.name, 'index']) || 0;
+            return indexA - indexB;
+          });
+
+          // Function to move a category up
+          const moveUp = (field: FormListFieldData) => {
+            const allItems = form.getFieldValue('items') || [];
+            const currentItem = allItems[field.name];
+
+            // Sort items by index
+            const sortedItems = [...allItems]
+              .map((item: any, idx: number) => ({ ...item, arrayIndex: idx }))
+              .sort((a: any, b: any) => (a.index || 0) - (b.index || 0));
+
+            // Find current item position in sorted array
+            const currentSortedIndex = sortedItems.findIndex(
+              (item: any) => item.arrayIndex === field.name,
+            );
+
+            // If already at the top, do nothing
+            if (currentSortedIndex <= 0) return;
+
+            // Get the item above in sorted order
+            const prevItem = sortedItems[currentSortedIndex - 1];
+
+            // Swap indices
+            const updatedItems = allItems.map((item: any, idx: number) => {
+              if (idx === field.name) {
+                return { ...item, index: prevItem.index };
+              }
+              if (idx === prevItem.arrayIndex) {
+                return { ...item, index: currentItem.index };
+              }
+              return item;
+            });
+
+            // Update form with new values
+            form.setFieldsValue({ items: updatedItems });
+
+            // Force the node to update
+            if (nodeId) {
+              setTimeout(() => {
+                updateNodeInternals(nodeId);
+              }, 0);
+            }
+
+            // Trigger form values change to propagate to node data
+            form.validateFields(['items']).then(() => {
+              const values = form.getFieldsValue();
+              handleValuesChange(values, values);
+            });
+          };
+
+          // Function to move a category down
+          const moveDown = (field: FormListFieldData) => {
+            const allItems = form.getFieldValue('items') || [];
+            const currentItem = allItems[field.name];
+
+            // Sort items by index
+            const sortedItems = [...allItems]
+              .map((item: any, idx: number) => ({ ...item, arrayIndex: idx }))
+              .sort((a: any, b: any) => (a.index || 0) - (b.index || 0));
+
+            // Find current item position in sorted array
+            const currentSortedIndex = sortedItems.findIndex(
+              (item: any) => item.arrayIndex === field.name,
+            );
+
+            // If already at the bottom, do nothing
+            if (currentSortedIndex >= sortedItems.length - 1) return;
+
+            // Get the item below in sorted order
+            const nextItem = sortedItems[currentSortedIndex + 1];
+
+            // Swap indices
+            const updatedItems = allItems.map((item: any, idx: number) => {
+              if (idx === field.name) {
+                return { ...item, index: nextItem.index };
+              }
+              if (idx === nextItem.arrayIndex) {
+                return { ...item, index: currentItem.index };
+              }
+              return item;
+            });
+
+            // Update form with new values
+            form.setFieldsValue({ items: updatedItems });
+
+            // Force the node to update
+            if (nodeId) {
+              setTimeout(() => {
+                updateNodeInternals(nodeId);
+              }, 0);
+            }
+
+            // Trigger form values change to propagate to node data
+            form.validateFields(['items']).then(() => {
+              const values = form.getFieldsValue();
+              handleValuesChange(values, values);
+            });
+          };
+
           return (
             <Flex gap={18} vertical>
-              {fields.map((field) => (
+              {sortedFields.map((field) => (
                 <Collapse
                   size="small"
                   key={field.key}
-                  className={styles.caseCard}
                   items={[
                     {
                       key: field.key,
                       label: (
-                        <div className="flex justify-between">
+                        <div className="flex justify-between w-full">
                           <span>
                             {form.getFieldValue(['items', field.name, 'name'])}
                           </span>
-                          <CloseOutlined
-                            onClick={() => {
-                              remove(field.name);
-                            }}
-                          />
+                          <div className="flex items-center gap-2">
+                            <ArrowUpOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moveUp(field);
+                              }}
+                              className="cursor-pointer"
+                            />
+                            <ArrowDownOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moveDown(field);
+                              }}
+                              className="cursor-pointer"
+                            />
+                            <CloseOutlined
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                remove(field.name);
+                              }}
+                            />
+                          </div>
                         </div>
                       ),
                       children: (
@@ -243,7 +377,6 @@ const DynamicCategorize = ({ nodeId }: IProps) => {
                 type="dashed"
                 onClick={handleAdd}
                 block
-                className={styles.addButton}
                 icon={<PlusOutlined />}
               >
                 {t('addCategory')}

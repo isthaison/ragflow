@@ -96,7 +96,10 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       </Form.Item>
       <DynamicInputVariable node={node}></DynamicInputVariable>
       <MessageHistoryWindowSizeItem initialValue={1} />
-      <DynamicCategorize nodeId={node?.id}></DynamicCategorize>
+      <DynamicCategorize
+        nodeId={node?.id}
+        onValuesChange={onValuesChange}
+      ></DynamicCategorize>
       <DefaultCategorySelector />
     </Form>
   );

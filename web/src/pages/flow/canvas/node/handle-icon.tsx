@@ -13,6 +13,10 @@ export const RightHandleStyle: CSSProperties = {
   right: 0,
 };
 
+export const TopHandleStyle: CSSProperties = {
+  top: 0,
+};
+
 export const LeftHandleStyle: CSSProperties = {
   left: 0,
 };

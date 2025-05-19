@@ -82,10 +82,12 @@ export interface ICategorizeForm extends IGenerateForm {
   category_description: ICategorizeItemResult;
 }
 
-export interface IClassifyFAISSForm extends IGenerateForm {
+export interface IClassifyFAISSForm {
   category_description: ICategorizeItemResult;
   default_category: string;
   k: number;
+  similarity_threshold: number;
+  keyword_weight: number;
 }
 
 export interface IRelevantForm extends IGenerateForm {

@@ -83,7 +83,7 @@ export function SwitchNode({ id, data, selected }: NodeProps<ISwitchNode>) {
       <Flex vertical gap={10}>
         {positions.map((position, idx) => {
           return (
-            <div key={idx}>
+            <div style={{ position: 'relative' }} key={idx}>
               <Flex vertical>
                 <Flex justify={'space-between'}>
                   <span>{idx < positions.length - 1 && position.text}</span>
@@ -103,7 +103,7 @@ export function SwitchNode({ id, data, selected }: NodeProps<ISwitchNode>) {
                 position={Position.Right}
                 isConnectable
                 className={styles.handle}
-                style={{ ...RightHandleStyle, top: position.top }}
+                style={{ ...RightHandleStyle, top: '50%', right: -10 }}
               ></Handle>
             </div>
           );
