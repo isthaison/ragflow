@@ -86,6 +86,7 @@ services:
       - ../../../classifier/docs:/app/docs
       - ../../../classifier/models:/app/models
       - ../../../classifier/web/.next/standalone:/app/web
+      - ../../../classifier/web/.next/static:/app/web/.next/static
       - ../../../classifier/requirements-cpu.txt:/app/requirements.txt
       - ../../../classifier/startup.sh:/app/startup.sh
 
