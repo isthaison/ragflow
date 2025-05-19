@@ -155,6 +155,7 @@ function FlowCanvas({ drawerVisible, hideDrawer }: IProps) {
         edges={edges}
         onEdgesChange={onEdgesChange}
         fitView
+        minZoom={0.01}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}

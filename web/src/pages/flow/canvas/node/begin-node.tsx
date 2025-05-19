@@ -1,9 +1,10 @@
 import { useTheme } from '@/components/theme-provider';
 import { IBeginNode } from '@/interfaces/database/flow';
 import { Handle, NodeProps, Position } from '@xyflow/react';
-import { Flex } from 'antd';
+import { Button, Flex } from 'antd';
 import classNames from 'classnames';
 import get from 'lodash/get';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   BeginQueryType,
@@ -21,6 +22,14 @@ export function BeginNode({ selected, data }: NodeProps<IBeginNode>) {
   const { t } = useTranslation();
   const query: BeginQuery[] = get(data, 'form.query', []);
   const { theme } = useTheme();
+  const [showAllQueries, setShowAllQueries] = useState(false);
+
+  const maxVisibleQueries = 3;
+  const hasMoreQueries = query.length > maxVisibleQueries;
+  const visibleQueries = showAllQueries
+    ? query
+    : query.slice(0, maxVisibleQueries);
+
   return (
     <section
       className={classNames(
@@ -50,7 +59,7 @@ export function BeginNode({ selected, data }: NodeProps<IBeginNode>) {
         </div>
       </Flex>
       <Flex gap={8} vertical className={styles.generateParameters}>
-        {query.map((x, idx) => {
+        {visibleQueries.map((x, idx) => {
           const Icon = BeginQueryTypeIconMap[x.type as BeginQueryType];
           return (
             <Flex
@@ -66,6 +75,19 @@ export function BeginNode({ selected, data }: NodeProps<IBeginNode>) {
             </Flex>
           );
         })}
+
+        {hasMoreQueries && (
+          <Button
+            type="link"
+            size="small"
+            onClick={() => setShowAllQueries(!showAllQueries)}
+            style={{ padding: '0', height: 'auto' }}
+          >
+            {showAllQueries
+              ? t('flow.showLess')
+              : t(`flow.showMore`) + ` (${query.length - maxVisibleQueries})`}
+          </Button>
+        )}
       </Flex>
     </section>
   );
