@@ -36,7 +36,7 @@ services:
       - ../graphrag:/ragflow/graphrag
       - ../flask_session:/ragflow/flask_session
       - ../agentic_reasoning:/ragflow/agentic_reasoning
-      - ../../../f-vision/agent:/ragflow/history_data_agent
+      # - ../../../f-vision/agent:/ragflow/history_data_agent
       - ../pyproject.toml:/ragflow/pyproject.toml
       - ../conf/llm_factories.json:/ragflow/conf/llm_factories.json
  
@@ -55,25 +55,23 @@ services:
     restart: on-failure
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
   gemini-openai-compatibility-nodejs:
-    container_name: gemini-openai-compatibility-nodejs
     image: gemini-openai-compatibility-nodejs
+    container_name: gemini-openai-compatibility-nodejs
     ports:
-      - "8080:8080"
-    volumes:
-      - ../../../gemini-proxy:/app  # Mount toàn bộ thư mục code vào container
+      - "8080:3000"
     environment:
-      - NODE_ENV=development
-    command: yarn dev  # Chạy chế độ phát triển với auto-reload
-    healthcheck:
-      test: ["CMD-SHELL", "curl http://localhost:8080/health"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-
+      - NODE_ENV=production
+    volumes:
+      - ../../../gemini-proxy/.next/standalone/:/app
+      - ../../../gemini-proxy/data:/app/data
+      - ../../../gemini-proxy/.next/static/:/app/.next/static
+    restart: always
+    command: sh -c "node server.js"
+    networks:
+      - ragflow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   classifier:
     image: classifier
