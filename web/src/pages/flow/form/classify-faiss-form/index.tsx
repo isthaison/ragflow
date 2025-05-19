@@ -64,56 +64,28 @@ const ClassifyFaissForm = ({ form, onValuesChange, node }: IOperatorForm) => {
       <Form.Item
         label={t('flow.classifyFaissForm.keyword_weight')}
         shouldUpdate
+        name={'keyword_weight'}
       >
-        {({ getFieldValue, setFieldsValue }) => (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Slider
-              step={0.01}
-              min={0}
-              max={1}
-              style={{ flex: 1 }}
-              value={getFieldValue('keyword_weight')}
-              onChange={(value) => setFieldsValue({ keyword_weight: value })}
-              marks={{ 0: '0', 1: '1' }}
-            />
-            <InputNumber
-              min={0}
-              max={1}
-              value={getFieldValue('keyword_weight')}
-              onChange={(value) => setFieldsValue({ keyword_weight: value })}
-              style={{ width: 70 }}
-            />
-          </div>
-        )}
+        <Slider
+          step={0.01}
+          min={0}
+          max={1}
+          style={{ flex: 1 }}
+          marks={{ 0: '0', 1: '1' }}
+        />
       </Form.Item>
       <Form.Item
         label={t('flow.classifyFaissForm.similarity_threshold')}
         shouldUpdate
+        name={'similarity_threshold'}
       >
-        {({ getFieldValue, setFieldsValue }) => (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Slider
-              step={0.01}
-              min={0}
-              max={1}
-              style={{ flex: 1 }}
-              value={getFieldValue('similarity_threshold')}
-              onChange={(value) =>
-                setFieldsValue({ similarity_threshold: value })
-              }
-              marks={{ 0: '0', 1: '1' }}
-            />
-            <InputNumber
-              min={0}
-              max={1}
-              value={getFieldValue('similarity_threshold')}
-              onChange={(value) =>
-                setFieldsValue({ similarity_threshold: value })
-              }
-              style={{ width: 70 }}
-            />
-          </div>
-        )}
+        <Slider
+          step={0.01}
+          min={0}
+          max={1}
+          style={{ flex: 1 }}
+          marks={{ 0: '0', 1: '1' }}
+        />
       </Form.Item>
       <Form.Item
         name={'deep_zone'}

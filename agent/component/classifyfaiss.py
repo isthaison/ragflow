@@ -30,8 +30,8 @@ class ClassifyFaissParam(ComponentParamBase):
         self.default_category = ""
         self.pathzone = ""
         self.k = 5
-        self.keyword_weight = 0.1
-        self.similarity_threshold = 0.1
+        self.keyword_weight = 0.01
+        self.similarity_threshold = 0.01
         self.deep_zone = False
 
     def check(self):
