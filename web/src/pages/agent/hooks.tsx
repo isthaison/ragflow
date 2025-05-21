@@ -41,6 +41,7 @@ import {
   initialBingValues,
   initialCategorizeValues,
   initialClassifyFaissValues,
+  initialCodeValues,
   initialConcentratorValues,
   initialCrawlerValues,
   initialDeepLValues,
@@ -143,6 +144,7 @@ export const useInitializeOperatorParams = () => {
       [Operator.Iteration]: initialIterationValues,
       [Operator.IterationStart]: initialIterationValues,
       [Operator.ClassifyFaiss]: initialClassifyFaissValues,
+      [Operator.Code]: initialCodeValues,
     };
   }, [llmId]);
 

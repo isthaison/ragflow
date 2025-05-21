@@ -28,6 +28,7 @@ import { ReactComponent as TemplateIcon } from '@/assets/svg/template.svg';
 import { ReactComponent as TuShareIcon } from '@/assets/svg/tushare.svg';
 import { ReactComponent as WenCaiIcon } from '@/assets/svg/wencai.svg';
 import { ReactComponent as YahooFinanceIcon } from '@/assets/svg/yahoo-finance.svg';
+import { CodeTemplateStrMap, ProgrammingLanguage } from '@/constants/agent';
 
 // 邮件功能
 
@@ -57,6 +58,7 @@ import upperFirst from 'lodash/upperFirst';
 import {
   CirclePower,
   CloudUpload,
+  CodeXml,
   IterationCcw,
   ListOrdered,
   OptionIcon,
@@ -105,6 +107,7 @@ export enum Operator {
   Iteration = 'Iteration',
   IterationStart = 'IterationItem',
   ClassifyFaiss = 'ClassifyFaiss',
+  Code = 'Code',
 }
 
 export const CommonOperatorList = Object.values(Operator).filter(
@@ -164,6 +167,7 @@ export const operatorIconMap = {
   [Operator.Iteration]: IterationCcw,
   [Operator.IterationStart]: CirclePower,
   [Operator.ClassifyFaiss]: FaissIcon,
+  [Operator.Code]: CodeXml,
 };
 
 export const operatorMap: Record<
@@ -303,6 +307,7 @@ export const operatorMap: Record<
   [Operator.Iteration]: { backgroundColor: '#e6f7ff' },
   [Operator.IterationStart]: { backgroundColor: '#e6f7ff' },
   [Operator.ClassifyFaiss]: { backgroundColor: '#e6f7ff' },
+  [Operator.Code]: { backgroundColor: '#4c5458' },
 };
 
 export const componentMenuList = [
@@ -339,6 +344,9 @@ export const componentMenuList = [
   },
   {
     name: Operator.Iteration,
+  },
+  {
+    name: Operator.Code,
   },
   {
     name: Operator.Note,
@@ -664,6 +672,19 @@ export const initialIterationValues = {
 };
 export const initialIterationStartValues = {};
 
+export const initialCodeValues = {
+  lang: 'python',
+  script: CodeTemplateStrMap[ProgrammingLanguage.Python],
+  arguments: [
+    {
+      name: 'arg1',
+    },
+    {
+      name: 'arg2',
+    },
+  ],
+};
+
 export const CategorizeAnchorPointPositions = [
   { top: 1, right: 34 },
   { top: 8, right: 18 },
@@ -751,6 +772,7 @@ export const RestrictedUpstreamMap = {
   [Operator.Email]: [Operator.Begin],
   [Operator.Iteration]: [Operator.Begin],
   [Operator.IterationStart]: [Operator.Begin],
+  [Operator.Code]: [Operator.Begin],
 };
 
 export const NodeMap = {
@@ -790,6 +812,8 @@ export const NodeMap = {
   [Operator.Email]: 'emailNode',
   [Operator.Iteration]: 'group',
   [Operator.ClassifyFaiss]: 'classifyFaissNode',
+  [Operator.IterationStart]: 'iterationStartNode',
+  [Operator.Code]: 'ragNode',
 };
 
 export const LanguageOptions = [
