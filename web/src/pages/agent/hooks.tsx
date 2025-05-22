@@ -296,7 +296,13 @@ export const useHandleFormValuesChange = (
   useEffect(() => {
     const subscription = form?.watch((value, { name, type, values }) => {
       if (id && name) {
-        console.log('🚀 ~ useEffect ~ value:', type, values);
+        console.log(
+          '🚀 ~ useEffect ~ value:',
+          name,
+          type,
+          values,
+          operatorName,
+        );
         let nextValues: any = value;
 
         // Fixed the issue that the related form value does not change after selecting the freedom field of the model
@@ -322,8 +328,8 @@ export const useHandleFormValuesChange = (
             category_description: buildCategorizeObjectFromList(value.items),
           };
         }
+        // Manually triggered form updates are synchronized to the canvas
         if (type) {
-          // Manually triggered form updates are synchronized to the canvas
           updateNodeForm(id, nextValues);
         }
       }
