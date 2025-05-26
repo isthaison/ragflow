@@ -1,7 +1,7 @@
 import { CodeTemplateStrMap, ProgrammingLanguage } from '@/constants/agent';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { Operator } from '../constant';
+import { AgentDialogueMode, Operator } from '../constant';
 import AkShareForm from '../form/akshare-form';
 import AnswerForm from '../form/answer-form';
 import ArXivForm from '../form/arxiv-form';
@@ -43,20 +43,33 @@ export function useFormConfigMap() {
   const FormConfigMap = {
     [Operator.Begin]: {
       component: BeginForm,
-      defaultValues: {},
+      defaultValues: {
+        enablePrologue: true,
+        prologue: t('chat.setAnOpenerInitial'),
+        mode: AgentDialogueMode.Conversational,
+      },
       schema: z.object({
-        name: z
+        enablePrologue: z.boolean().optional(),
+        prologue: z
           .string()
           .min(1, {
             message: t('common.namePlaceholder'),
           })
-          .trim(),
-        age: z
-          .string()
-          .min(1, {
-            message: t('common.namePlaceholder'),
-          })
-          .trim(),
+          .trim()
+          .optional(),
+        mode: z.string(),
+        query: z
+          .array(
+            z.object({
+              key: z.string(),
+              type: z.string(),
+              value: z.string(),
+              optional: z.boolean(),
+              name: z.string(),
+              options: z.array(z.union([z.number(), z.string(), z.boolean()])),
+            }),
+          )
+          .optional(),
       }),
     },
     [Operator.Retrieval]: {
@@ -113,8 +126,18 @@ export function useFormConfigMap() {
     },
     [Operator.Message]: {
       component: MessageForm,
-      defaultValues: {},
-      schema: z.object({}),
+      defaultValues: {
+        content: [],
+      },
+      schema: z.object({
+        content: z
+          .array(
+            z.object({
+              value: z.string(),
+            }),
+          )
+          .optional(),
+      }),
     },
     [Operator.Relevant]: {
       component: RelevantForm,
