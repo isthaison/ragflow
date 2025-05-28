@@ -36,7 +36,6 @@ services:
       - ../graphrag:/ragflow/graphrag
       - ../flask_session:/ragflow/flask_session
       - ../agentic_reasoning:/ragflow/agentic_reasoning
-      # - ../../../f-vision/agent:/ragflow/history_data_agent
       - ../pyproject.toml:/ragflow/pyproject.toml
       - ../conf/llm_factories.json:/ragflow/conf/llm_factories.json
  
