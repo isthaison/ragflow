@@ -94,6 +94,7 @@ class Retrieval(ComponentBase, ABC):
             rerank_mdl = LLMBundle(kbs[0].tenant_id, LLMType.RERANK, self._param.rerank_id)
 
         if kbs:
+            query = re.sub(r"^user[:：\s]*", "", query, flags=re.IGNORECASE)
             kbinfos = settings.retrievaler.retrieval(
                 query,
                 embd_mdl,
