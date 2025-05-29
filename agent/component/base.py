@@ -45,6 +45,9 @@ class ComponentParamBase(ABC):
 
     def check(self):
         raise NotImplementedError("Parameter Object should be checked.")
+    
+    def output(self):
+        return None
 
     @classmethod
     def _get_or_init_deprecated_params_set(cls):
