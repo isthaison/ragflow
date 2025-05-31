@@ -130,7 +130,7 @@ class ScheduleAgentService(CommonService):
             return False
 
     @classmethod
-    def _should_run_once(cls, schedule, current_datetime):
+    def _should_run_once(cls, schedule: ScheduleAgent, current_datetime):
         """Check if one-time schedule should run"""
         if not schedule.execute_date or not schedule.execute_time:
             return False
@@ -139,7 +139,7 @@ class ScheduleAgentService(CommonService):
         return current_datetime >= execute_datetime and not cls._has_any_run(schedule.id)
 
     @classmethod
-    def _should_run_recurring(cls, schedule, current_datetime, check_already_run_func):
+    def _should_run_recurring(cls, schedule: ScheduleAgent, current_datetime, check_already_run_func):
         """Generic check for recurring schedules"""
         if not schedule.execute_time:
             return False
@@ -148,7 +148,7 @@ class ScheduleAgentService(CommonService):
         return current_datetime >= today_execute_time and not check_already_run_func(schedule.id)
 
     @classmethod
-    def _should_run_weekly(cls, schedule, current_datetime):
+    def _should_run_weekly(cls, schedule: ScheduleAgent, current_datetime):
         """Check if weekly schedule should run"""
         if not schedule.execute_time or not schedule.days_of_week:
             return False
@@ -160,7 +160,7 @@ class ScheduleAgentService(CommonService):
         return cls._should_run_recurring(schedule, current_datetime, cls._has_run_today)
 
     @classmethod
-    def _should_run_monthly(cls, schedule, current_datetime):
+    def _should_run_monthly(cls, schedule: ScheduleAgent, current_datetime):
         """Check if monthly schedule should run"""
         if not schedule.execute_time or not schedule.day_of_month:
             return False
