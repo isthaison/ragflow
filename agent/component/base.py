@@ -311,6 +311,18 @@ class ComponentParamBase(ABC):
     @staticmethod
     def _not_in(value, wrong_value_list):
         return value not in wrong_value_list
+    @staticmethod
+    def check_json(param, descr=""):
+        if type(param).__name__ != "str":
+            raise ValueError(
+                descr + " {} not supported, should be string type".format(param)
+            )
+        try:
+            json.loads(param)
+        except json.JSONDecodeError:
+            raise ValueError(
+                descr + " {} not supported, should be json string".format(param)
+            )
 
     def _warn_deprecated_param(self, param_name, descr):
         if self._deprecated_params_set.get(param_name):
