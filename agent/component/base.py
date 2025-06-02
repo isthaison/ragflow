@@ -19,6 +19,7 @@ import os
 import logging
 from functools import partial
 from typing import Any, Tuple, Union
+from abc import ABC
 
 import pandas as pd
 
