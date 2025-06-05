@@ -1355,6 +1355,10 @@ This delimiter is used to split the input text into several text pieces echo of 
       agent: 'Agent',
       agentDescription:
         'Builds agent components equipped with reasoning, tool usage, and multi-agent collaboration. ',
+      googleprovider: 'Google provider',
+      noParameters: 'No parameters',
+      addParametersDescription:
+        'Add parameters to the component to use them in the prompt.',
     },
     llmTools: {
       bad_calculator: {

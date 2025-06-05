@@ -22,6 +22,7 @@ import { RagNode } from './node';
 import { AgentNode } from './node/agent-node';
 import { BeginNode } from './node/begin-node';
 import { CategorizeNode } from './node/categorize-node';
+import { ClassifyFaissNode } from './node/classify-faiss-node';
 import { EmailNode } from './node/email-node';
 import { GenerateNode } from './node/generate-node';
 import { InvokeNode } from './node/invoke-node';
@@ -35,6 +36,7 @@ import { RetrievalNode } from './node/retrieval-node';
 import { RewriteNode } from './node/rewrite-node';
 import { SwitchNode } from './node/switch-node';
 import { TemplateNode } from './node/template-node';
+import { VariablesNode } from './node/variable-node';
 
 const nodeTypes: NodeTypes = {
   ragNode: RagNode,
@@ -55,6 +57,8 @@ const nodeTypes: NodeTypes = {
   group: IterationNode,
   iterationStartNode: IterationStartNode,
   agentNode: AgentNode,
+  variablesNode: VariablesNode,
+  classifyFaissNode: ClassifyFaissNode,
 };
 
 const edgeTypes = {

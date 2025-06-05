@@ -353,6 +353,9 @@ export const componentMenuList = [
     name: Operator.Note,
   },
   {
+    name: Operator.ClassifyFaiss,
+  },
+  {
     name: Operator.DuckDuckGo,
   },
   {
@@ -414,9 +417,6 @@ export const componentMenuList = [
   },
   {
     name: Operator.Email,
-  },
-  {
-    name: Operator.ClassifyFaiss,
   },
 ];
 

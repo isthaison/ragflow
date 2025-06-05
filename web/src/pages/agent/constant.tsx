@@ -3,6 +3,7 @@ import {
   GitHubIcon,
   KeywordIcon,
   QWeatherIcon,
+  VarsIcon,
   WikipediaIcon,
 } from '@/assets/icon/Icon';
 import { ReactComponent as AkShareIcon } from '@/assets/svg/akshare.svg';
@@ -116,6 +117,7 @@ export enum Operator {
   Code = 'Code',
   WaitingDialogue = 'WaitingDialogue',
   Agent = 'Agent',
+  VariablesExtract = 'VariablesExtract',
 }
 
 export const CommonOperatorList = Object.values(Operator).filter(
@@ -137,6 +139,7 @@ export const AgentOperatorList = [
   Operator.WaitingDialogue,
   Operator.Note,
   Operator.Agent,
+  Operator.VariablesExtract,
 ];
 
 export const operatorIconMap = {
@@ -148,6 +151,7 @@ export const operatorIconMap = {
   [Operator.Message]: MessageOutlined,
   [Operator.Relevant]: BranchesOutlined,
   [Operator.RewriteQuestion]: FormOutlined,
+  [Operator.VariablesExtract]: VarsIcon,
   [Operator.KeywordExtract]: KeywordIcon,
   [Operator.DuckDuckGo]: DuckIcon,
   [Operator.Baidu]: BaiduIcon,
@@ -238,6 +242,8 @@ export const operatorMap: Record<
     fontSize: 12,
     iconFontSize: 16,
   },
+  [Operator.VariablesExtract]: { backgroundColor: '#e6f7ff' },
+
   [Operator.KeywordExtract]: {
     width: 70,
     height: 70,
@@ -360,6 +366,9 @@ export const componentMenuList = [
     name: Operator.Iteration,
   },
   {
+    name: Operator.VariablesExtract,
+  },
+  {
     name: Operator.Code,
   },
   {
@@ -370,6 +379,9 @@ export const componentMenuList = [
   },
   {
     name: Operator.Note,
+  },
+  {
+    name: Operator.ClassifyFaiss,
   },
   {
     name: Operator.DuckDuckGo,
@@ -434,9 +446,6 @@ export const componentMenuList = [
   {
     name: Operator.Email,
   },
-  {
-    name: Operator.ClassifyFaiss,
-  },
 ];
 
 const initialQueryBaseValues = {
@@ -490,7 +499,10 @@ export const initialRewriteQuestionValues = {
 export const initialRelevantValues = {
   ...initialLlmBaseValues,
 };
-
+export const initialVariableValues = {
+  ...initialLlmBaseValues,
+  message_history_window_size: 6,
+};
 export const initialCategorizeValues = {
   ...initialLlmBaseValues,
   parameter: ModelVariableType.Precise,
@@ -793,6 +805,7 @@ export const RestrictedUpstreamMap = {
   [Operator.Switch]: [Operator.Begin],
   [Operator.WenCai]: [Operator.Begin],
   [Operator.AkShare]: [Operator.Begin],
+
   [Operator.YahooFinance]: [Operator.Begin],
   [Operator.Jin10]: [Operator.Begin],
   [Operator.Concentrator]: [Operator.Begin],
@@ -806,6 +819,7 @@ export const RestrictedUpstreamMap = {
   [Operator.IterationStart]: [Operator.Begin],
   [Operator.Code]: [Operator.Begin],
   [Operator.WaitingDialogue]: [Operator.Begin],
+  [Operator.VariablesExtract]: [Operator.Begin],
 };
 
 export const NodeMap = {
