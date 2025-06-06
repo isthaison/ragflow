@@ -399,7 +399,7 @@ class ComponentBase(ABC):
     def _run(self, history, **kwargs):
         raise NotImplementedError()
 
-    def output(self, allow_partial=True) -> Tuple[str, Union[pd.DataFrame, partial]]:
+    def output(self, allow_partial=True):
         o = getattr(self._param, self._param.output_var_name)
         if not isinstance(o, partial):
             if not isinstance(o, pd.DataFrame):
