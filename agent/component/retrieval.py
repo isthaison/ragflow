@@ -58,7 +58,10 @@ class Retrieval(ComponentBase, ABC):
 
     def _run(self, history, **kwargs):
         query = self.get_input()
-        query = str(query["content"][0]) if "content" in query else ""
+        if hasattr(query, "to_dict") and "content" in query:
+            query = ", ".join(map(str, query["content"].dropna()))
+        else:
+            query = str(query)
 
         kb_ids: list[str] = self._param.kb_ids or []
 
