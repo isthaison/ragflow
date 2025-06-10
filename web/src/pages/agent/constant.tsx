@@ -458,7 +458,7 @@ const initialQueryBaseValues = {
 
 export const initialRetrievalValues = {
   query: '',
-  top_n: 0.2,
+  top_n: 8,
   top_k: 1024,
   kb_ids: [],
   rerank_id: '',
