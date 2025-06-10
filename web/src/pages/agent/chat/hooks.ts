@@ -14,10 +14,13 @@ import { Message } from '@/interfaces/database/chat';
 import i18n from '@/locales/config';
 import api from '@/utils/api';
 import { message } from 'antd';
+import { get } from 'lodash';
 import trim from 'lodash/trim';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'umi';
 import { v4 as uuid } from 'uuid';
+import { BeginId } from '../constant';
+import useGraphStore from '../store';
 import { receiveMessageError } from '../utils';
 
 const antMessage = message;
@@ -49,12 +52,25 @@ export const useSelectNextMessages = () => {
 };
 
 function findMessageFromList(eventList: IEventList) {
-  const event = eventList.find((x) => x.event === MessageEventType.Message) as
-    | IMessageEvent
-    | undefined;
-
-  return event?.data?.content;
+  const messageEventList = eventList.filter(
+    (x) => x.event === MessageEventType.Message,
+  ) as IMessageEvent[];
+  return {
+    id: messageEventList[0]?.message_id,
+    content: messageEventList.map((x) => x.data.content).join(''),
+  };
 }
+
+const useGetBeginNodePrologue = () => {
+  const getNode = useGraphStore((state) => state.getNode);
+
+  return useMemo(() => {
+    const formData = get(getNode(BeginId), 'data.form', {});
+    if (formData?.enablePrologue) {
+      return formData?.prologue;
+    }
+  }, [getNode]);
+};
 
 export const useSendNextMessage = () => {
   const {
@@ -74,6 +90,8 @@ export const useSendNextMessage = () => {
   const { send, answerList, done, stopOutputMessage } = useSendMessageBySSE(
     api.runCanvas,
   );
+
+  const prologue = useGetBeginNodePrologue();
 
   const sendMessage = useCallback(
     async ({ message }: { message: Message; messages?: Message[] }) => {
@@ -111,10 +129,11 @@ export const useSendNextMessage = () => {
   );
 
   useEffect(() => {
-    const message = findMessageFromList(answerList);
-    if (message) {
+    const { content, id } = findMessageFromList(answerList);
+    if (content) {
       addNewestAnswer({
-        answer: message,
+        answer: content,
+        id: id,
         reference: {
           chunks: [],
           doc_aggs: [],
@@ -138,19 +157,18 @@ export const useSendNextMessage = () => {
     });
   }, [addNewestQuestion, handleSendMessage, done, setValue, value]);
 
-  const fetchPrologue = useCallback(async () => {
-    // fetch prologue
-    const sendRet = await send({ id: agentId });
-    if (receiveMessageError(sendRet)) {
-      message.error(sendRet?.data?.message);
-    } else {
-      refetch();
-    }
-  }, [agentId, refetch, send]);
-
   useEffect(() => {
-    fetchPrologue();
-  }, [fetchPrologue]);
+    if (prologue) {
+      addNewestAnswer({
+        answer: prologue,
+        reference: {
+          chunks: [],
+          doc_aggs: [],
+          total: 0,
+        },
+      });
+    }
+  }, [addNewestAnswer, prologue]);
 
   return {
     handlePressEnter,
