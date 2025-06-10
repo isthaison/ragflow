@@ -1336,6 +1336,9 @@ This delimiter is used to split the input text into several text pieces echo of 
         lastSuccessfulRun: 'Last successful run',
         runs: 'runs',
         success: 'Success',
+        currentlyRunning: 'Currently running',
+        currentlyRunningDesc: 'The schedule is currently executing.',
+        running: 'Running',
       },
       common: {
         action: 'Action',
