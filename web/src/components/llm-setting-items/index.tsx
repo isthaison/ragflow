@@ -6,6 +6,7 @@ import {
 import { Flex, Form, InputNumber, Select, Slider, Switch, Tooltip } from 'antd';
 import camelCase from 'lodash/camelCase';
 
+import { ChatVariableEnabledField } from '@/constants/chat';
 import { useTranslate } from '@/hooks/common-hooks';
 import { useComposeLlmOptionsByModelTypes } from '@/hooks/llm-hooks';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -34,7 +35,13 @@ const LlmSettingItems = ({ prefix, formItemLayout = {}, onChange }: IProps) => {
       if (prefix) {
         nextVariable = { [prefix]: variable };
       }
-      form.setFieldsValue(nextVariable);
+      const variableCheckBoxFieldMap = Object.values(
+        ChatVariableEnabledField,
+      ).reduce<Record<string, boolean>>((pre, cur) => {
+        pre[cur] = cur !== ChatVariableEnabledField.MaxTokensEnabled;
+        return pre;
+      }, {});
+      form.setFieldsValue({ ...nextVariable, ...variableCheckBoxFieldMap });
     },
     [form, prefix],
   );
@@ -300,8 +307,7 @@ const LlmSettingItems = ({ prefix, formItemLayout = {}, onChange }: IProps) => {
                         >
                           <Slider
                             className={styles.variableSlider}
-                            max={4096}
-                            step={1}
+                            max={128000}
                             disabled={disabled}
                           />
                         </Form.Item>
@@ -311,11 +317,10 @@ const LlmSettingItems = ({ prefix, formItemLayout = {}, onChange }: IProps) => {
                         noStyle
                       >
                         <InputNumber
-                          className={styles.sliderInputNumber}
-                          max={1048576 * 2}
-                          min={1}
-                          step={1}
                           disabled={disabled}
+                          className={styles.sliderInputNumber}
+                          max={128000}
+                          min={0}
                         />
                       </Form.Item>
                     </>
