@@ -4,9 +4,9 @@ import { Handle, NodeProps, Position } from '@xyflow/react';
 import { Divider, Flex, Tag } from 'antd';
 import classNames from 'classnames';
 import { RightHandleStyle } from './handle-icon';
-import { useBuildCategorizeHandlePositions } from './hooks';
 import styles from './index.less';
 import NodeHeader from './node-header';
+import { useBuildCategorizeHandlePositions } from './use-build-categorize-handle-positions';
 
 export function ClassifyFaissNode({
   id,
