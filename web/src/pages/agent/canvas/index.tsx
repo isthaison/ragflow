@@ -44,6 +44,7 @@ import { RetrievalNode } from './node/retrieval-node';
 import { RewriteNode } from './node/rewrite-node';
 import { SwitchNode } from './node/switch-node';
 import { TemplateNode } from './node/template-node';
+import { ToolNode } from './node/tool-node';
 import { VariablesNode } from './node/variable-node';
 
 const nodeTypes: NodeTypes = {
@@ -67,6 +68,7 @@ const nodeTypes: NodeTypes = {
   agentNode: AgentNode,
   variablesNode: VariablesNode,
   classifyFaissNode: ClassifyFaissNode,
+  toolNode: ToolNode,
 };
 
 const edgeTypes = {
