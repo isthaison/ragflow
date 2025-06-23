@@ -39,6 +39,7 @@ import {
   initialRetrievalValues,
   initialRewriteQuestionValues,
   initialSwitchValues,
+  initialTavilyValues,
   initialTemplateValues,
   initialTuShareValues,
   initialWaitingDialogueValues,
@@ -104,6 +105,7 @@ export const useInitializeOperatorParams = () => {
       [Operator.WaitingDialogue]: initialWaitingDialogueValues,
       [Operator.Agent]: { ...initialAgentValues, llm_id: llmId },
       [Operator.Tool]: {},
+      [Operator.Tavily]: initialTavilyValues,
     };
   }, [llmId]);
 
@@ -184,7 +186,7 @@ function useAddChildEdge() {
   return { addChildEdge };
 }
 
-function useAddTooNode() {
+function useAddToolNode() {
   const addNode = useGraphStore((state) => state.addNode);
   const getNode = useGraphStore((state) => state.getNode);
   const addEdge = useGraphStore((state) => state.addEdge);
@@ -241,7 +243,7 @@ export function useAddNode(reactFlowInstance?: ReactFlowInstance<any, any>) {
   const initializeOperatorParams = useInitializeOperatorParams();
   const { calculateNewlyBackChildPosition } = useCalculateNewlyChildPosition();
   const { addChildEdge } = useAddChildEdge();
-  const { addToolNode } = useAddTooNode();
+  const { addToolNode } = useAddToolNode();
   //   const [reactFlowInstance, setReactFlowInstance] =
   //     useState<ReactFlowInstance<any, any>>();
 
