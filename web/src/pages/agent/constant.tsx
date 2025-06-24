@@ -87,7 +87,7 @@ export enum Operator {
   Agent = 'Agent',
   VariablesExtract = 'VariablesExtract',
   Tool = 'Tool',
-  Tavily = 'Tavily',
+  TavilySearch = 'TavilySearch',
 }
 
 export const SwitchLogicOperatorOptions = ['and', 'or'];
@@ -257,7 +257,7 @@ export const operatorMap: Record<
   [Operator.Code]: { backgroundColor: '#4c5458' },
   [Operator.WaitingDialogue]: { backgroundColor: '#a5d65c' },
   [Operator.Agent]: { backgroundColor: '#a5d65c' },
-  [Operator.Tavily]: { backgroundColor: '#a5d65c' },
+  [Operator.TavilySearch]: { backgroundColor: '#a5d65c' },
 };
 
 export const componentMenuList = [
@@ -841,6 +841,7 @@ export const RestrictedUpstreamMap = {
   [Operator.WaitingDialogue]: [Operator.Begin],
   [Operator.VariablesExtract]: [Operator.Begin],
   [Operator.Agent]: [Operator.Begin],
+  [Operator.TavilySearch]: [Operator.Begin],
 };
 
 export const NodeMap = {
@@ -885,7 +886,7 @@ export const NodeMap = {
   [Operator.WaitingDialogue]: 'ragNode',
   [Operator.Agent]: 'agentNode',
   [Operator.Tool]: 'toolNode',
-  [Operator.Tavily]: 'ragNode',
+  [Operator.TavilySearch]: 'ragNode',
 };
 
 export const LanguageOptions = [
