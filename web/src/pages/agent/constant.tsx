@@ -143,6 +143,7 @@ export const operatorMap: Record<
     backgroundColor: '#f4816d',
     color: '#f4816d',
   },
+  [Operator.Tool]: {},
   [Operator.Begin]: {
     backgroundColor: '#4f51d6',
   },
