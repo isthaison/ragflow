@@ -672,7 +672,7 @@ export const initialEmailValues = {
 };
 
 export const initialIterationValues = {
-  delimiter: ',',
+  items_ref: '',
 };
 export const initialIterationStartValues = {};
 
@@ -693,6 +693,7 @@ export const initialWaitingDialogueValues = {};
 
 export const initialAgentValues = {
   ...initialLlmBaseValues,
+  description: '',
   sys_prompt: ``,
   prompts: [{ role: PromptRole.User, content: `{${AgentGlobals.SysQuery}}` }],
   message_history_window_size: 12,
