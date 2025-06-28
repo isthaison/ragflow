@@ -21,6 +21,7 @@ from jinja2.sandbox import SandboxedEnvironment
 
 from agent.component.base import ComponentBase, ComponentParamBase
 
+
 class TemplateParam(ComponentParamBase):
     """
     Define the Template component parameters.
@@ -59,7 +60,6 @@ class Template(ComponentBase):
                     res.append({"key": r.group(1), "name": p["name"]})
                     key_set.add(r.group(1))
                 continue
-          
             cpn_nm = self._canvas.get_component_name(cpn_id)
             if not cpn_nm:
                 continue
@@ -69,6 +69,7 @@ class Template(ComponentBase):
 
     def _run(self, history, **kwargs):
         content = self._param.content
+
         self._param.inputs = []
         for para in self.get_input_elements():
             if para["key"].lower().find("begin@") == 0:
@@ -86,6 +87,7 @@ class Template(ComponentBase):
                 else:
                     assert False, f"Can't find parameter '{key}' for {cpn_id}"
                 continue
+
             component_id = para["key"]
             cpn = self._canvas.get_component(component_id)["obj"]
             if cpn.component_name.lower() == "answer":
@@ -104,6 +106,7 @@ class Template(ComponentBase):
                 continue
 
             _, out = cpn.output(allow_partial=False)
+
             result = ""
             if "content" in out.columns:
                 result = "\n".join([o if isinstance(o, str) else str(o) for o in out["content"]])
@@ -142,4 +145,3 @@ class Template(ComponentBase):
         except Exception:
             pass
         kwargs[para["key"]] = value
-        
