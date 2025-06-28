@@ -19,6 +19,7 @@
 # beartype_all(conf=BeartypeConf(violation_type=UserWarning))    # <-- emit warnings from all code
 
 from api.utils.log_utils import init_root_logger
+from mcp_client.mcp_tool_call import shutdown_all_mcp_sessions
 from plugin import GlobalPluginManager
 init_root_logger("ragflow_server")
 
@@ -64,6 +65,8 @@ def update_progress():
             redis_lock.release()
 
 def signal_handler(sig, frame):
+    logging.info("Received interrupt signal, shutting down...")
+    shutdown_all_mcp_sessions()
     stop_event.set()
     time.sleep(1)
     sys.exit(0)
