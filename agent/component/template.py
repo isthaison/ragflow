@@ -53,7 +53,6 @@ class Template(ComponentBase):
             if cpn_id in key_set:
                 continue
             if cpn_id.lower().find("begin@") == 0:
-                # Sửa lỗi tách cpn_id, key
                 parts = cpn_id.split("@", 1)
                 if len(parts) != 2:
                     continue
@@ -96,7 +95,6 @@ class Template(ComponentBase):
                         origin_pattern = "{begin@" + key + "}"
                         new_pattern = "begin_" + key
                         content = content.replace(origin_pattern, "{" + new_pattern + "}")
-                        # Sửa lỗi pop key không tồn tại
                         if origin_pattern in kwargs:
                             kwargs[new_pattern] = kwargs.pop(origin_pattern)
                         else:
@@ -130,7 +128,6 @@ class Template(ComponentBase):
                         kwargs[new_pattern] = hist
                 continue
 
-            # Sửa lỗi unpack nếu output không trả về tuple
             output_result = cpn_obj.output(allow_partial=False)
             if isinstance(output_result, tuple) and len(output_result) == 2:
                 _, out = output_result
