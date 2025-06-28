@@ -1,6 +1,6 @@
 import { RAGFlowNodeType } from '@/interfaces/database/flow';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Collapse, Flex, Form, Input, Select } from 'antd';
+import { Button, Checkbox, Collapse, Flex, Form, Input, Select } from 'antd';
 import { PropsWithChildren, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBuildComponentIdSelectOptions } from '../../hooks/use-get-begin-query';
@@ -67,6 +67,16 @@ const DynamicVariableForm = ({ name: formName, node }: IProps) => {
                   options={options}
                   onChange={handleTypeChange(name)}
                 ></Select>
+              </Form.Item>
+              {/* Thêm cột is_use_label */}
+              <Form.Item
+                {...restField}
+                name={[name, 'is_use_label']}
+                valuePropName="checked"
+                className={styles.variableType}
+                style={{ marginBottom: 0 }}
+              >
+                <Checkbox>{t('flow.isUseLabel') || 'is_use_label'}</Checkbox>
               </Form.Item>
               <Form.Item noStyle dependencies={[name, 'type']}>
                 {({ getFieldValue }) => {

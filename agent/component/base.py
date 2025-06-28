@@ -474,7 +474,7 @@ class ComponentBase(ABC):
             self._param.inputs = []
             outs = self._fetch_outputs_from(self._param.query)
 
-            for out in outs:
+            for idx, out in enumerate(outs):
                 records = out.to_dict("records")
                 content: str
 
@@ -483,12 +483,53 @@ class ComponentBase(ABC):
                 else:
                     content = records[0]["content"]
 
-                self._param.inputs.append({"component_id": records[0].get("component_id"), "content": content})
+                is_use_label = None
+                name_val = None
+                if idx < len(self._param.query):
+                    is_use_label = self._param.query[idx].get("is_use_label")
+                    component_id = self._param.query[idx].get("component_id")
+                    if component_id:
+                        try:
+                            name_val = self._canvas.get_component(component_id)["obj"].component_name
+                        except Exception:
+                            name_val = None
+                self._param.inputs.append({
+                    "component_id": records[0].get("component_id"),
+                    "content": content,
+                    "is_use_label": is_use_label,
+                    "name": name_val  or records[0].get("component_id")
+                }) 
 
             if outs:
                 df = pd.concat(outs, ignore_index=True)
                 if "content" in df:
                     df = df.drop_duplicates(subset=["content"]).reset_index(drop=True)
+                if hasattr(self._param, "query"):
+                    is_use_label_list = [
+                        q.get("is_use_label") for q in self._param.query
+                    ]
+                    name_list = []
+                    for q in self._param.query:
+                        component_id = q.get("component_id")
+                        if component_id:
+                            if "@" in component_id and component_id.split("@")[0].lower().find("begin") >= 0:
+                                cpn_id, key = component_id.split("@")
+                                name_list.append(key)
+                             
+                            else:
+                                component_id = component_id.split("@")[0]
+                                try:
+                                    name_list.append(self._canvas.get_component(component_id)["obj"].component_name)
+                                except Exception:
+                                    name_list.append(None)
+
+                            
+                        else:
+                            name_list.append(None)
+                    if len(is_use_label_list) == len(df):
+                        df["is_use_label"] = is_use_label_list
+                    if len(name_list) == len(df):
+                        df["name"] = name_list
                 return df
 
         upstream_outs = []
@@ -541,7 +582,12 @@ class ComponentBase(ABC):
                     cpn_id, key = cpn_id.split("@")
                     eles.extend(self._canvas.get_component(cpn_id)["obj"]._param.query)
                     continue
-                eles.append({"name": self._canvas.get_component_name(cpn_id), "key": cpn_id})
+                eles.append({
+                    "name": self._canvas.get_component_name(cpn_id) or cpn_id,
+                    "key": cpn_id,
+                    "component_id": cpn_id,
+                    "is_use_label": q.get("is_use_label", False)
+                })
             else:
                 eles.append({"key": q["value"], "name": q["value"], "value": q["value"]})
         return eles

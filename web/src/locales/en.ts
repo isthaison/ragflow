@@ -1363,6 +1363,7 @@ This delimiter is used to split the input text into several text pieces echo of 
       noParameters: 'No parameters',
       addParametersDescription:
         'Add parameters to the component to use them in the prompt.',
+      isUseLabel: 'Is use label',
     },
     llmTools: {
       bad_calculator: {

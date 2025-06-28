@@ -64,7 +64,34 @@ class VariablesExtract(Generate, ABC):
                         args[field] = ""
 
         inputs = self.get_input()
-        query ="\n".join(i.strip() for i in inputs["content"] if i.strip())
+        logging.info(f"VariablesExtract inputs: {inputs}")
+
+        def get_query_line(i, idx):
+            if hasattr(inputs, "iloc"):
+                row = inputs.iloc[idx]
+                content = row["content"]
+                label = row.get("name")
+                is_use_label = row.get("is_use_label")
+            else:
+                content = i
+                label = None
+                is_use_label = None
+            if is_use_label:
+                if label:
+                    return f"{label}: {content}"
+            return content
+
+        if hasattr(inputs, "shape") and len(inputs) > 0:
+            query = "\n".join(
+                get_query_line(inputs.iloc[idx]["content"], idx)
+                if "content" in inputs.iloc[idx] else ""
+                for idx in range(len(inputs))
+                if str(inputs.iloc[idx].get("content", "")).strip()
+            )
+        else:
+            # fallback
+            query = "\n".join(i.strip() for i in inputs["content"] if i.strip())
+
         hist = self._canvas.get_history(self._param.message_history_window_size)
         initquestion = ""
         if query:
