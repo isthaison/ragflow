@@ -49,7 +49,6 @@ export enum LLMFactory {
   SentenceTransformers = 'sentence-transformers',
   GPUStack = 'GPUStack',
   VLLM = 'VLLM',
-  FastEmbed = 'FastEmbed',
 }
 
 // Please lowercase the file name
@@ -104,5 +103,4 @@ export const IconMap = {
   [LLMFactory.SentenceTransformers]: 'sentence-transformers',
   [LLMFactory.GPUStack]: 'gpustack',
   [LLMFactory.VLLM]: 'vllm',
-  [LLMFactory.FastEmbed]: 'fastembed',
 };
