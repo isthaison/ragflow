@@ -709,6 +709,13 @@ export const initialAgentValues = {
   sys_prompt: ``,
   prompts: [{ role: PromptRole.User, content: `{${AgentGlobals.SysQuery}}` }],
   message_history_window_size: 12,
+  max_retries: 3,
+  delay_after_error: 1,
+  visual_files_var: '',
+  max_rounds: 5,
+  exception_method: null,
+  exception_comment: '',
+  exception_goto: '',
   tools: [],
   outputs: {
     structured_output: {
@@ -978,6 +985,7 @@ export enum NodeHandleId {
 export enum VariableType {
   String = 'string',
   Array = 'array',
+  File = 'file',
 }
 
 export const DefaultAgentToolValuesMap = {
@@ -989,3 +997,9 @@ export const DefaultAgentToolValuesMap = {
     api_key: '',
   },
 };
+
+export enum AgentExceptionMethod {
+  Comment = 'comment',
+  Goto = 'goto',
+  Null = 'null',
+}

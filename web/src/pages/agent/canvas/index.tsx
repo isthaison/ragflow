@@ -178,6 +178,7 @@ function AgentCanvas({ drawerVisible, hideDrawer }: IProps) {
           isValidConnection={isValidConnection}
           onEdgeMouseEnter={onEdgeMouseEnter}
           onEdgeMouseLeave={onEdgeMouseLeave}
+          className="h-full"
           defaultEdgeOptions={{
             type: 'buttonEdge',
             markerEnd: 'logo',
