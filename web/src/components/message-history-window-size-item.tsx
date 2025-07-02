@@ -1,4 +1,4 @@
-import { Form, InputNumber } from 'antd';
+import { Form, InputNumber, Select } from 'antd';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {

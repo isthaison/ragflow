@@ -27,7 +27,7 @@ import trio
 from agent.canvas import Canvas
 from api.db.services.canvas_service import UserCanvasService
 from api.db.services.schedule_agent_service import ScheduleAgentService
-from api.utils.log_utils import initRootLogger
+from api.utils.log_utils import init_root_logger
 from api.versions import get_ragflow_version
 from api import settings
 from api.db.db_models import ScheduleAgent, close_connection
@@ -234,5 +234,5 @@ Max concurrent agents: {MAX_CONCURRENT_AGENTS}
 
 
 if __name__ == "__main__":
-    initRootLogger(CONSUMER_NAME)
+    init_root_logger(CONSUMER_NAME)
     trio.run(main)

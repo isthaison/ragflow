@@ -82,7 +82,7 @@ export enum Operator {
   Iteration = 'Iteration',
   IterationStart = 'IterationItem',
   ClassifyFaiss = 'ClassifyFaiss',
-  Code = 'Code',
+  Code = 'CodeExec',
   WaitingDialogue = 'WaitingDialogue',
   Agent = 'Agent',
   VariablesExtract = 'VariablesExtract',
@@ -260,6 +260,12 @@ export const operatorMap: Record<
   [Operator.WaitingDialogue]: { backgroundColor: '#a5d65c' },
   [Operator.Agent]: { backgroundColor: '#a5d65c' },
   [Operator.TavilySearch]: { backgroundColor: '#a5d65c' },
+  [Operator.StringTransform]: {
+    backgroundColor: '#f8cfa0',
+  },
+  [Operator.UserFillUp]: {
+    backgroundColor: '#f8cfa0',
+  },
 };
 
 export const componentMenuList = [
