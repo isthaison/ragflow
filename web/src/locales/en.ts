@@ -552,6 +552,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
     setting: {
       profile: 'Profile',
       avatar: 'Avatar',
+      avatarTip: 'This will be displayed on your profile.',
       profileDescription: 'Update your photo and personal details here.',
       maxTokens: 'Max Tokens',
       maxTokensMessage: 'Max Tokens is required',
@@ -584,6 +585,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       currentPassword: 'Current password',
       currentPasswordMessage: 'Please input your password!',
       newPassword: 'New password',
+      changePassword: 'Change Password',
       newPasswordMessage: 'Please input your password!',
       newPasswordDescription:
         'Your new password must be more than 8 characters.',
@@ -1286,7 +1288,7 @@ This delimiter is used to split the input text into several text pieces echo of 
       parameters: 'Parameters',
       parametersDescription: `This component is used to set the parameters. The parameters are set in the form of key-value pairs, and the key is the name of the parameter. The value is the value of the parameter. The parameters are set in JSON format.`,
       openingSwitch: 'Opening switch',
-      openingCopy: 'Opening copy',
+      openingCopy: 'Opening greeting',
       openingSwitchTip:
         'Your users will see this welcome message at the beginning.',
       modeTip: 'The mode defines how the workflow is initiated.',
