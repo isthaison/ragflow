@@ -50,7 +50,7 @@ class ExeSQLParam(GenerateParam):
         self.check_positive_integer(self.port, "IP Port")
         self.check_empty(self.password, "Database password")
         self.check_positive_integer(self.top_n, "Number of records")
-        self.check_valid_value(self.output_type, "Output type", ['markdown', 'json'])  # Validate output_type
+        self.check_valid_value(self.output_type, "Output type", ['markdown', 'json', 'text_list'])  # Validate output_type
         if self.database == "rag_flow":
             if self.host == "ragflow-mysql":
                 raise ValueError("For the security reason, it dose not support database named rag_flow.")
@@ -60,7 +60,7 @@ class ExeSQLParam(GenerateParam):
 
 class ExeSQL(Generate, ABC):
     component_name = "ExeSQL"
-
+  
     def _refactor(self, ans):
         ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
         match = re.search(r"```sql\s*(.*?)\s*```", ans, re.DOTALL)
@@ -122,9 +122,18 @@ class ExeSQL(Generate, ABC):
                     else:
                         single_res = pd.DataFrame([i for i in cursor.fetchmany(self._param.top_n)])
                         single_res.columns = [i[0] for i in cursor.description]
-                    # Output as markdown or json based on param
-                    if getattr(self._param, "output_type", "markdown") == "json":
+                    # Output as markdown or json or text_list based on param
+                    output_type = getattr(self._param, "output_type", "markdown")
+                    if output_type == "json":
                         sql_res.append({"content": json.dumps(single_res.to_dict(orient="records"), default=str)})
+                    elif output_type == "text_list":
+                        def escape(val):
+                            s = str(val)
+                            return s.replace('\t', '\\t').replace('\n', '\\n')
+                        header = "\t".join(escape(col) for col in single_res.columns)
+                        rows = ["\t".join(escape(v) for v in row) for row in single_res.values.tolist()]
+                        text_result = "\n".join([header] + rows)
+                        sql_res.append({"content": text_result})
                     else:
                         sql_res.append({"content": single_res.to_markdown(index=False)})
                     break
@@ -155,5 +164,7 @@ class ExeSQL(Generate, ABC):
         except Exception as e:
             return None
 
+    def debug(self, **kwargs):
+        return self._run([], **kwargs)
     def debug(self, **kwargs):
         return self._run([], **kwargs)

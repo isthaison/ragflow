@@ -192,7 +192,7 @@ class Generate(ComponentBase):
             else:
                 if cpn.component_name.lower() == "retrieval":
                     retrieval_res.append(out)
-                kwargs[para["key"]] = "  - " + "\n - ".join([o if isinstance(o, str) else str(o) for o in out["content"]])
+                kwargs[para["key"]] = "" + "\n".join([o if isinstance(o, str) else str(o) for o in out["content"]])
             self._param.inputs.append({"component_id": para["key"], "content": kwargs[para["key"]]})
 
 
@@ -205,7 +205,7 @@ class Generate(ComponentBase):
             prompt = re.sub(r"\{%s\}" % re.escape(n), str(v).replace("\\", " "), prompt)
         if not self._param.inputs and prompt.find("{input}") >= 0:
             retrieval_res = self.get_input()
-            input = ("  - " + "\n  - ".join(
+            input = ("" + "\n".join(
                 [c for c in retrieval_res["content"] if isinstance(c, str)])) if "content" in retrieval_res else ""
             prompt = re.sub(r"\{input\}", re.escape(input), prompt)
         downstreams = self._canvas.get_component(self._id)["downstream"]
@@ -213,7 +213,7 @@ class Generate(ComponentBase):
             "obj"].component_name.lower() == "answer":
             return partial(self.stream_output, chat_mdl, prompt, retrieval_res)
         if "empty_response" in retrieval_res.columns and not "".join(retrieval_res["content"]):
-            empty_res = "\n- ".join([str(t) for t in retrieval_res["empty_response"] if str(t)])
+            empty_res = "\n ".join([str(t) for t in retrieval_res["empty_response"] if str(t)])
             res = {"content": empty_res if empty_res else "Nothing found in knowledgebase!", "reference": []}
             return pd.DataFrame([res])
         msg = self._canvas.get_history(self._param.message_history_window_size)

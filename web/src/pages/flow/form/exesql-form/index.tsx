@@ -38,12 +38,19 @@ const ExeSQLForm = ({ onValuesChange, form, node }: IOperatorForm) => {
         name="output_type"
         initialValue="markdown"
         rules={[{ required: true }]}
-        tooltip="Select output format: markdown or json"
+        tooltip="Chọn kiểu xuất kết quả: 
+- Markdown: bảng markdown dễ đọc cho người.
+- JSON: danh sách đối tượng cho máy xử lý.
+- Text List: từng dòng là text, tab phân cách cột, dễ copy hoặc xử lý tiếp."
       >
         <Select
           options={[
-            { label: 'Markdown', value: 'markdown' },
-            { label: 'JSON', value: 'json' },
+            { label: 'Markdown (bảng cho người đọc)', value: 'markdown' },
+            { label: 'JSON (dữ liệu cho máy)', value: 'json' },
+            {
+              label: 'Text List (dòng text, tab phân cách)',
+              value: 'text_list',
+            },
           ]}
         />
       </Form.Item>
