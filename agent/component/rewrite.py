@@ -14,6 +14,7 @@
 #  limitations under the License.
 #
 from abc import ABC
+import logging
 from agent.component import GenerateParam, Generate
 from rag.prompts import full_question
 
@@ -39,16 +40,20 @@ class RewriteQuestion(Generate, ABC):
     def _run(self, history, **kwargs):
         hist = self._canvas.get_history(self._param.message_history_window_size)
         message_role_filter = getattr(self._param, "message_history_role_filter", None)
+        logging.info(f"RewriteQuestion: message_role_filter={message_role_filter}")
         if message_role_filter:
             hist = [m for m in hist if m.get("role") in message_role_filter]
+        logging.info(f"RewriteQuestion: history={hist}")
         query = self.get_input()
         query = str(query["content"][0]) if "content" in query else ""
         messages = [h for h in hist if h["role"]!="system"]
         if messages[-1]["role"] != "user":
             messages.append({"role": "user", "content": query})
-        ans = full_question(self._canvas.get_tenant_id(), self._param.llm_id, messages, self.gen_lang(self._param.language))
+        ans, rendered_prompt = full_question(self._canvas.get_tenant_id(), self._param.llm_id, messages, self.gen_lang(self._param.language))
         self._canvas.history.pop()
         self._canvas.history.append(("user", ans))
+        self._canvas.set_component_infor(self._id, {"prompt":rendered_prompt,"messages":  [{"role": "user", "content": query}],"conf": {}})
+
         return RewriteQuestion.be_output(ans)
 
     @staticmethod

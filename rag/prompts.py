@@ -214,7 +214,7 @@ def full_question(tenant_id, llm_id, messages, language=None):
 
     ans = chat_mdl.chat(rendered_prompt, [{"role": "user", "content": "Output: "}], {"temperature": 0.2})
     ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
-    return ans if ans.find("**ERROR**") < 0 else messages[-1]["content"]
+    return [ans if ans.find("**ERROR**") < 0 else messages[-1]["content"], rendered_prompt]
 
 
 def cross_languages(tenant_id, llm_id, query, languages=[]):
