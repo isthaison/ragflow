@@ -27,6 +27,7 @@ const {
   getScheduleHistory,
   getScheduleStats,
   uploadCanvasFile,
+  trace,
 } = api;
 
 const methods = {
@@ -125,6 +126,10 @@ const methods = {
   uploadCanvasFile: {
     url: uploadCanvasFile,
     method: 'post',
+  },
+  trace: {
+    url: trace,
+    method: 'get',
   },
 } as const;
 

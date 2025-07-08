@@ -146,6 +146,7 @@ export default {
   getInputElements: `${api_host}/canvas/input_elements`,
   debug: `${api_host}/canvas/debug`,
   uploadCanvasFile: `${api_host}/canvas/upload`,
+  trace: `${api_host}/canvas/trace`,
 
   // Schedule endpoints
   createSchedule: `${api_host}/canvas/schedule/create`,
