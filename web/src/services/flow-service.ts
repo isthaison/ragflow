@@ -26,6 +26,7 @@ const {
   getFrequencyOptions,
   getScheduleHistory,
   getScheduleStats,
+  uploadCanvasFile,
 } = api;
 
 const methods = {
@@ -120,6 +121,10 @@ const methods = {
   getScheduleStats: {
     url: getScheduleStats,
     method: 'get',
+  },
+  uploadCanvasFile: {
+    url: uploadCanvasFile,
+    method: 'post',
   },
 } as const;
 
