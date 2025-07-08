@@ -34,12 +34,27 @@ const ExeSQLForm = ({ onValuesChange, form, node }: IOperatorForm) => {
         <LLMSelect></LLMSelect>
       </Form.Item>
       <Form.Item
+        label="Output Type"
+        name="output_type"
+        initialValue="markdown"
+        rules={[{ required: true }]}
+        tooltip="Select output format: markdown or json"
+      >
+        <Select
+          options={[
+            { label: 'Markdown', value: 'markdown' },
+            { label: 'JSON', value: 'json' },
+          ]}
+        />
+      </Form.Item>
+      <Form.Item
         label={t('dbType')}
         name={'db_type'}
         rules={[{ required: true }]}
       >
         <Select options={ExeSQLOptions}></Select>
       </Form.Item>
+
       <Form.Item
         label={t('database')}
         name={'database'}
@@ -76,6 +91,7 @@ const ExeSQLForm = ({ onValuesChange, form, node }: IOperatorForm) => {
         <InputNumber></InputNumber>
       </Form.Item>
       <TopNItem initialValue={30} max={1000}></TopNItem>
+
       <Flex justify={'end'}>
         <Button type={'primary'} loading={loading} onClick={handleTest}>
           Test

@@ -16,7 +16,7 @@
 from abc import ABC
 import re
 from copy import deepcopy
-
+import json
 import pandas as pd
 import pymysql
 import psycopg2
@@ -39,6 +39,7 @@ class ExeSQLParam(GenerateParam):
         self.password = ""
         self.loop = 3
         self.top_n = 30
+        self.output_type = "markdown"  # Add output_type param
 
     def check(self):
         super().check()
@@ -49,6 +50,7 @@ class ExeSQLParam(GenerateParam):
         self.check_positive_integer(self.port, "IP Port")
         self.check_empty(self.password, "Database password")
         self.check_positive_integer(self.top_n, "Number of records")
+        self.check_valid_value(self.output_type, "Output type", ['markdown', 'json'])  # Validate output_type
         if self.database == "rag_flow":
             if self.host == "ragflow-mysql":
                 raise ValueError("For the security reason, it dose not support database named rag_flow.")
@@ -120,7 +122,11 @@ class ExeSQL(Generate, ABC):
                     else:
                         single_res = pd.DataFrame([i for i in cursor.fetchmany(self._param.top_n)])
                         single_res.columns = [i[0] for i in cursor.description]
-                    sql_res.append({"content": single_res.to_markdown(index=False, floatfmt=".6f")})
+                    # Output as markdown or json based on param
+                    if getattr(self._param, "output_type", "markdown") == "json":
+                        sql_res.append({"content": json.dumps(single_res.to_dict(orient="records"), default=str)})
+                    else:
+                        sql_res.append({"content": single_res.to_markdown(index=False)})
                     break
                 except Exception as e:
                     single_sql = self._regenerate_sql(single_sql, str(e), **kwargs)
