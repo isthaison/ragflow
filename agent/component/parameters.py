@@ -36,7 +36,6 @@ class Parameters(ComponentBase, ABC):
     def _run(self, history, **kwargs):
         args = {}
         global_params = {}
-        invalid_values = {"unknown", "none", "invalid", "not found", "not available", "not applicable", "", "null"}
 
         for para in self._param.variables:
             key = para.get("key", "")
@@ -61,14 +60,13 @@ class Parameters(ComponentBase, ABC):
                 args[key] = ""
         logging.info(f"args: {args}")
         for k, v in args.items():
-            # Convert non-primitive types to string
             if not isinstance(v, (str, int, float)):
                 v = str(v)
             
             data = v.strip() if isinstance(v, str) else str(v)
-            if data.lower() not in invalid_values and data:
-                global_params[k] = data
-                self._canvas.add_item_global_param(key=k, value=data, description=f"Parameters set: {k}")
+          
+            global_params[k] = data
+            self._canvas.add_item_global_param(key=k, value=data, description=f"Parameters set: {k}")
         
         self._canvas.set_global_param(**global_params)
         return Parameters.be_output("")
