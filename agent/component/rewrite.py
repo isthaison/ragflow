@@ -38,6 +38,9 @@ class RewriteQuestion(Generate, ABC):
 
     def _run(self, history, **kwargs):
         hist = self._canvas.get_history(self._param.message_history_window_size)
+        message_role_filter = getattr(self._param, "message_history_role_filter", None)
+        if message_role_filter:
+            hist = [m for m in hist if m.get("role") in message_role_filter]
         query = self.get_input()
         query = str(query["content"][0]) if "content" in query else ""
         messages = [h for h in hist if h["role"]!="system"]

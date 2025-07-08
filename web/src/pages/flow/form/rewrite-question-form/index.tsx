@@ -1,5 +1,7 @@
 import LLMSelect from '@/components/llm-select';
-import MessageHistoryWindowSizeItem from '@/components/message-history-window-size-item';
+import MessageHistoryWindowSizeItem, {
+  MessageHistoryRoleFilterItem,
+} from '@/components/message-history-window-size-item';
 import { useTranslate } from '@/hooks/common-hooks';
 import { Form, Select } from 'antd';
 import { GoogleLanguageOptions } from '../../constant';
@@ -42,6 +44,7 @@ const RewriteQuestionForm = ({ onValuesChange, form }: IOperatorForm) => {
       <MessageHistoryWindowSizeItem
         initialValue={6}
       ></MessageHistoryWindowSizeItem>
+      <MessageHistoryRoleFilterItem initialValue={['user', 'assistant']} />
     </Form>
   );
 };
