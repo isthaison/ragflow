@@ -127,12 +127,7 @@ class Retrieval(ComponentBase, ABC):
             kbinfos["chunks"].extend(tav_res["chunks"])
             kbinfos["doc_aggs"].extend(tav_res["doc_aggs"])
 
-        # Store reference data in canvas
-        if kbinfos["chunks"] or kbinfos["doc_aggs"]:
-            self._canvas.reference.append({
-                "chunks": kbinfos["chunks"],
-                "doc_aggs": kbinfos["doc_aggs"]
-            })
+      
 
         if not kbinfos["chunks"]:
             df = Retrieval.be_output("")
