@@ -15,6 +15,7 @@
 #
 from abc import ABC
 import logging
+import re
 from agent.component import GenerateParam, Generate
 from rag.prompts import full_question
 
@@ -49,6 +50,13 @@ class RewriteQuestion(Generate, ABC):
         messages = [h for h in hist if h["role"]!="system"]
         if messages[-1]["role"] != "user":
             messages.append({"role": "user", "content": query})
+        # replace content thinking in item message to empty string
+        # this is used to remove the thinking content in the assistant message
+        for i in range(len(messages)):
+            if messages[i]["role"] == "assistant" and "thinking" in messages[i]["content"]:
+                # ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
+                messages[i]["content"] = re.sub(r"^.*</think>\s*", "", messages[i]["content"], flags=re.DOTALL).strip()
+        
         ans, rendered_prompt = full_question(self._canvas.get_tenant_id(), self._param.llm_id, messages, self.gen_lang(self._param.language))
         # self._canvas.history.pop()
         # self._canvas.history.append(("user", ans))
