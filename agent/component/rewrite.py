@@ -50,8 +50,8 @@ class RewriteQuestion(Generate, ABC):
         if messages[-1]["role"] != "user":
             messages.append({"role": "user", "content": query})
         ans, rendered_prompt = full_question(self._canvas.get_tenant_id(), self._param.llm_id, messages, self.gen_lang(self._param.language))
-        self._canvas.history.pop()
-        self._canvas.history.append(("user", ans))
+        # self._canvas.history.pop()
+        # self._canvas.history.append(("user", ans))
         self._canvas.set_component_infor(self._id, {"prompt":rendered_prompt,"messages":  [{"role": "user", "content": query}],"conf": {}})
 
         return RewriteQuestion.be_output(ans)
