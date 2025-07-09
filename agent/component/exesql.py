@@ -60,21 +60,60 @@ class ExeSQLParam(GenerateParam):
 
 class ExeSQL(Generate, ABC):
     component_name = "ExeSQL"
-  
+
+    def _split_sql_top_level(self, sql_block):
+        stmts = []
+        current = []
+        paren = 0
+        in_single = False
+        in_double = False
+        prev = ''
+        for c in sql_block:
+            if c == "'" and not in_double and prev != '\\':
+                in_single = not in_single
+            elif c == '"' and not in_single and prev != '\\':
+                in_double = not in_double
+            elif not in_single and not in_double:
+                if c == '(':
+                    paren += 1
+                elif c == ')':
+                    paren -= 1
+                elif c == ';' and paren == 0:
+                    stmt = ''.join(current).strip()
+                    if stmt:
+                        stmts.append(stmt)
+                    current = []
+                    prev = c
+                    continue
+            current.append(c)
+            prev = c
+        # Add last statement
+        stmt = ''.join(current).strip()
+        if stmt:
+            stmts.append(stmt)
+        return stmts
+
     def _refactor(self, ans):
+        # Loại bỏ phần trước </think>
         ans = re.sub(r"^.*</think>", "", ans, flags=re.DOTALL)
-        match = re.search(r"```sql\s*(.*?)\s*```", ans, re.DOTALL)
-        if match:
-            ans = match.group(1)  # Query content
-            return ans
+        # Lấy tất cả các block ```sql ... ```
+        sql_blocks = re.findall(r"```sql\s*(.*?)\s*```", ans, re.DOTALL | re.IGNORECASE)
+        sqls = []
+        if sql_blocks:
+            for block in sql_blocks:
+                block = block.strip()
+                if block:
+                    stmts = self._split_sql_top_level(block)
+                    sqls.extend(stmts)
         else:
-            print("no markdown")
-        ans = re.sub(r'^.*?SELECT ', 'SELECT ', (ans), flags=re.IGNORECASE)
-        ans = re.sub(r';.*?SELECT ', '; SELECT ', ans, flags=re.IGNORECASE)
-        ans = re.sub(r';[^;]*$', r';', ans)
-        if not ans:
+            # Nếu không có markdown, lấy phần sau SELECT đầu tiên
+            select_match = re.search(r"(SELECT\s.*)", ans, re.IGNORECASE | re.DOTALL)
+            if select_match:
+                sqls.append(select_match.group(1).strip())
+        if not sqls:
             raise Exception("SQL statement not found!")
-        return ans
+        # Ghép lại thành 1 chuỗi, phân tách bằng ;
+        return ";".join(sqls)
 
     def _run(self, history, **kwargs):
         ans = self.get_input()
@@ -104,17 +143,18 @@ class ExeSQL(Generate, ABC):
             self._loop += 1
         input_list = re.split(r';', ans.replace(r"\n", " "))
         sql_res = []
+        table_results = []  # List to store each table result
         for i in range(len(input_list)):
             single_sql = input_list[i]
             single_sql = single_sql.replace('```','')
             while self._loop <= self._param.loop:
                 self._loop += 1
-                if not single_sql:
+                if not single_sql.strip():
                     break
                 try:
                     cursor.execute(single_sql)
-                    if cursor.rowcount == 0:
-                        sql_res.append({"content": "No record in the database!"})
+                    if cursor.rowcount == 0 or cursor.description is None:
+                        table_results.append(pd.DataFrame())  # Empty DataFrame for no result
                         break
                     if self._param.db_type == 'mssql':
                         single_res = pd.DataFrame.from_records(cursor.fetchmany(self._param.top_n),
@@ -122,30 +162,42 @@ class ExeSQL(Generate, ABC):
                     else:
                         single_res = pd.DataFrame([i for i in cursor.fetchmany(self._param.top_n)])
                         single_res.columns = [i[0] for i in cursor.description]
-                    # Output as markdown or json or text_list based on param
-                    output_type = getattr(self._param, "output_type", "markdown")
-                    if output_type == "json":
-                        sql_res.append({"content": json.dumps(single_res.to_dict(orient="records"), default=str)})
-                    elif output_type == "text_list":
-                        def escape(val):
-                            s = str(val)
-                            return s.replace('\t', '\\t').replace('\n', '\\n')
-                        header = "\t".join(escape(col) for col in single_res.columns)
-                        rows = ["\t".join(escape(v) for v in row) for row in single_res.values.tolist()]
-                        text_result = "\n".join([header] + rows)
-                        sql_res.append({"content": text_result})
-                    else:
-                        sql_res.append({"content": single_res.to_markdown(index=False)})
+                    table_results.append(single_res)
                     break
                 except Exception as e:
                     single_sql = self._regenerate_sql(single_sql, str(e), **kwargs)
                     single_sql = self._refactor(single_sql)
                     if self._loop > self._param.loop:
-                        sql_res.append({"content": "Can't query the correct data via SQL statement."})
+                        table_results.append(pd.DataFrame([{"content": "Can't query the correct data via SQL statement."}]))
         db.close()
-        if not sql_res:
+        if not table_results:
             return ExeSQL.be_output("")
-        return pd.DataFrame(sql_res)
+        # Output formatting for multiple tables
+        output_type = getattr(self._param, "output_type", "markdown")
+        if output_type == "json":
+            json_tables = [df.to_dict(orient="records") for df in table_results]
+            return pd.DataFrame([{"content": json.dumps(json_tables, default=str)}])
+        elif output_type == "text_list":
+            def escape(val):
+                s = str(val)
+                return s.replace('\t', '\\t').replace('\n', '\\n')
+            text_tables = []
+            for df in table_results:
+                if df.empty:
+                    text_tables.append("No record in the database!")
+                else:
+                    header = "\t".join(escape(col) for col in df.columns)
+                    rows = ["\t".join(escape(v) for v in row) for row in df.values.tolist()]
+                    text_tables.append("\n".join([header] + rows))
+            return pd.DataFrame([{"content": "\n---\n".join(text_tables)}])
+        else:  # markdown
+            md_tables = []
+            for df in table_results:
+                if df.empty:
+                    md_tables.append("No record in the database!")
+                else:
+                    md_tables.append(df.to_markdown(index=False))
+            return pd.DataFrame([{"content": "\n\n---\n\n".join(md_tables)}])
 
     def _regenerate_sql(self, failed_sql, error_message, **kwargs):
         prompt = f'''
@@ -164,7 +216,5 @@ class ExeSQL(Generate, ABC):
         except Exception as e:
             return None
 
-    def debug(self, **kwargs):
-        return self._run([], **kwargs)
     def debug(self, **kwargs):
         return self._run([], **kwargs)
