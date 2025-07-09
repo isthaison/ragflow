@@ -93,6 +93,12 @@ class VariablesExtract(Generate, ABC):
             query = "\n".join(i.strip() for i in inputs["content"] if i.strip())
 
         hist = self._canvas.get_history(self._param.message_history_window_size)
+        # replace content thinking in item message to empty string
+        # this is used to remove the thinking content in the assistant message
+        for i in range(len(hist)):
+            if hist[i]["role"] == "assistant" and "think" in hist[i]["content"]:
+                # ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
+                hist[i]["content"] = re.sub(r"^.*</think>\s*", "", hist[i]["content"], flags=re.DOTALL).strip()
         initquestion = ""
         if query:
             conv = ["{}\n {}".format("# The information need to extract below:", query)]
