@@ -53,7 +53,7 @@ class RewriteQuestion(Generate, ABC):
         # replace content thinking in item message to empty string
         # this is used to remove the thinking content in the assistant message
         for i in range(len(messages)):
-            if messages[i]["role"] == "assistant" and "thinking" in messages[i]["content"]:
+            if messages[i]["role"] == "assistant" and "think" in messages[i]["content"]:
                 # ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
                 messages[i]["content"] = re.sub(r"^.*</think>\s*", "", messages[i]["content"], flags=re.DOTALL).strip()
         
