@@ -58,7 +58,6 @@ class Parameters(ComponentBase, ABC):
                 args[key] = value
             else:
                 args[key] = ""
-        logging.info(f"args: {args}")
         for k, v in args.items():
             if not isinstance(v, (str, int, float)):
                 v = str(v)
