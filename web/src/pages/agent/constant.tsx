@@ -499,7 +499,7 @@ export const initialClassifyFaissValues = {
 };
 
 export const initialMessageValues = {
-  messages: [],
+  content: [''],
 };
 
 export const initialKeywordExtractValues = {
