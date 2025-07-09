@@ -257,6 +257,12 @@ class Generate(ComponentBase):
         message_role_filter = getattr(self._param, "message_history_role_filter", None)
         if message_role_filter:
             msg = [m for m in msg if m.get("role") in message_role_filter]
+        # replace content thinking in item message to empty string
+        # this is used to remove the thinking content in the assistant message
+        for i in range(len(msg)):
+            if msg[i]["role"] == "assistant" and "think" in msg[i]["content"]:
+                # ans = re.sub(r"^.*</think>\s*", "", ans, flags=re.DOTALL)
+                msg[i]["content"] = re.sub(r"^.*</think>\s*", "", msg[i]["content"], flags=re.DOTALL).strip()
         if len(msg) < 1:
             msg.append({"role": "user", "content": "Output: "})
         _, msg = message_fit_in([{"role": "system", "content": prompt}, *msg], int(chat_mdl.max_length * 0.97))
@@ -289,3 +295,4 @@ class Generate(ComponentBase):
         u = kwargs.get("user")
         ans = chat_mdl.chat(prompt, [{"role": "user", "content": u if u else "Output: "}], self._param.gen_conf())
         return pd.DataFrame([ans])
+        

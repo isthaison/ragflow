@@ -41,10 +41,8 @@ class RewriteQuestion(Generate, ABC):
     def _run(self, history, **kwargs):
         hist = self._canvas.get_history(self._param.message_history_window_size)
         message_role_filter = getattr(self._param, "message_history_role_filter", None)
-        logging.info(f"RewriteQuestion: message_role_filter={message_role_filter}")
         if message_role_filter:
             hist = [m for m in hist if m.get("role") in message_role_filter]
-        logging.info(f"RewriteQuestion: history={hist}")
         query = self.get_input()
         query = str(query["content"][0]) if "content" in query else ""
         messages = [h for h in hist if h["role"]!="system"]
@@ -60,7 +58,7 @@ class RewriteQuestion(Generate, ABC):
         ans, rendered_prompt = full_question(self._canvas.get_tenant_id(), self._param.llm_id, messages, self.gen_lang(self._param.language))
         # self._canvas.history.pop()
         # self._canvas.history.append(("user", ans))
-        self._canvas.set_component_infor(self._id, {"prompt":rendered_prompt,"messages":  [{"role": "user", "content": query}],"conf": {}})
+        self._canvas.set_component_infor(self._id, {"prompt":rendered_prompt,"messages":  [{"role": "user", "content": "Output: "}],"conf": {}})
 
         return RewriteQuestion.be_output(ans)
 
